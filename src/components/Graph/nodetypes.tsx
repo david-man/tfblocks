@@ -1,4 +1,4 @@
-import InputLayerNode from './Nodes/SpecificNodes/InputLayerNode';
+import InputLayerNode from './Nodes/InputLayerNode';
 import DotProductNode from './Nodes/SpecificNodes/DotProductNode';
 import TransposeNode from './Nodes/SpecificNodes/TransposeNode';
 import DenseNode from './Nodes/SpecificNodes/DenseNode';

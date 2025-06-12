@@ -44,7 +44,7 @@ const Conv1DNode = (props : NodeProps) =>{
         updateNodeData(id, {kernelSize: kernelSize, neurons: neurons, data_shape: data_shape, filters: filters})
     }, [filters, kernelSize, neurons, data_shape])
 
-    const optionsMenu = <Conv1DOptions filters = {filters} setFilters = {setFilters} kernel = {kernelSize} setKernel = {setKernelSize}/>;
+    const optionsMenu = <Conv1DOptions id = {id} filters = {filters} setFilters = {setFilters} kernel = {kernelSize} setKernel = {setKernelSize}/>;
 
     return (
         <>

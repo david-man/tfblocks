@@ -20,7 +20,7 @@ const AnnotatedConnectionLine = (props : ConnectionLineComponentProps) => {
       />
       <EdgeLabelRenderer>
             <div className = "absolute" style = {{transform: `translate(-50%, -50%) translate(${labelX+10}px,${labelY-10}px)`}}>
-                <p className = "text-xs">{fromNode?.data?.data_shape ? fromNode?.data?.data_shape.toString() : "unknown"}</p>
+                <p className = "text-xs">From: {fromNode?.data?.data_shape ? fromNode?.data?.data_shape.toString() : "unknown"}</p>
             </div>
         </EdgeLabelRenderer>
     </>

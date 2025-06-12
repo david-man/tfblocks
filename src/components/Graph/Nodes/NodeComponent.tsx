@@ -28,9 +28,9 @@ const NodeComponent = (props : any) =>{
 
     return (
         <>
-        <div className = "w-[100px] h-fit p-2 border-2 rounded-xs border-black flex flex-col justify-center items-center"
-        style = {{backgroundColor: (props.valid_node ? "green" : "red")}}>
-            <p className = "text-center">{props.mainText}[{props.neurons ? props.neurons : ""}]</p>
+        <div className = "w-[100px] h-fit p-2 border-2 rounded-xs flex flex-col justify-center items-center"
+        style = {{backgroundColor: (props.valid_node ? "green" : "red"), borderColor: (selected ? "blue" : "black")}}>
+            <p className = "text-center">{props.mainText}{props?.neurons != undefined ? `[${isNaN(props.neurons) ? '' : `${props.neurons}`}]` : ""}</p>
             {props.optionsMenu ? 
                 <>
                     {CanvasListener?.data?.showMenu ? 

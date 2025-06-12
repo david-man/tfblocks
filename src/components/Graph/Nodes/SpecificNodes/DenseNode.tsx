@@ -32,14 +32,13 @@ const DenseNode = (props : NodeProps) =>{
                 setValid(true)
             }
         }
-        console.log(props)
     }, [ParentNode, units])
 
     useEffect(() => {
         updateNodeData(id, {units: units, neurons: neurons, data_shape: data_shape})
     }, [units, neurons, data_shape])
 
-    const optionsMenu = <DenseOptions units = {units} setUnits = {setUnits} />;
+    const optionsMenu = <DenseOptions units = {units} setUnits = {setUnits} id = {id}/>;
     
     return (
         <>
