@@ -9,7 +9,7 @@ const TransposeDragElement = () => {
         <div className = "flex justify-center w-full">
             <button ref = {setNodeRef} style = {style} {...listeners} {...attributes} className = "w-4/5 m-4">
                 <div className = "text-2xl border-2 border-black">
-                    <p>Transpose Element</p>
+                    <p>Transpose</p>
                 </div>
             </button>
         </div>

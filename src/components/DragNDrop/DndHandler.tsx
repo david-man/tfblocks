@@ -25,9 +25,21 @@ const dndNodeAddition = (event : DragEndEvent, mousePosn : MousePosn, screenToFl
                 newNode.type = "dense"
                 newNode.data = {label: 'Dense', units: NaN}
                 break
-            case "conv1d":
-                newNode.type = "conv1d"
-                newNode.data = {label: 'Conv1D'}
+            case "conv":
+                newNode.type = "conv"
+                newNode.data = {label: 'Conv'}
+                break
+            case "add":
+                newNode.type = "add"
+                newNode.data = {label: 'Add'}
+                break
+            case "activation":
+                newNode.type = "activation"
+                newNode.data = {label: 'Activation'}
+                break
+            case "pooling":
+                newNode.type = "pooling"
+                newNode.data = {label: 'Pool'}
                 break
             default:
                 newNode.type = "input"

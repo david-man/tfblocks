@@ -1,4 +1,4 @@
-import { useConnection, type ConnectionLineComponentProps, MarkerType, getBezierPath, Position, EdgeLabelRenderer} from '@xyflow/react';
+import { useConnection, type ConnectionLineComponentProps, getBezierPath, Position, EdgeLabelRenderer} from '@xyflow/react';
 import '../../../App.css'
 const AnnotatedConnectionLine = (props : ConnectionLineComponentProps) => {
   const { fromNode } = useConnection();

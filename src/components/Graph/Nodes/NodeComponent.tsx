@@ -6,6 +6,7 @@ import dependencyController from '../../../controllers/dependencyController';
 
 const NodeComponent = (props : any) =>{
     const id = props.id
+    const width = props.width ? props.width : '100px'
     const parent_nodes : Node[] = props.parents
     const [selected, setSelected] = useState(false);
     const {updateNodeData} = useReactFlow()
@@ -28,7 +29,7 @@ const NodeComponent = (props : any) =>{
 
     return (
         <>
-        <div className = "w-[100px] h-fit p-2 border-2 rounded-xs flex flex-col justify-center items-center"
+        <div className = {`w-[${width}] h-fit p-2 border-2 rounded-xs flex flex-col justify-center items-center`}
         style = {{backgroundColor: (props.valid_node ? "green" : "red"), borderColor: (selected ? "blue" : "black")}}>
             <p className = "text-center">{props.mainText}{props?.neurons != undefined ? `[${isNaN(props.neurons) ? '' : `${props.neurons}`}]` : ""}</p>
             {props.optionsMenu ? 

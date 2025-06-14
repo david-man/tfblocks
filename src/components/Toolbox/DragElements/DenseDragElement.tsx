@@ -9,7 +9,7 @@ const DenseDragElement = () => {
         <div className = "flex justify-center w-full">
             <button ref = {setNodeRef} style = {style} {...listeners} {...attributes} className = "w-4/5 m-4">
                 <div className = "text-2xl border-2 border-black">
-                    <p>Dense Element</p>
+                    <p>Dense Layer</p>
                 </div>
             </button>
         </div>

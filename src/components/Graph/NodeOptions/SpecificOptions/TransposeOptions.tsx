@@ -1,4 +1,4 @@
-import InputComponent from "../InputComponent";
+import InputComponent from "../NumericalInputComponent";
 
 const TransposeOptions = (props : any) => {
     return (

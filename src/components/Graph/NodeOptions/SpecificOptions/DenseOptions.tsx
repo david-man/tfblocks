@@ -1,4 +1,4 @@
-import InputComponent from "../InputComponent";
+import InputComponent from "../NumericalInputComponent";
 
 const DenseOptions = (props : any) => 
 {
