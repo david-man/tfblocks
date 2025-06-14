@@ -6,6 +6,8 @@ import ConvNode from './Nodes/SpecificNodes/ConvNode';
 import AddNode from './Nodes/SpecificNodes/AddNode';
 import ActivationNode from './Nodes/SpecificNodes/ActivationNode';
 import PoolingNode from './Nodes/SpecificNodes/PoolingNode';
+import NormalizationNode from './Nodes/SpecificNodes/NormalizationNode';
+import DropoutNode from './Nodes/SpecificNodes/DropoutNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -15,5 +17,7 @@ export const nodeTypes = {
     conv : ConvNode,
     add : AddNode,
     activation : ActivationNode,
-    pooling : PoolingNode
+    pooling : PoolingNode,
+    norm : NormalizationNode,
+    dropout : DropoutNode
 }

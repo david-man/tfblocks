@@ -1,21 +1,28 @@
 import '../../App.css'
 import DotProductDragElement from './DragElements/DotProductDragElement'
+import NormDragElement from './DragElements/NormDragElement'
 import TransposeDragElement from './DragElements/TransposeDragElement'
 import DenseDragElement from './DragElements/DenseDragElement'
-import Conv1DDragElement from './DragElements/ConvDragElement'
+import ConvDragElement from './DragElements/ConvDragElement'
 import AddDragElement from './DragElements/AddDragElement'
 import ActivationDragElement from './DragElements/ActivationDragElement'
 import PoolingDragElement from './DragElements/PoolingDragElement'
+import DropoutDragElement from './DragElements/DropoutDragElement'
 const Toolbox = () => {
     return (
         <div className = "border-2 border-black w-full h-full">
-            <DotProductDragElement />
-            <TransposeDragElement />
             <DenseDragElement />
-            <Conv1DDragElement />
-            <AddDragElement />
-            <ActivationDragElement />
+            <ConvDragElement />
             <PoolingDragElement />
+            <hr className = "w-full border-1"></hr>
+            <DotProductDragElement />
+            <AddDragElement />
+            <hr className = "w-full border-1"></hr>
+            <TransposeDragElement />
+            <hr className = "w-full border-1"></hr>
+            <NormDragElement />
+            <ActivationDragElement />
+            <DropoutDragElement />
         </div>
     )
 }

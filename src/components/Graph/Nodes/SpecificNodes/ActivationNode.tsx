@@ -33,11 +33,12 @@ const ActivationNode = (props : NodeProps) =>{
     const optionsMenu = <ActivationOptions id = {props.id} set_activation = {setActivation} activation = {activation}/>
 
     return (
-        <>
+        <div className = "w-[120px]">
             <SingularConnection type="target" position={Position.Left} id={`node_${id}_input_handle_1`}></SingularConnection>
             <Handle type="source" position={Position.Right} id={`node_${id}_output_handle_1`}/>
-            <NodeComponent valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Activation"} parents = {[Parent]} {...props}/>
-        </>
+            <NodeComponent valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Activation"} parents = {[Parent]} 
+            width = {"120px"} {...props}/>
+        </div>
     );
 }
 export default ActivationNode

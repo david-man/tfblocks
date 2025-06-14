@@ -11,24 +11,25 @@ const InputComponent = (props : any) => {
                 let neg = false;
                 if(input_to_filter.length >= 1 && input_to_filter.charAt(0) === '-'){
                     neg = true;
-                    input_to_filter = evt.target.value[1]
+                    input_to_filter = evt.target.value.slice(1)
                 }
                 let filtered_input = input_to_filter.replace(/[^0-9]/g, '');
+                if(props.filter){
+                    filtered_input = props.filter(filtered_input) ? filtered_input : ''
+                }
                 if(neg){
                     props.setFunction(filtered_input === '' ? NaN : Number(filtered_input) * -1)
                 }
                 else{
                     props.setFunction(filtered_input === '' ? NaN : Number(filtered_input))
                 }
-                // if(props.filter){
-                //     filtered_input = props.filter(filtered_input) ? filtered_input : ''
-                // }
+                
             }
             else{
                 let filtered_input = evt.target.value.replace(/[^0-9]/g, '');
-                // if(props.filter){
-                //     filtered_input = props.filter(filtered_input) ? filtered_input : ''
-                // }
+                if(props.filter){
+                    filtered_input = props.filter(filtered_input) ? filtered_input : ''
+                }
                 props.setFunction(filtered_input === '' ? NaN : Number(filtered_input))
             }
             

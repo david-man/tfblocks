@@ -41,6 +41,14 @@ const dndNodeAddition = (event : DragEndEvent, mousePosn : MousePosn, screenToFl
                 newNode.type = "pooling"
                 newNode.data = {label: 'Pool'}
                 break
+            case "norm":
+                newNode.type = "norm"
+                newNode.data = {label: 'Normalization'}
+                break
+            case "dropout":
+                newNode.type = "dropout"
+                newNode.data = {label: 'Dropout'}
+                break
             default:
                 newNode.type = "input"
                 newNode.data = {label: "THIS SHOULD NOT EXIST"}
