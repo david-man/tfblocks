@@ -4,7 +4,14 @@ import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState } from 'react';
 import NodeComponent from '../NodeComponent';
 import PoolingOptions from '../../NodeOptions/SpecificOptions/PoolingOptions';
+import handleController, {type HandleMap} from '../../../../controllers/handleController';
+import { useStore } from 'zustand';
 const PoolingNode = (props : NodeProps) =>{
+    const id = props.id.toString()
+    const outgoing_handle_id = `node_${id}_output_handle_1`
+    const incoming_handle_id = `node_${id}_incoming_handle_1`
+
+    const {set_handle_shape} = handleController()
     const [valid, setValid] = useState(false)
 
     const [pool, setPool] = useState("maxpool")
@@ -14,98 +21,97 @@ const PoolingNode = (props : NodeProps) =>{
     const [strideSize, setStrideSize] = useState(1)
 
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
-    const id = props.id.toString()
     const {updateNodeData} = useReactFlow()
-    const incomingConnectionA = useNodeConnections({
+    const incomingConnection = useNodeConnections({
         handleType: "target",
-        handleId: `node_${id}_input_handle_1`
+        handleId: incoming_handle_id
     })
-    const Parent = useNodesData(incomingConnectionA[0]?.source)
+    const ParentID = incomingConnection[0]?.source
+    const ParentHandle = incomingConnection[0]?.sourceHandle
+    const IncomingShape = useStore(handleController, (state : HandleMap) => state.get_handle_shape(ParentHandle))
     useEffect(() => {
         set_data_shape(undefined)
         setValid(false)
-        if(Parent){
-            if(Parent?.data?.data_shape && pool && dimensionality && poolSize && strideSize && padding){
-                const parent_shape = Parent?.data?.data_shape as Array<number>
-                switch (dimensionality){
-                    case "1d": //ASSUMPTION: CHANNELS_LAST OVER CHANNELS_FIRST
-                        if(padding === "valid"){
-                            if(parent_shape.length === 3 && Math.floor((parent_shape[1] - poolSize) / strideSize) + 1 > 0){
-                                set_data_shape([parent_shape[0], Math.floor((parent_shape[1] - poolSize) / strideSize) + 1, parent_shape[2]])
-                                setValid(true)
-                            }
+        if(IncomingShape && pool && dimensionality && poolSize && strideSize && padding){
+            switch (dimensionality){
+                case "1d": //ASSUMPTION: CHANNELS_LAST OVER CHANNELS_FIRST
+                    if(padding === "valid"){
+                        if(IncomingShape.length === 3 && Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1 > 0){
+                            set_data_shape([IncomingShape[0], Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, IncomingShape[2]])
+                            setValid(true)
                         }
-                        else{
-                            if(parent_shape.length === 3 && Math.floor((parent_shape[1]) / strideSize) + 1 > 0){
-                                set_data_shape([parent_shape[0], Math.floor((parent_shape[1]) / strideSize) + 1, parent_shape[2]])
-                                setValid(true)
-                            }
+                    }
+                    else{
+                        if(IncomingShape.length === 3 && Math.floor((IncomingShape[1]) / strideSize) + 1 > 0){
+                            set_data_shape([IncomingShape[0], Math.floor((IncomingShape[1]) / strideSize) + 1, IncomingShape[2]])
+                            setValid(true)
                         }
-                        break
-                    case "2d":
-                        if(padding === 'valid'){
-                            if(parent_shape.length === 4 
-                                && Math.floor((parent_shape[1] - poolSize) / strideSize) + 1 > 0 
-                                && Math.floor((parent_shape[2] - poolSize) / strideSize) + 1 > 0){
-                                set_data_shape([parent_shape[0], 
-                                    Math.floor((parent_shape[1] - poolSize) / strideSize) + 1, 
-                                    Math.floor((parent_shape[2] - poolSize) / strideSize) + 1, 
-                                    parent_shape[3]])
-                                setValid(true)
-                            }
+                    }
+                    break
+                case "2d":
+                    if(padding === 'valid'){
+                        if(IncomingShape.length === 4 
+                            && Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1 > 0 
+                            && Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1 > 0){
+                            set_data_shape([IncomingShape[0], 
+                                Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, 
+                                Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1, 
+                                IncomingShape[3]])
+                            setValid(true)
                         }
-                        else{
-                            if(parent_shape.length === 4 
-                                && Math.floor((parent_shape[1]) / strideSize) + 1 > 0 
-                                && Math.floor((parent_shape[2]) / strideSize) + 1 > 0){
-                                set_data_shape([parent_shape[0], 
-                                    Math.floor((parent_shape[1]) / strideSize) + 1, 
-                                    Math.floor((parent_shape[2]) / strideSize) + 1, 
-                                    parent_shape[3]])
-                                setValid(true)
-                            }
+                    }
+                    else{
+                        if(IncomingShape.length === 4 
+                            && Math.floor((IncomingShape[1]) / strideSize) + 1 > 0 
+                            && Math.floor((IncomingShape[2]) / strideSize) + 1 > 0){
+                            set_data_shape([IncomingShape[0], 
+                                Math.floor((IncomingShape[1]) / strideSize) + 1, 
+                                Math.floor((IncomingShape[2]) / strideSize) + 1, 
+                                IncomingShape[3]])
+                            setValid(true)
                         }
-                        
-                        break
-                    case "3d":
-                        if(padding === 'valid'){
-                            if(parent_shape.length === 4 
-                                && Math.floor((parent_shape[1] - poolSize) / strideSize) + 1 > 0 
-                                && Math.floor((parent_shape[2] - poolSize) / strideSize) + 1 > 0
-                                && Math.floor((parent_shape[3] - poolSize) / strideSize) + 1){
-                                set_data_shape([parent_shape[0], 
-                                    Math.floor((parent_shape[1] - poolSize) / strideSize) + 1, 
-                                    Math.floor((parent_shape[2] - poolSize) / strideSize) + 1,
-                                    Math.floor((parent_shape[3] - poolSize) / strideSize) + 1,  
-                                    parent_shape[4]])
-                                setValid(true)
-                            }
+                    }
+                    
+                    break
+                case "3d":
+                    if(padding === 'valid'){
+                        if(IncomingShape.length === 4 
+                            && Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1 > 0 
+                            && Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1 > 0
+                            && Math.floor((IncomingShape[3] - poolSize) / strideSize) + 1){
+                            set_data_shape([IncomingShape[0], 
+                                Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, 
+                                Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1,
+                                Math.floor((IncomingShape[3] - poolSize) / strideSize) + 1,  
+                                IncomingShape[4]])
+                            setValid(true)
                         }
-                        else{
-                            if(parent_shape.length === 4 
-                                && Math.floor((parent_shape[1]) / strideSize) + 1 > 0 
-                                && Math.floor((parent_shape[2]) / strideSize) + 1 > 0
-                                && Math.floor((parent_shape[3]) / strideSize) + 1 > 0){
-                                set_data_shape([parent_shape[0], 
-                                    Math.floor((parent_shape[1]) / strideSize) + 1, 
-                                    Math.floor((parent_shape[2]) / strideSize) + 1, 
-                                    Math.floor((parent_shape[3]) / strideSize) + 1, 
-                                    parent_shape[4]])
-                                setValid(true)
-                            }
+                    }
+                    else{
+                        if(IncomingShape.length === 4 
+                            && Math.floor((IncomingShape[1]) / strideSize) + 1 > 0 
+                            && Math.floor((IncomingShape[2]) / strideSize) + 1 > 0
+                            && Math.floor((IncomingShape[3]) / strideSize) + 1 > 0){
+                            set_data_shape([IncomingShape[0], 
+                                Math.floor((IncomingShape[1]) / strideSize) + 1, 
+                                Math.floor((IncomingShape[2]) / strideSize) + 1, 
+                                Math.floor((IncomingShape[3]) / strideSize) + 1, 
+                                IncomingShape[4]])
+                            setValid(true)
                         }
-                        
-                        break
-                    default:
-                        break
-                }
+                    }
+                    
+                    break
+                default:
+                    break
             }
         }
-    }, [Parent, dimensionality, pool, poolSize, padding, strideSize])
+    }, [IncomingShape, dimensionality, pool, poolSize, padding, strideSize])
 
     useEffect(() => {
         
-        updateNodeData(id, {data_shape: data_shape, pool: pool, poolSize: poolSize, dimensionality: dimensionality, padding : padding, strideSize : strideSize})
+        updateNodeData(id, {pool: pool, poolSize: poolSize, dimensionality: dimensionality, padding : padding, strideSize : strideSize})
+        set_handle_shape(outgoing_handle_id, data_shape)
     }, [data_shape, dimensionality, pool, poolSize, padding, strideSize])
 
     const optionsMenu = <PoolingOptions id = {props.id} 
@@ -117,9 +123,9 @@ const PoolingNode = (props : NodeProps) =>{
 
     return (
         <div className = "w-[150px]">
-            <SingularConnection type="target" position={Position.Left} id={`node_${id}_input_handle_1`}></SingularConnection>
-            <Handle type="source" position={Position.Right} id={`node_${id}_output_handle_1`}/>
-            <NodeComponent valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Pooling"} parents = {[Parent]} width = {"150px"} {...props}/>
+            <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}></SingularConnection>
+            <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
+            <NodeComponent valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Pooling"} parents = {[ParentID]} width = {"150px"} {...props}/>
         </div>
     );
 }

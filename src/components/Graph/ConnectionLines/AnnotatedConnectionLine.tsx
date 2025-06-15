@@ -1,7 +1,9 @@
-import { useConnection, type ConnectionLineComponentProps, getBezierPath, Position, EdgeLabelRenderer} from '@xyflow/react';
+import { type ConnectionLineComponentProps, getBezierPath, Position, EdgeLabelRenderer} from '@xyflow/react';
 import '../../../App.css'
+import handleController, { type HandleMap } from '../../../controllers/handleController';
+import { useStore } from 'zustand';
 const AnnotatedConnectionLine = (props : ConnectionLineComponentProps) => {
-  const { fromNode } = useConnection();
+  const sourceShape =  useStore(handleController, (state : HandleMap) => state.get_handle_shape(props.fromHandle?.id))
   const [edgePath, labelX, labelY] = getBezierPath({
           sourceX : props.fromX,
           sourceY : props.fromY,
@@ -20,7 +22,7 @@ const AnnotatedConnectionLine = (props : ConnectionLineComponentProps) => {
       />
       <EdgeLabelRenderer>
             <div className = "absolute" style = {{transform: `translate(-50%, -50%) translate(${labelX+10}px,${labelY-10}px)`}}>
-                <p className = "text-xs">From: {fromNode?.data?.data_shape ? fromNode?.data?.data_shape.toString() : "unknown"}</p>
+                <p className = "text-xs">From: {sourceShape ? sourceShape.toString() : "unknown"}</p>
             </div>
         </EdgeLabelRenderer>
     </>

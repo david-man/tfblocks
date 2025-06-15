@@ -4,7 +4,7 @@ const ActivationOptions = (props : any) =>
 {
     const selection_id = `${props.id}_select`
     const handleChange : FormEventHandler = (event) => {
-        const val = event.target.value;
+        const val = (event.target as HTMLSelectElement).value;
         props.set_activation(val ? val : undefined)
     }
     return (

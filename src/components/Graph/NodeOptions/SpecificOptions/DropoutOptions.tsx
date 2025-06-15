@@ -3,7 +3,7 @@ import InputComponent from "../NumericalInputComponent";
 
 const DropoutOptions = (props : any) => {
     const handleDimChange : FormEventHandler= (event) => {
-        const val = event.target.value
+        const val = (event.target as HTMLSelectElement).value
         props.set_dim(val ? val : undefined)
     }
     return (
@@ -17,7 +17,7 @@ const DropoutOptions = (props : any) => {
                     <option value = "3d">Spatial 3d</option>
                 </select>
             </div>
-        <InputComponent id = {`${props.id}_text_1`} setFunction={(new_rate) => {
+        <InputComponent id = {`${props.id}_text_1`} setFunction={(new_rate : number) => {
             if(!new_rate || new_rate <= 100)props.set_rate(new_rate)}} value = {props.rate} label = {"Rate(%): "}></InputComponent>
     </div>)
 }

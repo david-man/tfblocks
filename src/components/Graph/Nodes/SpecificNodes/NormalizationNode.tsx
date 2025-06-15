@@ -4,7 +4,14 @@ import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
 import NodeComponent from '../NodeComponent';
 import NormalizationOptions from '../../NodeOptions/SpecificOptions/NormalizationOptions';
+import handleController, {type HandleMap} from '../../../../controllers/handleController';
+import { useStore } from 'zustand';
 const NormalizationNode = (props : NodeProps) =>{
+    const id = props.id.toString()
+    const outgoing_handle_id = `node_${id}_output_handle_1`
+    const incoming_handle_id = `node_${id}_incoming_handle_1`
+
+    const {set_handle_shape} = handleController()
     const [valid, setValid] = useState(false)
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
     const [neurons, setNeurons] = useState(NaN)
@@ -12,19 +19,21 @@ const NormalizationNode = (props : NodeProps) =>{
     const [axis, setAxis] = useState(-1)
     const [normType, setNormType] = useState(undefined)
 
-    const id = props.id.toString()
     const {updateNodeData} = useReactFlow()
     const incomingConnection = useNodeConnections({
         handleType: "target",
-        handleId: `node_${id}_input_handle_1`
+        handleId: incoming_handle_id
     })
-    const ParentNode = useNodesData(incomingConnection[0]?.source)
+    const ParentID = incomingConnection[0]?.source
+    const ParentHandle = incomingConnection[0]?.sourceHandle
+    const IncomingShape = useStore(handleController, (state : HandleMap) => state.get_handle_shape(ParentHandle))
+
     useEffect(() => {
         set_data_shape(undefined)
         setNeurons(NaN)
         setValid(false)
-        if(ParentNode && ParentNode?.data?.data_shape && normType && axis){
-            let Shape= [...ParentNode.data.data_shape as Array<number>] 
+        if(IncomingShape && normType && axis){
+            let Shape= [...IncomingShape as Array<number>] 
             let a = (axis >= 0 ? axis : Shape.length + axis)
             if(a >= 0 && a < Shape.length)
             {
@@ -45,10 +54,11 @@ const NormalizationNode = (props : NodeProps) =>{
                 setValid(true)
             }
         }
-    }, [ParentNode, normType, axis])
+    }, [IncomingShape, normType, axis])
 
     useEffect(() => {
-        updateNodeData(id, {data_shape: data_shape, neurons: neurons, normType: normType, axis: axis})
+        updateNodeData(id, {neurons: neurons, normType: normType, axis: axis})
+        set_handle_shape(outgoing_handle_id, data_shape)
     }, [data_shape, normType, axis, neurons])
 
     const optionsMenu = <NormalizationOptions id = {id} 
@@ -56,9 +66,9 @@ const NormalizationNode = (props : NodeProps) =>{
     axis = {axis} set_axis = {setAxis}></NormalizationOptions>
     return (
         <div className = "w-[140px]">
-            <SingularConnection type="target" position={Position.Left} id={`node_${id}_input_handle_1`}/>
-            <Handle type="source" position={Position.Right} id={`node_${id}_output_handle_1`}/>
-            <NodeComponent neurons = {neurons} optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Normalization"} parents = {[ParentNode]} {...props}/>
+            <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
+            <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
+            <NodeComponent neurons = {neurons} optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Normalization"} parents = {[ParentID]} {...props}/>
         </div>
     );
 }

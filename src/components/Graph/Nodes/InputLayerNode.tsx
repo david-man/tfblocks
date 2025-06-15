@@ -1,16 +1,22 @@
 import { Handle, Position, useReactFlow, type NodeProps } from '@xyflow/react';
 import { useEffect} from 'react';
 import dependencyController from '../../../controllers/dependencyController';
+import handleController from '../../../controllers/handleController';
 
 const InputLayerNode = (props : NodeProps) =>{
     const data_shape = [1, 10, 5]
     const {remove_id, set_dependencies} = dependencyController()
+    const {remove_handle, set_handle_shape} = handleController()
     const id = props.id
     const {updateNodeData} = useReactFlow()
     useEffect(() => {
-        updateNodeData(props.id, {data_shape: data_shape, neurons: 0})
-        set_dependencies(props.id, [])
-        return (() => {remove_id(props.id)})
+        updateNodeData(id, {data_shape: data_shape, neurons: 0})
+        set_dependencies(id, [])
+        set_handle_shape(`node_${id}_output_handle`, data_shape)
+        return (() => {
+            remove_id(id)
+            remove_handle(id)
+        })
     }, [])
     return (
         <>

@@ -5,11 +5,11 @@ const Conv1DOptions = (props : any) =>
     const padding_id = `${props.id}_select_padding`
     const dim_id = `${props.id}_select_dim`
     const handlePaddingChange : FormEventHandler = (event) => {
-        const val = event.target.value;
+        const val = (event.target as HTMLSelectElement).value;
         props.setPadding(val ? val : undefined)
     }
     const handleDimChange : FormEventHandler = (event) => {
-        const val = event.target.value;
+        const val = (event.target as HTMLSelectElement).value;
         props.setDimensionality(val ? val : undefined)
     }
     return (

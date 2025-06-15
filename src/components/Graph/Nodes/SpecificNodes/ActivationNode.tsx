@@ -4,39 +4,49 @@ import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState } from 'react';
 import NodeComponent from '../NodeComponent';
 import ActivationOptions from '../../NodeOptions/SpecificOptions/ActivationOptions';
+import handleController, {type HandleMap} from '../../../../controllers/handleController';
+import { useStore } from 'zustand';
+
+
 const ActivationNode = (props : NodeProps) =>{
+    const id = props.id.toString()
+    const outgoing_handle_id = `node_${id}_output_handle_1`
+    const incoming_handle_id = `node_${id}_incoming_handle_1`
+    const {set_handle_shape} = handleController()
+
     const [valid, setValid] = useState(false)
     const [activation, setActivation] = useState(undefined)
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
-    const id = props.id.toString()
     const {updateNodeData} = useReactFlow()
-    const incomingConnectionA = useNodeConnections({
+    const incomingConnection = useNodeConnections({
         handleType: "target",
-        handleId: `node_${id}_input_handle_1`
+        handleId: incoming_handle_id
     })
-    const Parent = useNodesData(incomingConnectionA[0]?.source)
+    const ParentID = incomingConnection[0]?.source
+    const ParentHandle = incomingConnection[0]?.sourceHandle
+    const IncomingShape = useStore(handleController, (state : HandleMap) => state.get_handle_shape(ParentHandle))
+
     useEffect(() => {
         set_data_shape(undefined)
         setValid(false)
-        if(Parent){
-            if(Parent?.data?.data_shape && activation){
-                set_data_shape([...Parent?.data?.data_shape as Array<number>])
-                setValid(true)
-            }
+        if(IncomingShape && activation){
+            set_data_shape([...IncomingShape])
+            setValid(true)
         }
-    }, [Parent, activation])
+    }, [IncomingShape, activation])
 
     useEffect(() => {
         updateNodeData(id, {data_shape: data_shape, activation : activation})
+        set_handle_shape(outgoing_handle_id, data_shape)
     }, [data_shape, activation])
 
     const optionsMenu = <ActivationOptions id = {props.id} set_activation = {setActivation} activation = {activation}/>
 
     return (
         <div className = "w-[120px]">
-            <SingularConnection type="target" position={Position.Left} id={`node_${id}_input_handle_1`}></SingularConnection>
-            <Handle type="source" position={Position.Right} id={`node_${id}_output_handle_1`}/>
-            <NodeComponent valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Activation"} parents = {[Parent]} 
+            <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}></SingularConnection>
+            <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
+            <NodeComponent valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Activation"} parents = {[ParentID]} 
             width = {"120px"} {...props}/>
         </div>
     );

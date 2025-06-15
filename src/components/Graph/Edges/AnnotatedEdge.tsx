@@ -1,9 +1,8 @@
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, type EdgeProps} from '@xyflow/react';
-import nodeController, { type Graph } from '../../../controllers/nodeController';
-import { useShallow } from 'zustand/shallow';
+import handleController, { type HandleMap } from '../../../controllers/handleController';
+import { useStore } from 'zustand';
  
 const AnnotatedEdge = (props : EdgeProps) => {
-    const {nodes} = nodeController(useShallow((state : Graph) => ({nodes : state.nodes})))
     const [edgePath, labelX, labelY] = getBezierPath({
         sourceX : props.sourceX,
         sourceY : props.sourceY,
@@ -12,13 +11,13 @@ const AnnotatedEdge = (props : EdgeProps) => {
         targetY : props.targetY,
         targetPosition : props.targetPosition,
     });
-    const source_node = nodes.find(node => node.id === props.source)
+    const source_shape = useStore(handleController, (state : HandleMap) => state.get_handle_shape(props.sourceHandleId))
     return (
         <>
         <BaseEdge path={edgePath} markerEnd = {props.markerEnd}/>
         <EdgeLabelRenderer>
             <div className = "absolute" style = {{transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}}>
-                <p className = "text-xs">From: {`${source_node?.data.data_shape ? source_node?.data.data_shape : "unknown"}`}</p>
+                <p className = "text-xs">From: {`${source_shape ? source_shape : "unknown"}`}</p>
             </div>
         </EdgeLabelRenderer>
         

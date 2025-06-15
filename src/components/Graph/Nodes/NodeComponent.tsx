@@ -7,7 +7,7 @@ import dependencyController from '../../../controllers/dependencyController';
 const NodeComponent = (props : any) =>{
     const id = props.id
     const width = props.width ? props.width : '100px'
-    const parent_nodes : Node[] = props.parents
+    const parent_ids : String[] = props.parents
     const [selected, setSelected] = useState(false);
     const {updateNodeData} = useReactFlow()
     const {remove_id, set_dependencies} = dependencyController()
@@ -15,13 +15,13 @@ const NodeComponent = (props : any) =>{
 
     useEffect(() => {
         let dependencies : String[] = []
-        if(parent_nodes && parent_nodes.length != 0)
+        if(parent_ids && parent_ids.length != 0)
         {
-            parent_nodes.map((parent : Node) => (parent?.id ? dependencies.push(parent.id) : null))
+            parent_ids.map((parent_id : String) => (parent_id ? dependencies.push(parent_id) : null))
         }
         set_dependencies(id, dependencies)
         return(() => remove_id(id))
-    }, [JSON.stringify(parent_nodes)])
+    }, [JSON.stringify(parent_ids)])
 
     useEffect(() => {
         setSelected(props?.selected ? props.selected : false)

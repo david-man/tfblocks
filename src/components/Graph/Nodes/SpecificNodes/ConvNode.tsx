@@ -4,10 +4,14 @@ import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
 import ConvOptions from '../../NodeOptions/SpecificOptions/ConvOptions';
 import NodeComponent from '../NodeComponent';
-
-
+import handleController, {type HandleMap} from '../../../../controllers/handleController';
+import { useStore } from 'zustand';
 
 const ConvNode = (props : NodeProps) =>{
+    const id = props.id.toString()
+    const outgoing_handle_id = `node_${id}_output_handle_1`
+    const {set_handle_shape} = handleController()
+
     const [valid, setValid] = useState(false)
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
     const [neurons, setNeurons] = useState(NaN)
@@ -17,39 +21,39 @@ const ConvNode = (props : NodeProps) =>{
     const [stride, setStride] = useState(1)
     const [padding, setPadding] = useState("valid")
     const [dimensionality, setDimensionality] = useState(undefined)
-    
-    const id = props.id.toString()
+
     const {updateNodeData} = useReactFlow()
     const incomingConnection = useNodeConnections({
         handleType: "target",
         handleId: `node_${id}_input_handle_1`
     })
-    const ParentNode = useNodesData(incomingConnection[0]?.source)
+    const ParentID = incomingConnection[0]?.source
+    const ParentHandle = incomingConnection[0]?.sourceHandle
+    const IncomingShape = useStore(handleController, (state : HandleMap) => state.get_handle_shape(ParentHandle!))
 
     useEffect(() => {
         setNeurons(NaN)
         set_data_shape(undefined)
         setValid(false)
-        if(ParentNode){
-            if(ParentNode?.data?.data_shape && filters && kernelSize && stride && padding && dimensionality)
+        if(IncomingShape){
+            if(IncomingShape && filters && kernelSize && stride && padding && dimensionality)
             {
-                const Shape = ParentNode?.data?.data_shape as Array<number>
-                const channels = Shape[Shape.length - 1]
+                const channels = IncomingShape[IncomingShape.length - 1]
                 switch(dimensionality){
                     case "1d"://ASSUMPTION: CHANNELS_LAST > CHANNELS_FIRST
                         if(padding === 'valid'){
-                            if(Shape.length === 3  && Math.floor((Shape[1] - kernelSize) / stride) + 1 > 0 )
+                            if(IncomingShape.length === 3  && Math.floor((IncomingShape[1] - kernelSize) / stride) + 1 > 0 )
                             {
-                                set_data_shape([Shape[0], Math.floor((Shape[1] - kernelSize) / stride) + 1, filters])
+                                set_data_shape([IncomingShape[0], Math.floor((IncomingShape[1] - kernelSize) / stride) + 1, filters])
                                 setNeurons(channels * filters * kernelSize)
                                 setValid(true)
                             }
                         }
                         else
                         {
-                            if(Shape.length === 3  && Math.ceil((Shape[1]) / stride) > 0 )
+                            if(IncomingShape.length === 3  && Math.ceil((IncomingShape[1]) / stride) > 0 )
                             {
-                                set_data_shape([Shape[0], Math.ceil((Shape[1]) / stride), filters])
+                                set_data_shape([IncomingShape[0], Math.ceil((IncomingShape[1]) / stride), filters])
                                 setNeurons(channels * filters * kernelSize)
                                 setValid(true)
                             }
@@ -57,13 +61,13 @@ const ConvNode = (props : NodeProps) =>{
                         break
                     case "2d":
                         if(padding === 'valid'){
-                            if(Shape.length === 4 && 
-                                Math.floor((Shape[1] - kernelSize) / stride) + 1 > 0 &&
-                                Math.floor((Shape[2] - kernelSize) / stride) + 1 > 0 )
+                            if(IncomingShape.length === 4 && 
+                                Math.floor((IncomingShape[1] - kernelSize) / stride) + 1 > 0 &&
+                                Math.floor((IncomingShape[2] - kernelSize) / stride) + 1 > 0 )
                             {
-                                set_data_shape([Shape[0], 
-                                    Math.floor((Shape[1] - kernelSize) / stride) + 1, 
-                                    Math.floor((Shape[2] - kernelSize) / stride) + 1,
+                                set_data_shape([IncomingShape[0], 
+                                    Math.floor((IncomingShape[1] - kernelSize) / stride) + 1, 
+                                    Math.floor((IncomingShape[2] - kernelSize) / stride) + 1,
                                     filters])
                                 setNeurons(channels * filters * (kernelSize**2))
                                 setValid(true)
@@ -71,11 +75,11 @@ const ConvNode = (props : NodeProps) =>{
                         }
                         else
                         {
-                            if(Shape.length === 4 && 
-                                Math.ceil((Shape[1]) / stride) > 0 && 
-                                Math.ceil((Shape[2]) / stride) > 0 )
+                            if(IncomingShape.length === 4 && 
+                                Math.ceil((IncomingShape[1]) / stride) > 0 && 
+                                Math.ceil((IncomingShape[2]) / stride) > 0 )
                             {
-                                set_data_shape([Shape[0], Math.ceil((Shape[1]) / stride), Math.ceil((Shape[2]) / stride), filters])
+                                set_data_shape([IncomingShape[0], Math.ceil((IncomingShape[1]) / stride), Math.ceil((IncomingShape[2]) / stride), filters])
                                 setNeurons(channels * filters * (kernelSize**2))
                                 setValid(true)
                             }
@@ -83,15 +87,15 @@ const ConvNode = (props : NodeProps) =>{
                         break
                     case "3d":
                         if(padding === 'valid'){
-                            if(Shape.length === 5 && 
-                                Math.floor((Shape[1] - kernelSize) / stride) + 1 > 0&&
-                                Math.floor((Shape[2] - kernelSize) / stride) + 1 > 0&& 
-                                Math.floor((Shape[3] - kernelSize) / stride) + 1 > 0 )
+                            if(IncomingShape.length === 5 && 
+                                Math.floor((IncomingShape[1] - kernelSize) / stride) + 1 > 0&&
+                                Math.floor((IncomingShape[2] - kernelSize) / stride) + 1 > 0&& 
+                                Math.floor((IncomingShape[3] - kernelSize) / stride) + 1 > 0 )
                             {
-                                set_data_shape([Shape[0], 
-                                    Math.floor((Shape[1] - kernelSize) / stride) + 1, 
-                                    Math.floor((Shape[2] - kernelSize) / stride) + 1,
-                                    Math.floor((Shape[3] - kernelSize) / stride) + 1,
+                                set_data_shape([IncomingShape[0], 
+                                    Math.floor((IncomingShape[1] - kernelSize) / stride) + 1, 
+                                    Math.floor((IncomingShape[2] - kernelSize) / stride) + 1,
+                                    Math.floor((IncomingShape[3] - kernelSize) / stride) + 1,
                                     filters])
                                 setNeurons(channels * filters * (kernelSize**3))
                                 setValid(true)
@@ -99,15 +103,15 @@ const ConvNode = (props : NodeProps) =>{
                         }
                         else
                         {
-                            if(Shape.length === 5 && 
-                                Math.ceil((Shape[1]) / stride) > 0&& 
-                                Math.ceil((Shape[2]) / stride) > 0 &&
-                                Math.ceil((Shape[3]) / stride) > 0)
+                            if(IncomingShape.length === 5 && 
+                                Math.ceil((IncomingShape[1]) / stride) > 0&& 
+                                Math.ceil((IncomingShape[2]) / stride) > 0 &&
+                                Math.ceil((IncomingShape[3]) / stride) > 0)
                             {
-                                set_data_shape([Shape[0], 
-                                    Math.ceil((Shape[1]) / stride), 
-                                    Math.ceil((Shape[2]) / stride), 
-                                    Math.ceil((Shape[3]) / stride),
+                                set_data_shape([IncomingShape[0], 
+                                    Math.ceil((IncomingShape[1]) / stride), 
+                                    Math.ceil((IncomingShape[2]) / stride), 
+                                    Math.ceil((IncomingShape[3]) / stride),
                                     filters])
                                 setNeurons(channels * filters * (kernelSize**3))
                                 setValid(true)
@@ -120,12 +124,13 @@ const ConvNode = (props : NodeProps) =>{
                 }
             }
         }
-    }, [ParentNode, filters, kernelSize, stride, padding, dimensionality])
+    }, [IncomingShape, filters, kernelSize, stride, padding, dimensionality])
 
     useEffect(() => {
-        updateNodeData(id, {kernelSize: kernelSize, neurons: neurons, data_shape: data_shape, filters: filters,
+        updateNodeData(id, {kernelSize: kernelSize, neurons: neurons, filters: filters,
             padding: padding, stride : stride, dimensionality : dimensionality
         })
+        set_handle_shape(outgoing_handle_id, data_shape)
     }, [filters, kernelSize, neurons, data_shape, stride, padding, dimensionality])
 
     const optionsMenu = <ConvOptions id = {id} 
@@ -133,13 +138,13 @@ const ConvNode = (props : NodeProps) =>{
         kernel = {kernelSize} setKernel = {setKernelSize}
         stride = {stride} setStride = {setStride}
         padding = {padding} setPadding = {setPadding}
-        dimensionality = {dimensionality} setDimensionality = {setDimensionality}/>;
+        dim = {dimensionality} setDimensionality = {setDimensionality}/>;
 
     return (
         <div className = "w-[120px]">
             <SingularConnection type="target" position={Position.Left} id={`node_${id}_input_handle_1`}/>
             <Handle type="source" position={Position.Right} id={`node_${id}_output_handle_1`}/>
-            <NodeComponent width = "120px" optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Conv"} parents = {[ParentNode]} {...props}/>
+            <NodeComponent width = "120px" optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Conv"} parents = {[ParentID]} {...props}/>
         </div>
     );
 }
