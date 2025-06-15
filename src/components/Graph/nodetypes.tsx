@@ -8,6 +8,7 @@ import ActivationNode from './Nodes/SpecificNodes/ActivationNode';
 import PoolingNode from './Nodes/SpecificNodes/PoolingNode';
 import NormalizationNode from './Nodes/SpecificNodes/NormalizationNode';
 import DropoutNode from './Nodes/SpecificNodes/DropoutNode';
+import CutNode from './Nodes/SpecificNodes/CutNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -19,5 +20,6 @@ export const nodeTypes = {
     activation : ActivationNode,
     pooling : PoolingNode,
     norm : NormalizationNode,
-    dropout : DropoutNode
+    dropout : DropoutNode,
+    cut : CutNode
 }

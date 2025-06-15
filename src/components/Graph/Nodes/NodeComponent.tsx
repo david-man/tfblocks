@@ -6,7 +6,7 @@ import dependencyController from '../../../controllers/dependencyController';
 
 const NodeComponent = (props : any) =>{
     const id = props.id
-    const width = props.width ? props.width : '100px'
+    const width = props.width ? props.width : 'fit'
     const parent_ids : String[] = props.parents
     const [selected, setSelected] = useState(false);
     const {updateNodeData} = useReactFlow()

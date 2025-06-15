@@ -49,6 +49,10 @@ const dndNodeAddition = (event : DragEndEvent, mousePosn : MousePosn, screenToFl
                 newNode.type = "dropout"
                 newNode.data = {label: 'Dropout'}
                 break
+            case "cut":
+                newNode.type = "cut"
+                newNode.data = {label: 'Cut'}
+                break
             default:
                 newNode.type = "input"
                 newNode.data = {label: "THIS SHOULD NOT EXIST"}

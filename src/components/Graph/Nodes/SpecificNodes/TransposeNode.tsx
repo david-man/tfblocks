@@ -39,7 +39,7 @@ const TransposeNode = (props : NodeProps) =>{
                 setValid(true)
             }
         }
-    }, [IncomingShape])
+    }, [IncomingShape, axis_1, axis_2])
 
     useEffect(() => {
         set_handle_shape(outgoing_handle_id, data_shape)

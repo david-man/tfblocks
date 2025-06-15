@@ -8,6 +8,7 @@ import AddDragElement from './DragElements/AddDragElement'
 import ActivationDragElement from './DragElements/ActivationDragElement'
 import PoolingDragElement from './DragElements/PoolingDragElement'
 import DropoutDragElement from './DragElements/DropoutDragElement'
+import CutDragElement from './DragElements/CutDragElement'
 const Toolbox = () => {
     return (
         <div className = "border-2 border-black w-full h-full">
@@ -19,6 +20,7 @@ const Toolbox = () => {
             <AddDragElement />
             <hr className = "w-full border-1"></hr>
             <TransposeDragElement />
+            <CutDragElement />
             <hr className = "w-full border-1"></hr>
             <NormDragElement />
             <ActivationDragElement />
