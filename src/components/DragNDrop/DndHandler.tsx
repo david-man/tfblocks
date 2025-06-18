@@ -53,6 +53,10 @@ const dndNodeAddition = (event : DragEndEvent, mousePosn : MousePosn, screenToFl
                 newNode.type = "cut"
                 newNode.data = {label: 'Cut'}
                 break
+            case "recurrent_head":
+                newNode.type = "recurrent_head"
+                newNode.data = {label: "Recurrent Head"}
+                break
             default:
                 newNode.type = "input"
                 newNode.data = {label: "THIS SHOULD NOT EXIST"}

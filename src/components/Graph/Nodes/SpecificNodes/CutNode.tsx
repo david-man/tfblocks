@@ -1,4 +1,4 @@
-import { Position, useNodeConnections, useNodesData, type NodeProps} from '@xyflow/react';
+import { Position, useNodeConnections, useNodesData, type NodeConnection, type NodeProps} from '@xyflow/react';
 import { Handle, useReactFlow} from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
@@ -8,9 +8,9 @@ import { useStore } from 'zustand';
 import CutOptions from '../../NodeOptions/SpecificOptions/CutOptions';
 const CutNode = (props : NodeProps) =>{
     const id = props.id.toString()
-    const outgoing_handle_id_1 = `node_${id}_output_handle_1`
-    const outgoing_handle_id_2 = `node_${id}_output_handle_2`
-    const incoming_handle_id = `node_${id}_incoming_handle_1`
+    const outgoing_handle_id_1 = `${id}|output_handle_1`
+    const outgoing_handle_id_2 = `${id}|output_handle_2`
+    const incoming_handle_id = `${id}|incoming_handle_1`
 
     const {set_handle_shape} = handleController()
     const [valid, setValid] = useState(false)
@@ -23,8 +23,17 @@ const CutNode = (props : NodeProps) =>{
         handleType: "target",
         handleId: incoming_handle_id
     })
-    const ParentID = incomingConnection[0]?.source
+    const outgoingConnection1 = useNodeConnections({
+        handleType: "source",
+        handleId: outgoing_handle_id_1
+    })
+    const outgoingConnection2 = useNodeConnections({
+        handleType: "source",
+        handleId: outgoing_handle_id_2
+    })
     const ParentHandle = incomingConnection[0]?.sourceHandle
+    const ChildHandles = (outgoingConnection1.concat(outgoingConnection2)).filter((connection : NodeConnection) => connection.targetHandle ? true : false)
+                                            .map((connection : NodeConnection) => connection.targetHandle)
     const IncomingShape = useStore(handleController, (state : HandleMap) => state.get_handle_shape(ParentHandle))
     useEffect(() => {
         set_data_shape_1(undefined)
@@ -57,7 +66,9 @@ const CutNode = (props : NodeProps) =>{
         <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
         <Handle type="source" position={Position.Right} id={outgoing_handle_id_1} style = {{top: "25%"}}/>
         <Handle type="source" position={Position.Right} id={outgoing_handle_id_2} style = {{top: "75%"}}/>
-        <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Cut"} parents = {[ParentID]} {...props}/>
+        <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Cut"} 
+        parent_handles = {[ParentHandle]} 
+        child_handles = {ChildHandles}{...props}/>
         </>
     );
 }

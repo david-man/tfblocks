@@ -1,27 +1,39 @@
 import { useEffect , useState} from 'react';
-import { useNodesData, type Node } from '@xyflow/react';
+import { useNodesData, type Node, type NodeConnection } from '@xyflow/react';
 import { useReactFlow } from '@xyflow/react';
 import dependencyController from '../../../controllers/dependencyController';
 
-
+//IMPLEMENT MULTIPLE EDGES(or create a layer specifically for duping and make everything a single-connector)
+//also correct for the fact that you need a hidden state + per-timestep-input + final output(3 output pins instead of 2)
 const NodeComponent = (props : any) =>{
     const id = props.id
     const width = props.width ? props.width : 'fit'
-    const parent_ids : String[] = props.parents
     const [selected, setSelected] = useState(false);
     const {updateNodeData} = useReactFlow()
-    const {remove_id, set_dependencies} = dependencyController()
+    const {remove_id, set_dependencies, set_children} = dependencyController()
     const CanvasListener = useNodesData(id)
 
     useEffect(() => {
+        return(() => remove_id(id))
+    }, [])
+
+    useEffect(() => {
         let dependencies : String[] = []
-        if(parent_ids && parent_ids.length != 0)
+        if(props.parent_handles && props.parent_handles.length != 0)
         {
-            parent_ids.map((parent_id : String) => (parent_id ? dependencies.push(parent_id) : null))
+            props.parent_handles.map((parent_handle : String) => (parent_handle ? dependencies.push(parent_handle.split("|")[0]) : null))
         }
         set_dependencies(id, dependencies)
-        return(() => remove_id(id))
-    }, [JSON.stringify(parent_ids)])
+    }, [JSON.stringify(props.parent_handles)])
+
+    useEffect(() => {
+        let children : String[] = []
+        if(props.child_handles && props.child_handles.length != 0)
+        {
+            props.child_handles.map((child_handle : String) => (child_handle ? children.push(child_handle.split("|")[0]) : null))
+        }
+        set_children(id, children)
+    }, [JSON.stringify(props.child_handles)])
 
     useEffect(() => {
         setSelected(props?.selected ? props.selected : false)

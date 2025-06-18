@@ -1,4 +1,4 @@
-import { Position, useNodeConnections, useNodesData, type NodeProps} from '@xyflow/react';
+import { Position, useNodeConnections, useNodesData, type NodeConnection, type NodeProps} from '@xyflow/react';
 import { Handle, useReactFlow} from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
@@ -9,7 +9,8 @@ import { useStore } from 'zustand';
 
 const ConvNode = (props : NodeProps) =>{
     const id = props.id.toString()
-    const outgoing_handle_id = `node_${id}_output_handle_1`
+    const incoming_handle_id = `${id}|incoming_handle_1`
+    const outgoing_handle_id = `${id}|output_handle_1`
     const {set_handle_shape} = handleController()
 
     const [valid, setValid] = useState(false)
@@ -25,9 +26,14 @@ const ConvNode = (props : NodeProps) =>{
     const {updateNodeData} = useReactFlow()
     const incomingConnection = useNodeConnections({
         handleType: "target",
-        handleId: `node_${id}_input_handle_1`
+        handleId: incoming_handle_id
     })
-    const ParentID = incomingConnection[0]?.source
+    const outgoingConnection = useNodeConnections({
+        handleType: "source",
+        handleId: outgoing_handle_id
+    })
+    const ChildHandles = outgoingConnection.filter((connection : NodeConnection) => connection.targetHandle ? true : false)
+                                            .map((connection : NodeConnection) => connection.targetHandle)
     const ParentHandle = incomingConnection[0]?.sourceHandle
     const IncomingShape = useStore(handleController, (state : HandleMap) => state.get_handle_shape(ParentHandle!))
 
@@ -142,9 +148,12 @@ const ConvNode = (props : NodeProps) =>{
 
     return (
         <div className = "w-[120px]">
-            <SingularConnection type="target" position={Position.Left} id={`node_${id}_input_handle_1`}/>
-            <Handle type="source" position={Position.Right} id={`node_${id}_output_handle_1`}/>
-            <NodeComponent width = "120px" optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Conv"} parents = {[ParentID]} {...props}/>
+            <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
+            <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
+            <NodeComponent width = "120px" optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Conv"} 
+            parent_handles = {[ParentHandle]}
+            child_handles = {ChildHandles} 
+            {...props}/>
         </div>
     );
 }

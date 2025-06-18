@@ -1,4 +1,4 @@
-import { Position, useNodeConnections, useNodesData, type NodeProps} from '@xyflow/react';
+import { Position, useNodeConnections, useNodesData, type NodeConnection, type NodeProps} from '@xyflow/react';
 import { Handle, useReactFlow} from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState } from 'react';
@@ -7,9 +7,9 @@ import handleController, {type HandleMap} from '../../../../controllers/handleCo
 import { useStore } from 'zustand';
 const AddNode = (props : NodeProps) =>{
     const id = props.id.toString()
-    const outgoing_handle_id = `node_${id}_output_handle_1`
-    const incoming_handle_id_A = `node_${id}_incoming_handle_1`
-    const incoming_handle_id_B = `node_${id}_incoming_handle_2`
+    const outgoing_handle_id = `${id}|output_handle_1`
+    const incoming_handle_id_A = `${id}|incoming_handle_1`
+    const incoming_handle_id_B = `${id}|incoming_handle_2`
 
     const {set_handle_shape} = handleController()
 
@@ -24,8 +24,12 @@ const AddNode = (props : NodeProps) =>{
         handleType: "target",
         handleId: incoming_handle_id_B
     })
-    const ParentAID = incomingConnectionA[0]?.source
-    const ParentBID = incomingConnectionB[0]?.source
+    const outgoingConnection = useNodeConnections({
+        handleType: "source",
+        handleId: outgoing_handle_id
+    })
+    const ChildHandles = outgoingConnection.filter((connection : NodeConnection) => connection.targetHandle ? true : false)
+                                            .map((connection : NodeConnection) => connection.targetHandle)
     const ParentAHandle = incomingConnectionA[0]?.sourceHandle
     const ParentBHandle = incomingConnectionB[0]?.sourceHandle
     const IncomingShapeA = useStore(handleController, (state : HandleMap) => state.get_handle_shape(ParentAHandle))
@@ -51,7 +55,10 @@ const AddNode = (props : NodeProps) =>{
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id_A} style = {{top: "25%"}}/>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id_B} style = {{top: "75%"}}/>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
-            <NodeComponent valid_node = {valid} mainText = {"Add"} parents = {[ParentAID, ParentBID]} {...props}/>
+            <NodeComponent valid_node = {valid} mainText = {"Add"} 
+            parent_handles = {[ParentAHandle, ParentBHandle]}
+            child_handles = {ChildHandles}
+             {...props}/>
         </>
     );
 }

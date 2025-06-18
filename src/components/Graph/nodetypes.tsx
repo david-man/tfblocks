@@ -9,6 +9,7 @@ import PoolingNode from './Nodes/SpecificNodes/PoolingNode';
 import NormalizationNode from './Nodes/SpecificNodes/NormalizationNode';
 import DropoutNode from './Nodes/SpecificNodes/DropoutNode';
 import CutNode from './Nodes/SpecificNodes/CutNode';
+import RecurrentNode from './Nodes/RecurrentNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -21,5 +22,6 @@ export const nodeTypes = {
     pooling : PoolingNode,
     norm : NormalizationNode,
     dropout : DropoutNode,
-    cut : CutNode
+    cut : CutNode,
+    recurrent_head : RecurrentNode
 }

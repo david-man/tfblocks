@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { type Graph } from "../../controllers/nodeController";
 import {
@@ -30,7 +30,7 @@ const selector = (state: Graph) => ({
 const Canvas = () => {
   const ref = useRef(null)
   const { nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect} = nodeController(useShallow(selector));
-  const {get_dep_map} = dependencyController()
+  const {get_child_map, get_network_heads, get_dep_map, get_dependencies, get_children} = dependencyController()
   const { updateNodeData } = useReactFlow()
 
   const has_dependency = (child_id : String, comparison: String) => {
@@ -48,13 +48,91 @@ const Canvas = () => {
       return in_branch
     }
   }
+  const findNetwork = (id : String) => {
+    let to_ret = "hanging"
+    get_network_heads().map((network_head : String) => {
+      let nodes_to_search = [network_head]
+      let nodes_searched : Array<String> = []
+      while(!(nodes_to_search.length === 0) && to_ret  === 'hanging'){
+        let next_node = nodes_to_search.pop()!
+        if(next_node === id){
+          to_ret = network_head as string
+        }
+        let dep = get_dependencies(next_node)
+        let children = get_children(next_node)
+        let surroundings = dep.concat(children).filter((next : String) => !nodes_searched.includes(next))
 
+        if(surroundings.includes(id)){
+          to_ret = network_head as string
+        }
+        else{
+          nodes_to_search = nodes_to_search.concat(surroundings)
+          nodes_searched.push(next_node)
+        }
+      }
+    })
+    return to_ret
+  }
   const handleConnect = (new_connection : Connection) => {
-    if(has_dependency(new_connection.source, new_connection.target)){
-      alert("This is an illegal connection!")
+    /**
+     * Need to deal with multi-layered RNN's. 
+     * Basically, need to redo the network checking to be based on targetHandles. external handles for recurrent blocks should belong to the outer network, while hidden handles are for the inner network
+     */
+    const connection_source = new_connection?.sourceHandle.split("|")[0]
+    const target_source = new_connection?.targetHandle.split("|")[0]
+    const connection_net = findNetwork(connection_source)
+    const target_net = findNetwork(target_source)
+    console.log(connection_source, target_source)
+    console.log(connection_net, target_net)
+    if(connection_source.includes('in') || connection_source.includes('rec_hidden')){
+      if(target_net === connection_source || target_net === 'hanging'){
+        onConnect(new_connection)
+      }
+      else{
+        alert("This connection is illegal(network difference)")
+      }
+    }
+    else if(target_source.includes('rec_hidden')){
+      
+      if(connection_net === target_source){
+        onConnect(new_connection)
+      }
+      else if(connection_net === 'hanging'){
+        const external_equivalent = target_source.replace('rec_hidden', 'rec_external')
+        if(has_dependency(connection_source, external_equivalent)){
+          alert("This connection cannot be made due to external dependencies")
+        }
+        else{
+          onConnect(new_connection)
+        }
+      }
+      else{
+        alert("This connection is illegal(network difference)")
+      }
     }
     else{
-      onConnect(new_connection)
+      if(target_net === 'hanging' && connection_net === 'hanging'){
+        if(has_dependency(connection_source, target_source)){
+          alert("This connection is illegal(illegal looping)")
+        }
+        else{
+          onConnect(new_connection)
+        }
+      }
+      else if(target_net === 'hanging' || connection_net === 'hanging'){
+        onConnect(new_connection)
+      }
+      else if(target_net != connection_net){
+        alert("This connection is illegal(network difference)")
+      }
+      else{
+        if(has_dependency(connection_source, target_source)){
+          alert("This connection is illegal(illegal looping)")
+        }
+        else{
+          onConnect(new_connection)
+        }
+      }
     }
   }
 
