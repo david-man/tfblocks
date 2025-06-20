@@ -1,10 +1,12 @@
 import { useShallow } from 'zustand/shallow'
 import '../../App.css'
-import nodeController from '../../controllers/nodeController'
+import dependencyController from '../../controllers/dependencyController'
 const Header = () => {
-    const {nodes} = nodeController(useShallow((state) => ({nodes: state.nodes})))
+    const {get_dep_map, get_child_map, get_network_heads} = dependencyController()
     const handleClick = () => {
-        console.log(nodes)
+        console.log("CURRENT DEPENDENCY MAP: ", get_dep_map())
+        console.log("CURRENT CHILD MAP: ", get_child_map())
+        console.log("CURRENT NETWORK HEADS: ", get_network_heads())
     }
     return (
         <div className = "flex justify-center items-center border-2 border-black w-full h-full">

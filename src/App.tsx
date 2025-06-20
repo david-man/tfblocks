@@ -20,12 +20,14 @@ function PreApp() {
   const [mousePosn, setMousePosn] = useState<MousePosn>({x: 0, y: 0})
   const [dragging, setDragging] = useState<boolean>(false);
   const {screenToFlowPosition} = useReactFlow();
+  const [activeID, setActiveID] = useState<string | null>(null);
   const handleMouseMove = (event : MouseEvent<HTMLDivElement>) => {
     setMousePosn({x: event.clientX, y: event.clientY})
   }
   
   const handleDragStart = (event : DragStartEvent) => {
     setDragging(true)
+    setActiveID(event.active.id.toString())
   }
   const handleDragEnd = (event : DragEndEvent) => {
     setDragging(false)
@@ -33,6 +35,7 @@ function PreApp() {
       setId(id + 1)
       dndNodeAddition(event, mousePosn, screenToFlowPosition, nodes, setNodes, id)
     }
+    setActiveID(null);
   }
   return (
     <div onMouseMove = {handleMouseMove} className = "w-full h-full">
@@ -43,7 +46,7 @@ function PreApp() {
           </div>
           <div className = "h-7/8 w-full flex">
             <div className = "w-1/4 h-full p-2">
-              <Toolbox />
+              <Toolbox activeID = {activeID}/>
             </div>
             <div className = "flex-grow h-full p-2">
               {dragging ? <DndOverlay /> : null}

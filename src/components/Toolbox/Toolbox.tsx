@@ -1,4 +1,5 @@
 import '../../App.css'
+import { useState, useEffect } from 'react'
 import DotProductDragElement from './DragElements/DotProductDragElement'
 import NormDragElement from './DragElements/NormDragElement'
 import TransposeDragElement from './DragElements/TransposeDragElement'
@@ -10,25 +11,47 @@ import PoolingDragElement from './DragElements/PoolingDragElement'
 import DropoutDragElement from './DragElements/DropoutDragElement'
 import CutDragElement from './DragElements/CutDragElement'
 import RecurrentDragElement from './DragElements/RecurrentDragElement'
-const Toolbox = () => {
+import { DragOverlay } from '@dnd-kit/core'
+import {DragElement, DragShadow} from './DragElement'
+const Toolbox = (props) => {
+    
+    const [activeID, setActiveID] = useState<string | null>(null)
+    useEffect(() => {
+        setActiveID(props.activeID)
+    }, [props.activeID])
     return (
-        <div className = "border-2 border-black w-full h-full">
-            <DenseDragElement />
-            <ConvDragElement />
-            <PoolingDragElement />
-            <hr className = "w-full border-1"></hr>
-            <DotProductDragElement />
-            <AddDragElement />
-            <hr className = "w-full border-1"></hr>
-            <TransposeDragElement />
-            <CutDragElement />
-            <hr className = "w-full border-1"></hr>
-            <NormDragElement />
-            <ActivationDragElement />
-            <DropoutDragElement />
-            <hr className = "w-full border-1"></hr>
-            <RecurrentDragElement />
-        </div>
+        <>
+            <div className = "border-2 border-black w-full h-full overflow-y-auto overflow-x-clip">
+                <DragElement id = {'dense'} name = {'Dense Layer'} activeID = {activeID}></DragElement>
+                <DragElement id = {'conv'} name = {'Conv Layer'} activeID = {activeID}></DragElement>
+                <DragElement id = {'pooling'} name = {'Pooling Layer'} activeID = {activeID}></DragElement>
+                <hr className = "w-full border-1"></hr>
+                <DragElement id = {'add'} name = {'Add Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'dot'} name = {'Dot Product Node'} activeID = {activeID}></DragElement>
+                <hr className = "w-full border-1"></hr>
+                <DragElement id = {'transpose'} name = {'Transpose Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'cut'} name = {'Cut Node'} activeID = {activeID}></DragElement>
+                <hr className = "w-full border-1"></hr>
+                <DragElement id = {'norm'} name = {'Normalization Layer'} activeID = {activeID}></DragElement>
+                <DragElement id = {'activation'} name = {'Activation Layer'} activeID = {activeID}></DragElement>
+                <DragElement id = {'dropout'} name = {'Dropout Layer'} activeID = {activeID}></DragElement>
+                <hr className = "w-full border-1"></hr>
+                <DragElement id = {'recurrent_head'} name = {'Recurrent Head'} activeID = {activeID}></DragElement>
+            </div>
+            <DragOverlay>
+                <DragShadow id = {'dense'} name = {'Dense Layer'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'conv'} name = {'Conv Layer'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'pooling'} name = {'Pooling Layer'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'add'} name = {'Add Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'dot'} name = {'Dot Product Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'transpose'} name = {'Transpose Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'cut'} name = {'Cut Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'norm'} name = {'Normalization Layer'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'activation'} name = {'Activation Layer'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'dropout'} name = {'Dropout Layer'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'recurrent_head'} name = {'Recurrent Head'} activeID = {activeID}></DragShadow>
+            </DragOverlay>
+        </>
     )
 }
 export default Toolbox

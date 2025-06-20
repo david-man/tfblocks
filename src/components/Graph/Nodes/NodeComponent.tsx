@@ -3,8 +3,6 @@ import { useNodesData, type Node, type NodeConnection } from '@xyflow/react';
 import { useReactFlow } from '@xyflow/react';
 import dependencyController from '../../../controllers/dependencyController';
 
-//IMPLEMENT MULTIPLE EDGES(or create a layer specifically for duping and make everything a single-connector)
-//also correct for the fact that you need a hidden state + per-timestep-input + final output(3 output pins instead of 2)
 const NodeComponent = (props : any) =>{
     const id = props.id
     const width = props.width ? props.width : 'fit'
