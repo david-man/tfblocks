@@ -1,16 +1,5 @@
 import '../../App.css'
 import { useState, useEffect } from 'react'
-import DotProductDragElement from './DragElements/DotProductDragElement'
-import NormDragElement from './DragElements/NormDragElement'
-import TransposeDragElement from './DragElements/TransposeDragElement'
-import DenseDragElement from './DragElements/DenseDragElement'
-import ConvDragElement from './DragElements/ConvDragElement'
-import AddDragElement from './DragElements/AddDragElement'
-import ActivationDragElement from './DragElements/ActivationDragElement'
-import PoolingDragElement from './DragElements/PoolingDragElement'
-import DropoutDragElement from './DragElements/DropoutDragElement'
-import CutDragElement from './DragElements/CutDragElement'
-import RecurrentDragElement from './DragElements/RecurrentDragElement'
 import { DragOverlay } from '@dnd-kit/core'
 import {DragElement, DragShadow} from './DragElement'
 const Toolbox = (props) => {
@@ -27,7 +16,7 @@ const Toolbox = (props) => {
                 <DragElement id = {'pooling'} name = {'Pooling Layer'} activeID = {activeID}></DragElement>
                 <hr className = "w-full border-1"></hr>
                 <DragElement id = {'add'} name = {'Add Node'} activeID = {activeID}></DragElement>
-                <DragElement id = {'dot'} name = {'Dot Product Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'dotproduct'} name = {'Dot Product Node'} activeID = {activeID}></DragElement>
                 <hr className = "w-full border-1"></hr>
                 <DragElement id = {'transpose'} name = {'Transpose Node'} activeID = {activeID}></DragElement>
                 <DragElement id = {'cut'} name = {'Cut Node'} activeID = {activeID}></DragElement>
@@ -43,7 +32,7 @@ const Toolbox = (props) => {
                 <DragShadow id = {'conv'} name = {'Conv Layer'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'pooling'} name = {'Pooling Layer'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'add'} name = {'Add Node'} activeID = {activeID}></DragShadow>
-                <DragShadow id = {'dot'} name = {'Dot Product Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'dotproduct'} name = {'Dot Product Node'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'transpose'} name = {'Transpose Node'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'cut'} name = {'Cut Node'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'norm'} name = {'Normalization Layer'} activeID = {activeID}></DragShadow>

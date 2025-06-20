@@ -48,18 +48,18 @@ const ConvNode = (props : NodeProps) =>{
                 switch(dimensionality){
                     case "1d"://ASSUMPTION: CHANNELS_LAST > CHANNELS_FIRST
                         if(padding === 'valid'){
-                            if(IncomingShape.length === 3  && Math.floor((IncomingShape[1] - kernelSize) / stride) + 1 > 0 )
+                            if(IncomingShape.length === 2  && Math.floor((IncomingShape[0] - kernelSize) / stride) + 1 > 0 )
                             {
-                                set_data_shape([IncomingShape[0], Math.floor((IncomingShape[1] - kernelSize) / stride) + 1, filters])
+                                set_data_shape([Math.floor((IncomingShape[1] - kernelSize) / stride) + 1, filters])
                                 setNeurons(channels * filters * kernelSize)
                                 setValid(true)
                             }
                         }
                         else
                         {
-                            if(IncomingShape.length === 3  && Math.ceil((IncomingShape[1]) / stride) > 0 )
+                            if(IncomingShape.length === 2  && Math.ceil((IncomingShape[0]) / stride) > 0 )
                             {
-                                set_data_shape([IncomingShape[0], Math.ceil((IncomingShape[1]) / stride), filters])
+                                set_data_shape([Math.ceil((IncomingShape[1]) / stride), filters])
                                 setNeurons(channels * filters * kernelSize)
                                 setValid(true)
                             }
@@ -67,13 +67,13 @@ const ConvNode = (props : NodeProps) =>{
                         break
                     case "2d":
                         if(padding === 'valid'){
-                            if(IncomingShape.length === 4 && 
-                                Math.floor((IncomingShape[1] - kernelSize) / stride) + 1 > 0 &&
-                                Math.floor((IncomingShape[2] - kernelSize) / stride) + 1 > 0 )
+                            if(IncomingShape.length === 3 && 
+                                Math.floor((IncomingShape[0] - kernelSize) / stride) + 1 > 0 &&
+                                Math.floor((IncomingShape[1] - kernelSize) / stride) + 1 > 0 )
                             {
-                                set_data_shape([IncomingShape[0], 
-                                    Math.floor((IncomingShape[1] - kernelSize) / stride) + 1, 
-                                    Math.floor((IncomingShape[2] - kernelSize) / stride) + 1,
+                                set_data_shape([ 
+                                    Math.floor((IncomingShape[0] - kernelSize) / stride) + 1, 
+                                    Math.floor((IncomingShape[1] - kernelSize) / stride) + 1,
                                     filters])
                                 setNeurons(channels * filters * (kernelSize**2))
                                 setValid(true)
@@ -81,11 +81,11 @@ const ConvNode = (props : NodeProps) =>{
                         }
                         else
                         {
-                            if(IncomingShape.length === 4 && 
-                                Math.ceil((IncomingShape[1]) / stride) > 0 && 
-                                Math.ceil((IncomingShape[2]) / stride) > 0 )
+                            if(IncomingShape.length === 3 && 
+                                Math.ceil((IncomingShape[0]) / stride) > 0 && 
+                                Math.ceil((IncomingShape[1]) / stride) > 0 )
                             {
-                                set_data_shape([IncomingShape[0], Math.ceil((IncomingShape[1]) / stride), Math.ceil((IncomingShape[2]) / stride), filters])
+                                set_data_shape([Math.ceil((IncomingShape[0]) / stride), Math.ceil((IncomingShape[1]) / stride), filters])
                                 setNeurons(channels * filters * (kernelSize**2))
                                 setValid(true)
                             }
@@ -93,15 +93,15 @@ const ConvNode = (props : NodeProps) =>{
                         break
                     case "3d":
                         if(padding === 'valid'){
-                            if(IncomingShape.length === 5 && 
-                                Math.floor((IncomingShape[1] - kernelSize) / stride) + 1 > 0&&
-                                Math.floor((IncomingShape[2] - kernelSize) / stride) + 1 > 0&& 
-                                Math.floor((IncomingShape[3] - kernelSize) / stride) + 1 > 0 )
+                            if(IncomingShape.length === 4 && 
+                                Math.floor((IncomingShape[0] - kernelSize) / stride) + 1 > 0&&
+                                Math.floor((IncomingShape[1] - kernelSize) / stride) + 1 > 0&& 
+                                Math.floor((IncomingShape[2] - kernelSize) / stride) + 1 > 0 )
                             {
-                                set_data_shape([IncomingShape[0], 
-                                    Math.floor((IncomingShape[1] - kernelSize) / stride) + 1, 
+                                set_data_shape([ 
+                                    Math.floor((IncomingShape[0] - kernelSize) / stride) + 1, 
+                                    Math.floor((IncomingShape[1] - kernelSize) / stride) + 1,
                                     Math.floor((IncomingShape[2] - kernelSize) / stride) + 1,
-                                    Math.floor((IncomingShape[3] - kernelSize) / stride) + 1,
                                     filters])
                                 setNeurons(channels * filters * (kernelSize**3))
                                 setValid(true)
@@ -109,15 +109,15 @@ const ConvNode = (props : NodeProps) =>{
                         }
                         else
                         {
-                            if(IncomingShape.length === 5 && 
-                                Math.ceil((IncomingShape[1]) / stride) > 0&& 
-                                Math.ceil((IncomingShape[2]) / stride) > 0 &&
-                                Math.ceil((IncomingShape[3]) / stride) > 0)
+                            if(IncomingShape.length === 4 && 
+                                Math.ceil((IncomingShape[0]) / stride) > 0&& 
+                                Math.ceil((IncomingShape[1]) / stride) > 0 &&
+                                Math.ceil((IncomingShape[2]) / stride) > 0)
                             {
-                                set_data_shape([IncomingShape[0], 
+                                set_data_shape([
+                                    Math.ceil((IncomingShape[0]) / stride), 
                                     Math.ceil((IncomingShape[1]) / stride), 
-                                    Math.ceil((IncomingShape[2]) / stride), 
-                                    Math.ceil((IncomingShape[3]) / stride),
+                                    Math.ceil((IncomingShape[2]) / stride),
                                     filters])
                                 setNeurons(channels * filters * (kernelSize**3))
                                 setValid(true)

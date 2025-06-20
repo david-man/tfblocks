@@ -86,21 +86,20 @@ const RecurrentNode = (props : NodeProps) =>{
         set_outgoing_state_shape(undefined)
         setValid(false)
 
-        if(IncomingParentShape && IncomingParentShape.length === 3){
-            set_hidden_input_shape([IncomingParentShape[0], IncomingParentShape[2]])
+        if(IncomingParentShape && IncomingParentShape.length === 2){
+            set_hidden_input_shape([IncomingParentShape[1]])
             if(outputUnits){
-                set_outgoing_state_shape([IncomingParentShape[0], IncomingParentShape[1], outputUnits])
+                set_outgoing_state_shape([IncomingParentShape[0], outputUnits])
             }
             if(hiddenUnits){
-                set_hidden_state_shape([IncomingParentShape[0], hiddenUnits])
+                set_hidden_state_shape([hiddenUnits])
             }
 
             if(outputUnits && 
                 hiddenUnits && 
                 IncomingHiddenShape && 
-                IncomingHiddenShape.length === 2 &&
-                hiddenUnits === IncomingHiddenShape[1] &&
-                IncomingHiddenShape[0] === IncomingParentShape[0])
+                IncomingHiddenShape.length === 1 &&
+                hiddenUnits === IncomingHiddenShape[0])
                 {
                     setValid(true)
                 }

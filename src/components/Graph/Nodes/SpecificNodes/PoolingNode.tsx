@@ -41,38 +41,38 @@ const PoolingNode = (props : NodeProps) =>{
             switch (dimensionality){
                 case "1d": //ASSUMPTION: CHANNELS_LAST OVER CHANNELS_FIRST
                     if(padding === "valid"){
-                        if(IncomingShape.length === 3 && Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1 > 0){
-                            set_data_shape([IncomingShape[0], Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, IncomingShape[2]])
+                        if(IncomingShape.length === 2 && Math.floor((IncomingShape[0] - poolSize) / strideSize) + 1 > 0){
+                            set_data_shape([Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, IncomingShape[1]])
                             setValid(true)
                         }
                     }
                     else{
-                        if(IncomingShape.length === 3 && Math.floor((IncomingShape[1]) / strideSize) + 1 > 0){
-                            set_data_shape([IncomingShape[0], Math.floor((IncomingShape[1]) / strideSize) + 1, IncomingShape[2]])
+                        if(IncomingShape.length === 2 && Math.floor((IncomingShape[0]) / strideSize) + 1 > 0){
+                            set_data_shape([Math.floor((IncomingShape[0]) / strideSize) + 1, IncomingShape[1]])
                             setValid(true)
                         }
                     }
                     break
                 case "2d":
                     if(padding === 'valid'){
-                        if(IncomingShape.length === 4 
-                            && Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1 > 0 
-                            && Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1 > 0){
-                            set_data_shape([IncomingShape[0], 
+                        if(IncomingShape.length === 3 
+                            && Math.floor((IncomingShape[0] - poolSize) / strideSize) + 1 > 0 
+                            && Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1 > 0){
+                            set_data_shape([
+                                Math.floor((IncomingShape[0] - poolSize) / strideSize) + 1, 
                                 Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, 
-                                Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1, 
-                                IncomingShape[3]])
+                                IncomingShape[2]])
                             setValid(true)
                         }
                     }
                     else{
-                        if(IncomingShape.length === 4 
-                            && Math.floor((IncomingShape[1]) / strideSize) + 1 > 0 
-                            && Math.floor((IncomingShape[2]) / strideSize) + 1 > 0){
-                            set_data_shape([IncomingShape[0], 
+                        if(IncomingShape.length === 3 
+                            && Math.floor((IncomingShape[0]) / strideSize) + 1 > 0 
+                            && Math.floor((IncomingShape[1]) / strideSize) + 1 > 0){
+                            set_data_shape([ 
+                                Math.floor((IncomingShape[0]) / strideSize) + 1, 
                                 Math.floor((IncomingShape[1]) / strideSize) + 1, 
-                                Math.floor((IncomingShape[2]) / strideSize) + 1, 
-                                IncomingShape[3]])
+                                IncomingShape[2]])
                             setValid(true)
                         }
                     }
@@ -81,27 +81,27 @@ const PoolingNode = (props : NodeProps) =>{
                 case "3d":
                     if(padding === 'valid'){
                         if(IncomingShape.length === 4 
-                            && Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1 > 0 
-                            && Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1 > 0
-                            && Math.floor((IncomingShape[3] - poolSize) / strideSize) + 1){
-                            set_data_shape([IncomingShape[0], 
-                                Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, 
-                                Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1,
-                                Math.floor((IncomingShape[3] - poolSize) / strideSize) + 1,  
-                                IncomingShape[4]])
+                            && Math.floor((IncomingShape[0] - poolSize) / strideSize) + 1 > 0 
+                            && Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1 > 0
+                            && Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1){
+                            set_data_shape([ 
+                                Math.floor((IncomingShape[0] - poolSize) / strideSize) + 1, 
+                                Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1,
+                                Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1,  
+                                IncomingShape[3]])
                             setValid(true)
                         }
                     }
                     else{
                         if(IncomingShape.length === 4 
-                            && Math.floor((IncomingShape[1]) / strideSize) + 1 > 0 
-                            && Math.floor((IncomingShape[2]) / strideSize) + 1 > 0
-                            && Math.floor((IncomingShape[3]) / strideSize) + 1 > 0){
-                            set_data_shape([IncomingShape[0], 
+                            && Math.floor((IncomingShape[0]) / strideSize) + 1 > 0 
+                            && Math.floor((IncomingShape[1]) / strideSize) + 1 > 0
+                            && Math.floor((IncomingShape[2]) / strideSize) + 1 > 0){
+                            set_data_shape([
+                                Math.floor((IncomingShape[0]) / strideSize) + 1, 
                                 Math.floor((IncomingShape[1]) / strideSize) + 1, 
                                 Math.floor((IncomingShape[2]) / strideSize) + 1, 
-                                Math.floor((IncomingShape[3]) / strideSize) + 1, 
-                                IncomingShape[4]])
+                                IncomingShape[3]])
                             setValid(true)
                         }
                     }
