@@ -10,6 +10,9 @@ import NormalizationNode from './Nodes/SpecificNodes/NormalizationNode';
 import DropoutNode from './Nodes/SpecificNodes/DropoutNode';
 import CutNode from './Nodes/SpecificNodes/CutNode';
 import RecurrentNode from './Nodes/RecurrentNode';
+import GRUNode from './Nodes/SpecificNodes/GRUNode';
+import LSTMNode from './Nodes/SpecificNodes/LSTMNode';
+import RNNNode from './Nodes/SpecificNodes/RNNNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -23,5 +26,8 @@ export const nodeTypes = {
     norm : NormalizationNode,
     dropout : DropoutNode,
     cut : CutNode,
-    recurrent_head : RecurrentNode
+    recurrent_head : RecurrentNode,
+    gru : GRUNode,
+    lstm : LSTMNode,
+    rnn : RNNNode
 }

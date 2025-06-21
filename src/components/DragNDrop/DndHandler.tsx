@@ -57,6 +57,18 @@ const dndNodeAddition = (event : DragEndEvent, mousePosn : MousePosn, screenToFl
                 newNode.type = "recurrent_head"
                 newNode.data = {label: "Recurrent Head"}
                 break
+            case "rnn":
+                newNode.type = "rnn"
+                newNode.data = {label: 'RNN'}
+                break
+            case "lstm":
+                newNode.type = "lstm"
+                newNode.data = {label: 'LSTM'}
+                break
+            case "gru":
+                newNode.type = "gru"
+                newNode.data = {label: 'GRU'}
+                break;
             default:
                 newNode.type = "input"
                 newNode.data = {label: "THIS SHOULD NOT EXIST"}

@@ -26,6 +26,9 @@ const Toolbox = (props) => {
                 <DragElement id = {'dropout'} name = {'Dropout Layer'} activeID = {activeID}></DragElement>
                 <hr className = "w-full border-1"></hr>
                 <DragElement id = {'recurrent_head'} name = {'Recurrent Head'} activeID = {activeID}></DragElement>
+                <DragElement id = {'lstm'} name = {'LSTM'} activeID = {activeID}></DragElement>
+                <DragElement id = {'gru'} name = {'GRU'} activeID = {activeID}></DragElement>
+                <DragElement id = {'rnn'} name = {'RNN'} activeID = {activeID}></DragElement>
             </div>
             <DragOverlay>
                 <DragShadow id = {'dense'} name = {'Dense Layer'} activeID = {activeID}></DragShadow>
@@ -39,6 +42,9 @@ const Toolbox = (props) => {
                 <DragShadow id = {'activation'} name = {'Activation Layer'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'dropout'} name = {'Dropout Layer'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'recurrent_head'} name = {'Recurrent Head'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'lstm'} name = {'LSTM'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'gru'} name = {'GRU'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'rnn'} name = {'RNN'} activeID = {activeID}></DragShadow>
             </DragOverlay>
         </>
     )
