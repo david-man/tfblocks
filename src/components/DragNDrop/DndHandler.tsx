@@ -69,6 +69,18 @@ const dndNodeAddition = (event : DragEndEvent, mousePosn : MousePosn, screenToFl
                 newNode.type = "gru"
                 newNode.data = {label: 'GRU'}
                 break;
+            case "concatenate":
+                newNode.type = "concatenate"
+                newNode.data = {label: 'Concatenate'}
+                break;
+            case "upscale":
+                newNode.type = "upscale"
+                newNode.data = {label: 'Upscale'}
+                break;
+            case "flatten":
+                newNode.type = "flatten"
+                newNode.data = {label: 'Flatten'}
+                break;
             default:
                 newNode.type = "input"
                 newNode.data = {label: "THIS SHOULD NOT EXIST"}

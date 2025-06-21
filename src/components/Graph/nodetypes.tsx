@@ -13,6 +13,9 @@ import RecurrentNode from './Nodes/RecurrentNode';
 import GRUNode from './Nodes/SpecificNodes/GRUNode';
 import LSTMNode from './Nodes/SpecificNodes/LSTMNode';
 import RNNNode from './Nodes/SpecificNodes/RNNNode';
+import ConcatenateNode from './Nodes/SpecificNodes/ConcatenateNode';
+import UpscaleNode from './Nodes/SpecificNodes/UpscaleNode';
+import FlattenNode from './Nodes/SpecificNodes/FlattenNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -29,5 +32,8 @@ export const nodeTypes = {
     recurrent_head : RecurrentNode,
     gru : GRUNode,
     lstm : LSTMNode,
-    rnn : RNNNode
+    rnn : RNNNode,
+    concatenate : ConcatenateNode,
+    upscale : UpscaleNode,
+    flatten : FlattenNode
 }

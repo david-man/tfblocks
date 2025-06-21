@@ -20,6 +20,9 @@ const Toolbox = (props) => {
                 <hr className = "w-full border-1"></hr>
                 <DragElement id = {'transpose'} name = {'Transpose Node'} activeID = {activeID}></DragElement>
                 <DragElement id = {'cut'} name = {'Cut Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'concatenate'} name = {'Concatenate Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'upscale'} name = {'Upscale Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'flatten'} name = {'Flatten Node'} activeID = {activeID}></DragElement>
                 <hr className = "w-full border-1"></hr>
                 <DragElement id = {'norm'} name = {'Normalization Layer'} activeID = {activeID}></DragElement>
                 <DragElement id = {'activation'} name = {'Activation Layer'} activeID = {activeID}></DragElement>
@@ -38,6 +41,9 @@ const Toolbox = (props) => {
                 <DragShadow id = {'dotproduct'} name = {'Dot Product Node'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'transpose'} name = {'Transpose Node'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'cut'} name = {'Cut Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'concatenate'} name = {'Concatenate Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'upscale'} name = {'Upscale Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'flatten'} name = {'Flatten Node'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'norm'} name = {'Normalization Layer'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'activation'} name = {'Activation Layer'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'dropout'} name = {'Dropout Layer'} activeID = {activeID}></DragShadow>
