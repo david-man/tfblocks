@@ -7,6 +7,7 @@ import handleController from '../../../../controllers/handleController';
 import { type HandleMap } from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
 import LSTMOptions from '../../NodeOptions/SpecificOptions/LSTMOptions';
+import propertyController from '../../../../controllers/propertyController';
 
 
 const LSTMNode = (props : NodeProps) =>{
@@ -19,6 +20,7 @@ const LSTMNode = (props : NodeProps) =>{
     const [units, setUnits] = useState(NaN)
     const [valid, setValid] = useState(false)
     const {updateNodeData} = useReactFlow()
+    const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
         handleType: "target",
         handleId: incoming_handle_id
@@ -36,12 +38,17 @@ const LSTMNode = (props : NodeProps) =>{
         set_data_shape(undefined)
         setNeurons(NaN)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShape && units){
             if(IncomingShape.length === 2 && units >= 1)
             {
                 set_data_shape([units])
                 setNeurons(4 * units * ((IncomingShape[1] + units)))//+1 if/when including bias
                 setValid(true)
+                set_properties(id, {"valid": true, "input_shape": IncomingShape, "units": units,
+                    "parent_handle_id": ParentHandle,
+                    "output_handle_id": outgoing_handle_id,
+                })
             }
         }
     }, [IncomingShape, units])

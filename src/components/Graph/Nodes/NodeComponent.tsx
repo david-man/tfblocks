@@ -2,17 +2,22 @@ import { useEffect , useState} from 'react';
 import { useNodesData, type Node, type NodeConnection } from '@xyflow/react';
 import { useReactFlow } from '@xyflow/react';
 import dependencyController from '../../../controllers/dependencyController';
-
+import propertyController from '../../../controllers/propertyController';
 const NodeComponent = (props : any) =>{
     const id = props.id
     const width = props.width ? props.width : 'fit'
     const [selected, setSelected] = useState(false);
     const {updateNodeData} = useReactFlow()
+    const {remove_properties} = propertyController()
+    
     const {remove_id, set_dependencies, set_children} = dependencyController()
     const CanvasListener = useNodesData(id)
 
     useEffect(() => {
-        return(() => remove_id(id))
+        return(() => {
+            remove_id(id)
+            remove_properties(id)
+        })
     }, [])
 
     useEffect(() => {

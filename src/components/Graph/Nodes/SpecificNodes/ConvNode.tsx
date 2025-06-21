@@ -6,6 +6,7 @@ import ConvOptions from '../../NodeOptions/SpecificOptions/ConvOptions';
 import NodeComponent from '../NodeComponent';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
+import propertyController from '../../../../controllers/propertyController';
 
 const ConvNode = (props : NodeProps) =>{
     const id = props.id.toString()
@@ -24,6 +25,7 @@ const ConvNode = (props : NodeProps) =>{
     const [dimensionality, setDimensionality] = useState(undefined)
 
     const {updateNodeData} = useReactFlow()
+    const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
         handleType: "target",
         handleId: incoming_handle_id
@@ -41,6 +43,7 @@ const ConvNode = (props : NodeProps) =>{
         setNeurons(NaN)
         set_data_shape(undefined)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShape){
             if(IncomingShape && filters && kernelSize && stride && padding && dimensionality)
             {
@@ -53,6 +56,13 @@ const ConvNode = (props : NodeProps) =>{
                                 set_data_shape([Math.floor((IncomingShape[1] - kernelSize) / stride) + 1, filters])
                                 setNeurons(channels * filters * kernelSize)
                                 setValid(true)
+                                set_properties(id, {"valid": true,
+                                    "input_shape": IncomingShape,
+                                     "dim": dimensionality, "filters": filters, 
+                                    "kernel_size": kernelSize, "stride": stride, "padding": padding,
+                                    "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id
+                                })
                             }
                         }
                         else
@@ -62,6 +72,14 @@ const ConvNode = (props : NodeProps) =>{
                                 set_data_shape([Math.ceil((IncomingShape[1]) / stride), filters])
                                 setNeurons(channels * filters * kernelSize)
                                 setValid(true)
+                                set_properties(id, {"valid": true,
+                                    "input_shape": IncomingShape,
+                                     "dim": dimensionality, "filters": filters, 
+                                    "kernel_size": kernelSize, "stride": stride, 
+                                    "padding": padding,
+                                    "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,
+                                })
                             }
                         }
                         break
@@ -77,6 +95,14 @@ const ConvNode = (props : NodeProps) =>{
                                     filters])
                                 setNeurons(channels * filters * (kernelSize**2))
                                 setValid(true)
+                                set_properties(id, {"valid": true,
+                                    "input_shape": IncomingShape,
+                                     "dim": dimensionality, "filters": filters, 
+                                    "kernel_size": kernelSize, "stride": stride, 
+                                    "padding": padding,
+                                    "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,
+                                })
                             }
                         }
                         else
@@ -88,6 +114,14 @@ const ConvNode = (props : NodeProps) =>{
                                 set_data_shape([Math.ceil((IncomingShape[0]) / stride), Math.ceil((IncomingShape[1]) / stride), filters])
                                 setNeurons(channels * filters * (kernelSize**2))
                                 setValid(true)
+                                set_properties(id, {"valid": true,
+                                    "input_shape": IncomingShape,
+                                     "dim": dimensionality, "filters": filters, 
+                                    "kernel_size": kernelSize, "stride": stride, 
+                                    "padding": padding,
+                                    "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,
+                                })
                             }
                         }
                         break
@@ -105,6 +139,14 @@ const ConvNode = (props : NodeProps) =>{
                                     filters])
                                 setNeurons(channels * filters * (kernelSize**3))
                                 setValid(true)
+                                set_properties(id, {"valid": true,
+                                    "input_shape": IncomingShape,
+                                     "dim": dimensionality, "filters": filters, 
+                                    "kernel_size": kernelSize, "stride": stride,
+                                    "padding": padding,
+                                    "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,
+                                })
                             }
                         }
                         else
@@ -121,6 +163,14 @@ const ConvNode = (props : NodeProps) =>{
                                     filters])
                                 setNeurons(channels * filters * (kernelSize**3))
                                 setValid(true)
+                                set_properties(id, {"valid": true,
+                                    "input_shape": IncomingShape,
+                                     "dim": dimensionality, "filters": filters, 
+                                    "kernel_size": kernelSize, "stride": stride,
+                                    "padding": padding,
+                                    "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,
+                                })
                             }
                         }
                         break

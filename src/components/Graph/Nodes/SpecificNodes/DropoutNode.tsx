@@ -6,6 +6,7 @@ import NodeComponent from '../NodeComponent';
 import DropoutOptions from '../../NodeOptions/SpecificOptions/DropoutOptions';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
+import propertyController from '../../../../controllers/propertyController';
 const DropoutNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id = `${id}|output_handle_1`
@@ -20,6 +21,7 @@ const DropoutNode = (props : NodeProps) =>{
 
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
     const {updateNodeData} = useReactFlow()
+    const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
         handleType: "target",
         handleId: incoming_handle_id
@@ -36,6 +38,7 @@ const DropoutNode = (props : NodeProps) =>{
     useEffect(() => {
         set_data_shape(undefined)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShape && dimensionality && rate){
             const parent_shape = IncomingShape as Array<number>
             switch (dimensionality){
@@ -43,12 +46,20 @@ const DropoutNode = (props : NodeProps) =>{
                     if(parent_shape.length === 3){
                         set_data_shape([...parent_shape])
                         setValid(true)
+                        set_properties(id, {"valid": true, "input_shape": parent_shape, "dimensionality": dimensionality, "rate": rate,
+                            "parent_handle_id": ParentHandle,
+                            "output_handle_id": outgoing_handle_id,
+                        })
                     }
                     break
                 case "2d":
                     if(parent_shape.length === 4){
                         set_data_shape([...parent_shape])
                         setValid(true)
+                        set_properties(id, {"valid": true, "input_shape": parent_shape, "dimensionality": dimensionality, "rate": rate,
+                            "parent_handle_id": ParentHandle,
+                            "output_handle_id": outgoing_handle_id,
+                        })
                     }
                     
                     break
@@ -56,11 +67,19 @@ const DropoutNode = (props : NodeProps) =>{
                     if(parent_shape.length === 5){
                         set_data_shape([...parent_shape])
                         setValid(true)
+                        set_properties(id, {"valid": true, "input_shape": parent_shape, "dimensionality": dimensionality, "rate": rate,
+                            "parent_handle_id": ParentHandle,
+                            "output_handle_id": outgoing_handle_id,
+                        })
                     }
                     break
                 case "indiv":
                     set_data_shape([...parent_shape])
                     setValid(true)
+                    set_properties(id, {"valid": true, "input_shape": parent_shape, "dimensionality": dimensionality, "rate": rate,
+                        "parent_handle_id": ParentHandle,
+                        "output_handle_id": outgoing_handle_id,
+                    })
                     break
                 default:
                     break

@@ -6,6 +6,7 @@ import NodeComponent from '../NodeComponent';
 import ActivationOptions from '../../NodeOptions/SpecificOptions/ActivationOptions';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
+import propertyController from "../../../../controllers/propertyController"
 
 
 const ActivationNode = (props : NodeProps) =>{
@@ -13,6 +14,8 @@ const ActivationNode = (props : NodeProps) =>{
     const outgoing_handle_id = `${id}|output_handle_1`
     const incoming_handle_id = `${id}|incoming_handle_1`
     const {set_handle_shape} = handleController()
+    const {set_properties} = propertyController()
+    
 
     const [valid, setValid] = useState(false)
     const [activation, setActivation] = useState(undefined)
@@ -34,8 +37,13 @@ const ActivationNode = (props : NodeProps) =>{
     useEffect(() => {
         set_data_shape(undefined)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShape && activation){
             set_data_shape([...IncomingShape])
+            set_properties(id, {"valid": true, "input_shape": IncomingShape, 
+                "parent_handle_id": ParentHandle,
+                "output_handle_id": outgoing_handle_id, 
+                "activation": activation})
             setValid(true)
         }
     }, [IncomingShape, activation])

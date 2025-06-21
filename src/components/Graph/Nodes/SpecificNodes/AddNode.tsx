@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import NodeComponent from '../NodeComponent';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
+import propertyController from '../../../../controllers/propertyController';
 const AddNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id = `${id}|output_handle_1`
@@ -12,6 +13,7 @@ const AddNode = (props : NodeProps) =>{
     const incoming_handle_id_B = `${id}|incoming_handle_2`
 
     const {set_handle_shape} = handleController()
+    const {set_properties} = propertyController()
 
     const [valid, setValid] = useState(false)
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
@@ -38,11 +40,17 @@ const AddNode = (props : NodeProps) =>{
     useEffect(() => {
         set_data_shape(undefined)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(ParentAHandle && ParentBHandle){
             if(IncomingShapeA && IncomingShapeB){
                 const equal = JSON.stringify(IncomingShapeA) === JSON.stringify(IncomingShapeB);
                 setValid(equal)
                 set_data_shape(equal ? IncomingShapeA : undefined)
+                set_properties(id, {"valid": true, "input_shape": IncomingShapeA,
+                    "parent_handle_id_1": ParentAHandle,
+                    "parent_handle_id_2": ParentBHandle,
+                "output_handle_id": outgoing_handle_id,
+                })
             }
         }
     }, [IncomingShapeA, IncomingShapeB])

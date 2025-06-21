@@ -1,5 +1,4 @@
 import type { FormEventHandler } from "react"
-
 const ActivationOptions = (props : any) => 
 {
     const selection_id = `${props.id}_select`

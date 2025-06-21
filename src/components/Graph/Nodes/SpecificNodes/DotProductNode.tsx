@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import NodeComponent from '../NodeComponent';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
+import propertyController from '../../../../controllers/propertyController';
 const DotProductNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id = `${id}|output_handle_1`
@@ -12,6 +13,7 @@ const DotProductNode = (props : NodeProps) =>{
     const incoming_handle_id_B = `${id}|incoming_handle_2`
 
     const {set_handle_shape} = handleController()
+    const {set_properties} = propertyController()
 
     const [valid, setValid] = useState(false)
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
@@ -37,6 +39,7 @@ const DotProductNode = (props : NodeProps) =>{
     useEffect(() => {
         set_data_shape(undefined)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShapeA && IncomingShapeB){
             if(IncomingShapeA.length === IncomingShapeB.length && 
                 IncomingShapeA.length >= 2 && IncomingShapeB.length >= 2 && 
@@ -44,6 +47,11 @@ const DotProductNode = (props : NodeProps) =>{
                 set_data_shape([...IncomingShapeA.slice(0, IncomingShapeA.length - 2), 
                     IncomingShapeA[IncomingShapeA.length - 2], IncomingShapeB[IncomingShapeB.length - 1]])
                 setValid(true)
+                set_properties(id, {"valid": true, "input_shape_1": IncomingShapeA, "input_shape_2": IncomingShapeB,
+                    "parent_handle_id_1": ParentAHandle,
+                    "parent_handle_id_2": ParentBHandle,
+                    "output_handle_id": outgoing_handle_id,
+                })
             }
         }
     }, [IncomingShapeA, IncomingShapeB])

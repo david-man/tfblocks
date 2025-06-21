@@ -6,6 +6,7 @@ import NodeComponent from '../NodeComponent';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
 import CutOptions from '../../NodeOptions/SpecificOptions/CutOptions';
+import propertyController from '../../../../controllers/propertyController';
 const CutNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id_1 = `${id}|output_handle_1`
@@ -13,6 +14,7 @@ const CutNode = (props : NodeProps) =>{
     const incoming_handle_id = `${id}|incoming_handle_1`
 
     const {set_handle_shape} = handleController()
+    const {set_properties} = propertyController()
     const [valid, setValid] = useState(false)
     const [data_shape_1, set_data_shape_1] = useState<Array<number> | undefined>(undefined)
     const [data_shape_2, set_data_shape_2] = useState<Array<number> | undefined>(undefined)
@@ -39,6 +41,7 @@ const CutNode = (props : NodeProps) =>{
         set_data_shape_1(undefined)
         set_data_shape_2(undefined)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShape){
             let a1 = (axis >= 0 ? axis : IncomingShape.length + axis)
             if(a1 >= 0 && a1 < IncomingShape.length)
@@ -49,6 +52,12 @@ const CutNode = (props : NodeProps) =>{
                     set_data_shape_1(slice_1.concat([cut1].concat(slice_2)))
                     set_data_shape_2(slice_1.concat([cut2].concat(slice_2)))
                     setValid(true)
+                    set_properties(id, {"valid": true, "input_shape": IncomingShape, "axis": a1 - IncomingShape.length,
+                        "cut_1" : cut1, "cut_2": cut2,
+                        "parent_handle_id": ParentHandle,
+                        "output_handle_id_1": outgoing_handle_id_1,
+                        "output_handle_id_2": outgoing_handle_id_2
+                    })
                 }
             }
         }

@@ -6,6 +6,7 @@ import NodeComponent from '../NodeComponent';
 import NormalizationOptions from '../../NodeOptions/SpecificOptions/NormalizationOptions';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
+import propertyController from '../../../../controllers/propertyController';
 const NormalizationNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id = `${id}|output_handle_1`
@@ -20,6 +21,7 @@ const NormalizationNode = (props : NodeProps) =>{
     const [normType, setNormType] = useState(undefined)
 
     const {updateNodeData} = useReactFlow()
+    const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
         handleType: "target",
         handleId: incoming_handle_id
@@ -37,6 +39,7 @@ const NormalizationNode = (props : NodeProps) =>{
         set_data_shape(undefined)
         setNeurons(NaN)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShape && normType && axis){
             let Shape= [...IncomingShape as Array<number>] 
             let a = (axis >= 0 ? axis : Shape.length + axis)
@@ -56,7 +59,12 @@ const NormalizationNode = (props : NodeProps) =>{
                     default:
                         break
                 }
+                
                 setValid(true)
+                set_properties(id, {"valid": true, "input_shape": IncomingShape, "norm_type": normType, "axis": a - IncomingShape.length,
+                    "parent_handle_id": ParentHandle,
+                    "output_handle_id": outgoing_handle_id,
+                })
             }
         }
     }, [IncomingShape, normType, axis])

@@ -7,6 +7,7 @@ import NodeComponent from '../NodeComponent';
 import handleController from '../../../../controllers/handleController';
 import { type HandleMap } from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
+import propertyController from "../../../../controllers/propertyController"
 
 
 const DenseNode = (props : NodeProps) =>{
@@ -14,6 +15,7 @@ const DenseNode = (props : NodeProps) =>{
     const incoming_handle_id = `${id}|input_handle_1`
     const outgoing_handle_id = `${id}|output_handle_1`
     const {set_handle_shape} = handleController()
+    const {set_properties} = propertyController()
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
     const [neurons, setNeurons] = useState(NaN)
     const [units, setUnits] = useState(NaN)
@@ -36,11 +38,16 @@ const DenseNode = (props : NodeProps) =>{
         set_data_shape(undefined)
         setNeurons(NaN)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShape){
             if(IncomingShape.length >= 1 && !isNaN(IncomingShape[IncomingShape.length - 1] * units) && units >= 1)
             {
                 set_data_shape([...IncomingShape.slice(0, IncomingShape.length - 1), units])
                 setNeurons(units * IncomingShape[IncomingShape.length - 1])
+                set_properties(id, {"valid": true, "input_shape": IncomingShape, "units": units,
+                                    "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id
+                })
                 setValid(true)
             }
         }

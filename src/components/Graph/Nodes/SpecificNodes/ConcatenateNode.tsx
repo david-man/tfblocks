@@ -6,6 +6,8 @@ import NodeComponent from '../NodeComponent';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
 import ConcatenateOptions from '../../NodeOptions/SpecificOptions/ConcatenateOptions';
+import propertyController from '../../../../controllers/propertyController';
+
 const ConcatenateNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id = `${id}|output_handle_1`
@@ -13,6 +15,7 @@ const ConcatenateNode = (props : NodeProps) =>{
     const incoming_handle_id_B = `${id}|incoming_handle_2`
 
     const {set_handle_shape} = handleController()
+    const {set_properties} = propertyController()
 
     const [axis, setAxis] = useState(NaN)
 
@@ -40,6 +43,7 @@ const ConcatenateNode = (props : NodeProps) =>{
     useEffect(() => {
         set_data_shape(undefined)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShapeA && IncomingShapeB && axis){
             let a = (axis >= 0 ? axis : IncomingShapeA.length + axis)
             if(IncomingShapeA.length === IncomingShapeB.length && 
@@ -50,6 +54,11 @@ const ConcatenateNode = (props : NodeProps) =>{
                 {
                     set_data_shape([...IncomingShapeA.slice(0, a), IncomingShapeA[a] + IncomingShapeB[a], ...IncomingShapeA.slice(a + 1)])
                     setValid(true)
+                    set_properties(id, {"valid": true, "input_shape": IncomingShapeA, "axis" : a - IncomingShapeA.length,
+                        "parent_handle_id_1": ParentAHandle,
+                        "parent_handle_id_2": ParentBHandle,
+                "output_handle_id": outgoing_handle_id,
+                    })//set axis to negative
                 }
                 
             }

@@ -6,12 +6,14 @@ import NodeComponent from '../NodeComponent';
 import TransposeOptions from '../../NodeOptions/SpecificOptions/TransposeOptions';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
+import propertyController from '../../../../controllers/propertyController';
 const TransposeNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id = `${id}|output_handle_1`
     const incoming_handle_id = `${id}|incoming_handle_1`
 
     const {set_handle_shape} = handleController()
+    const {set_properties} = propertyController()
     const [valid, setValid] = useState(false)
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
     const [axis_1, setAxis1] = useState(-1)
@@ -31,6 +33,7 @@ const TransposeNode = (props : NodeProps) =>{
     useEffect(() => {
         set_data_shape(undefined)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShape){
             let Shape= [...IncomingShape as Array<number>] 
             let a1 = (axis_1 >= 0 ? axis_1 : Shape.length + axis_1)
@@ -42,6 +45,11 @@ const TransposeNode = (props : NodeProps) =>{
                 Shape[a1] = temp
                 set_data_shape(Shape)
                 setValid(true)
+                set_properties(id, {"valid": true, "input_shape": IncomingShape, "axis_1": a1 - IncomingShape.length,
+                    "axis_2": a2-IncomingShape.length,
+                    "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,
+                })
             }
         }
     }, [IncomingShape, axis_1, axis_2])

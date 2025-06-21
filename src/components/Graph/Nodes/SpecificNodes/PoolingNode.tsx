@@ -6,6 +6,7 @@ import NodeComponent from '../NodeComponent';
 import PoolingOptions from '../../NodeOptions/SpecificOptions/PoolingOptions';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
+import propertyController from '../../../../controllers/propertyController';
 const PoolingNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id = `${id}|output_handle_1`
@@ -22,6 +23,7 @@ const PoolingNode = (props : NodeProps) =>{
 
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
     const {updateNodeData} = useReactFlow()
+    const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
         handleType: "target",
         handleId: incoming_handle_id
@@ -37,6 +39,7 @@ const PoolingNode = (props : NodeProps) =>{
     useEffect(() => {
         set_data_shape(undefined)
         setValid(false)
+        set_properties(id, {"valid": false})
         if(IncomingShape && pool && dimensionality && poolSize && strideSize && padding){
             switch (dimensionality){
                 case "1d": //ASSUMPTION: CHANNELS_LAST OVER CHANNELS_FIRST
@@ -44,12 +47,20 @@ const PoolingNode = (props : NodeProps) =>{
                         if(IncomingShape.length === 2 && Math.floor((IncomingShape[0] - poolSize) / strideSize) + 1 > 0){
                             set_data_shape([Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, IncomingShape[1]])
                             setValid(true)
+                            set_properties(id, {"valid": true, "input_shape": IncomingShape, "dim": dimensionality,
+                                "pooling_size": poolSize, "stride": strideSize, "padding": padding, "pooling_type": pool,
+                            "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,})
                         }
                     }
                     else{
                         if(IncomingShape.length === 2 && Math.floor((IncomingShape[0]) / strideSize) + 1 > 0){
                             set_data_shape([Math.floor((IncomingShape[0]) / strideSize) + 1, IncomingShape[1]])
                             setValid(true)
+                            set_properties(id, {"valid": true, "input_shape": IncomingShape, "dim": dimensionality,
+                                "pooling_size": poolSize, "stride": strideSize, "padding": padding, "pooling_type": pool,
+                            "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,})
                         }
                     }
                     break
@@ -63,6 +74,10 @@ const PoolingNode = (props : NodeProps) =>{
                                 Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, 
                                 IncomingShape[2]])
                             setValid(true)
+                            set_properties(id, {"valid": true, "input_shape": IncomingShape, "dim": dimensionality,
+                                "pooling_size": poolSize, "stride": strideSize, "padding": padding, "pooling_type": pool,
+                            "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,})
                         }
                     }
                     else{
@@ -74,6 +89,10 @@ const PoolingNode = (props : NodeProps) =>{
                                 Math.floor((IncomingShape[1]) / strideSize) + 1, 
                                 IncomingShape[2]])
                             setValid(true)
+                            set_properties(id, {"valid": true, "input_shape": IncomingShape, "dim": dimensionality,
+                                "pooling_size": poolSize, "stride": strideSize, "padding": padding, "pooling_type": pool,
+                            "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,})
                         }
                     }
                     
@@ -90,6 +109,10 @@ const PoolingNode = (props : NodeProps) =>{
                                 Math.floor((IncomingShape[2] - poolSize) / strideSize) + 1,  
                                 IncomingShape[3]])
                             setValid(true)
+                            set_properties(id, {"valid": true, "input_shape": IncomingShape, "dim": dimensionality,
+                                "pooling_size": poolSize, "stride": strideSize, "padding": padding, "pooling_type": pool,
+                            "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,})
                         }
                     }
                     else{
@@ -103,6 +126,10 @@ const PoolingNode = (props : NodeProps) =>{
                                 Math.floor((IncomingShape[2]) / strideSize) + 1, 
                                 IncomingShape[3]])
                             setValid(true)
+                            set_properties(id, {"valid": true, "input_shape": IncomingShape, "dim": dimensionality,
+                                "pooling_size": poolSize, "stride": strideSize, "padding": padding, "pooling_type": pool,
+                                    "parent_handle_id": ParentHandle,
+                                    "output_handle_id": outgoing_handle_id,})
                         }
                     }
                     

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 type DependencyMap = {
-    network_heads: Array<string>,
+network_heads: Array<string>,
   child_map : Map<String, Array<String>>,//node to all child nodes
   dep_map : Map<String, Array<String>>,//node to all parent nodes
   get_dep_map : () => Map<String, Array<String>>,
