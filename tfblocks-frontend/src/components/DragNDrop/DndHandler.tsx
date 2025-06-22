@@ -1,0 +1,91 @@
+import type {DragEndEvent } from "@dnd-kit/core";
+import type { MousePosn } from "../../App";
+import type { Node} from "@xyflow/react";
+
+const dndNodeAddition = (event : DragEndEvent, mousePosn : MousePosn, screenToFlowPosition : any,
+     nodes : Node[], setNodes : (nodes: Node[]) => void, id : number) => {
+    if(event.over && event.over.id === 'dropArea'){
+        const newNode : Node = {
+            type: undefined,
+            data: {showMenu: false},
+            id: id.toString(),
+            position: screenToFlowPosition({x: mousePosn.x, y: mousePosn.y}),
+            origin: [0.5, 0]
+        }
+        switch(event.active.id){
+            case "dotproduct":
+                newNode.type = "dot_product"
+                newNode.data = {label: 'Dot Product'}
+                break
+            case "transpose":
+                newNode.type = "transpose"
+                newNode.data = {label: 'Transpose'}
+                break
+            case "dense":
+                newNode.type = "dense"
+                newNode.data = {label: 'Dense'}
+                break
+            case "conv":
+                newNode.type = "conv"
+                newNode.data = {label: 'Conv'}
+                break
+            case "add":
+                newNode.type = "add"
+                newNode.data = {label: 'Add'}
+                break
+            case "activation":
+                newNode.type = "activation"
+                newNode.data = {label: 'Activation'}
+                break
+            case "pooling":
+                newNode.type = "pooling"
+                newNode.data = {label: 'Pool'}
+                break
+            case "norm":
+                newNode.type = "norm"
+                newNode.data = {label: 'Normalization'}
+                break
+            case "dropout":
+                newNode.type = "dropout"
+                newNode.data = {label: 'Dropout'}
+                break
+            case "cut":
+                newNode.type = "cut"
+                newNode.data = {label: 'Cut'}
+                break
+            case "recurrent_head":
+                newNode.type = "recurrent_head"
+                newNode.data = {label: "Recurrent Head"}
+                break
+            case "rnn":
+                newNode.type = "rnn"
+                newNode.data = {label: 'RNN'}
+                break
+            case "lstm":
+                newNode.type = "lstm"
+                newNode.data = {label: 'LSTM'}
+                break
+            case "gru":
+                newNode.type = "gru"
+                newNode.data = {label: 'GRU'}
+                break;
+            case "concatenate":
+                newNode.type = "concatenate"
+                newNode.data = {label: 'Concatenate'}
+                break;
+            case "upscale":
+                newNode.type = "upscale"
+                newNode.data = {label: 'Upscale'}
+                break;
+            case "flatten":
+                newNode.type = "flatten"
+                newNode.data = {label: 'Flatten'}
+                break;
+            default:
+                newNode.type = "input"
+                newNode.data = {label: "THIS SHOULD NOT EXIST"}
+        }
+        setNodes(nodes.concat(newNode));
+    }
+}
+export default dndNodeAddition
