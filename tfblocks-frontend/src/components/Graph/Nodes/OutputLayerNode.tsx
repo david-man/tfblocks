@@ -13,7 +13,13 @@ const OutputLayerNode = (props : NodeProps) =>{
     const input_handle_id = `${id}|input_handle`
     const [valid, setValid] = useState(false)
     const {set_properties} = propertyController()
-
+    const {add_network_head, remove_network_head} = dependencyController()
+    useEffect(() => {
+        add_network_head('out')
+        return (() => {
+            remove_network_head('out')
+        })
+    }, [])
     const incomingConnection = useNodeConnections({
             handleType: "target",
             handleId: input_handle_id

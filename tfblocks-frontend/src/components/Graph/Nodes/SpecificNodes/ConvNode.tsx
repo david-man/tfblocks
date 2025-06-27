@@ -53,7 +53,7 @@ const ConvNode = (props : NodeProps) =>{
                         if(padding === 'valid'){
                             if(IncomingShape.length === 2  && Math.floor((IncomingShape[0] - kernelSize) / stride) + 1 > 0 )
                             {
-                                set_data_shape([Math.floor((IncomingShape[1] - kernelSize) / stride) + 1, filters])
+                                set_data_shape([Math.floor((IncomingShape[0] - kernelSize) / stride) + 1, filters])
                                 setNeurons(channels * filters * kernelSize)
                                 setValid(true)
                                 set_properties(id, {"valid": true,
@@ -69,7 +69,7 @@ const ConvNode = (props : NodeProps) =>{
                         {
                             if(IncomingShape.length === 2  && Math.ceil((IncomingShape[0]) / stride) > 0 )
                             {
-                                set_data_shape([Math.ceil((IncomingShape[1]) / stride), filters])
+                                set_data_shape([Math.ceil((IncomingShape[0]) / stride), filters])
                                 setNeurons(channels * filters * kernelSize)
                                 setValid(true)
                                 set_properties(id, {"valid": true,
@@ -111,7 +111,8 @@ const ConvNode = (props : NodeProps) =>{
                                 Math.ceil((IncomingShape[0]) / stride) > 0 && 
                                 Math.ceil((IncomingShape[1]) / stride) > 0 )
                             {
-                                set_data_shape([Math.ceil((IncomingShape[0]) / stride), Math.ceil((IncomingShape[1]) / stride), filters])
+                                set_data_shape([Math.ceil((IncomingShape[0]) / stride), 
+                                Math.ceil((IncomingShape[1]) / stride), filters])
                                 setNeurons(channels * filters * (kernelSize**2))
                                 setValid(true)
                                 set_properties(id, {"valid": true,

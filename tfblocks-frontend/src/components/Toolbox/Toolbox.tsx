@@ -16,6 +16,8 @@ const Toolbox = (props) => {
                 <DragElement id = {'pooling'} name = {'Pooling Layer'} activeID = {activeID}></DragElement>
                 <hr className = "w-full border-1"></hr>
                 <DragElement id = {'add'} name = {'Add Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'multiply'} name = {'Multiply Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'subtract'} name = {'Subtract Node'} activeID = {activeID}></DragElement>
                 <DragElement id = {'dotproduct'} name = {'Dot Product Node'} activeID = {activeID}></DragElement>
                 <hr className = "w-full border-1"></hr>
                 <DragElement id = {'transpose'} name = {'Transpose Node'} activeID = {activeID}></DragElement>

@@ -71,6 +71,9 @@ const Canvas = () => {
         }
       }
     })
+    if(to_ret == 'out'){
+      to_ret = 'in'
+    }
     return to_ret
   }
   const handleConnect = (new_connection : Connection) => {

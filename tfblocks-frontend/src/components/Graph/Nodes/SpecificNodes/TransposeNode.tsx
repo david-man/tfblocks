@@ -47,6 +47,7 @@ const TransposeNode = (props : NodeProps) =>{
                 setValid(true)
                 set_properties(id, {"valid": true, "input_shape": IncomingShape, "axis_1": a1 - IncomingShape.length,
                     "axis_2": a2-IncomingShape.length,
+                    "shapelen": Shape.length,
                     "parent_handle_id": ParentHandle,
                                     "output_handle_id": outgoing_handle_id,
                 })

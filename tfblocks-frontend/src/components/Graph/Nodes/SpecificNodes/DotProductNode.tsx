@@ -42,7 +42,7 @@ const DotProductNode = (props : NodeProps) =>{
         set_properties(id, {"valid": false})
         if(IncomingShapeA && IncomingShapeB){
             if(IncomingShapeA.length === IncomingShapeB.length && 
-                IncomingShapeA.length >= 2 && IncomingShapeB.length >= 2 && 
+                IncomingShapeA.length == 2 && 
                 IncomingShapeA[IncomingShapeA.length - 1] === IncomingShapeB[IncomingShapeB.length - 2]){
                 set_data_shape([...IncomingShapeA.slice(0, IncomingShapeA.length - 2), 
                     IncomingShapeA[IncomingShapeA.length - 2], IncomingShapeB[IncomingShapeB.length - 1]])

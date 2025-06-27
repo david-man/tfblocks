@@ -21,7 +21,7 @@ network_heads: Array<string>,
 export type {DependencyMap};
 
 const dependencyController = create<DependencyMap>((set, get) => ({
-    network_heads : ['in'],
+    network_heads : ['in', 'out'],
     child_map : new Map(),
     dep_map: new Map(),
     get_dep_map : () => get().dep_map,

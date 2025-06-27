@@ -20,6 +20,7 @@ const Header = () => {
             alert("This graph isn't ready to be parsed yet! Make sure you have a valid configuration!")
         }
         else{
+            const filtered_network_heads = get_network_heads().filter((id : string) => (id != 'out'))
             try{
                 const resp = await axios.post('http://localhost:8000/api/data/', {
                     active_nodes : [...nodes.map((node : Node) => {
@@ -28,7 +29,7 @@ const Header = () => {
                     properties_map: [...get_map()],
                     dependency_map : [...get_dep_map()],
                     child_map : [...get_child_map()],
-                    network_heads : [...get_network_heads()]
+                    network_heads : filtered_network_heads
                 })
                 console.log(resp.data)
             }

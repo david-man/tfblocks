@@ -1,5 +1,6 @@
 const InputComponent = (props : any) => {
     const allowNegative = props?.allowNegative ? props.allowNegative : false;
+    const anyNumber = props?.anyNumber ? props.anyNumber : false;
 
     return (
     <div className = "flex flex-col h-fit w-full items-center p-2">

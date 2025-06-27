@@ -45,7 +45,7 @@ const PoolingNode = (props : NodeProps) =>{
                 case "1d": //ASSUMPTION: CHANNELS_LAST OVER CHANNELS_FIRST
                     if(padding === "valid"){
                         if(IncomingShape.length === 2 && Math.floor((IncomingShape[0] - poolSize) / strideSize) + 1 > 0){
-                            set_data_shape([Math.floor((IncomingShape[1] - poolSize) / strideSize) + 1, IncomingShape[1]])
+                            set_data_shape([Math.floor((IncomingShape[0] - poolSize) / strideSize) + 1, IncomingShape[1]])
                             setValid(true)
                             set_properties(id, {"valid": true, "input_shape": IncomingShape, "dim": dimensionality,
                                 "pooling_size": poolSize, "stride": strideSize, "padding": padding, "pooling_type": pool,

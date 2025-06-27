@@ -33,6 +33,14 @@ const dndNodeAddition = (event : DragEndEvent, mousePosn : MousePosn, screenToFl
                 newNode.type = "add"
                 newNode.data = {label: 'Add'}
                 break
+            case "multiply":
+                newNode.type = "multiply"
+                newNode.data = {label: 'Multiply'}
+                break
+            case "subtract":
+                newNode.type = "subtract"
+                newNode.data = {label: 'Subtract'}
+                break
             case "activation":
                 newNode.type = "activation"
                 newNode.data = {label: 'Activation'}

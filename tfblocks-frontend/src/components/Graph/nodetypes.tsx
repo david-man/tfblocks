@@ -17,6 +17,8 @@ import ConcatenateNode from './Nodes/SpecificNodes/ConcatenateNode';
 import UpscaleNode from './Nodes/SpecificNodes/UpscaleNode';
 import FlattenNode from './Nodes/SpecificNodes/FlattenNode';
 import OutputLayerNode from './Nodes/OutputLayerNode';
+import SubtractNode from './Nodes/SpecificNodes/SubtractNode';
+import MultiplyNode from './Nodes/SpecificNodes/MultiplyNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -25,6 +27,8 @@ export const nodeTypes = {
     dense : DenseNode, 
     conv : ConvNode,
     add : AddNode,
+    subtract : SubtractNode,
+    multiply : MultiplyNode,
     activation : ActivationNode,
     pooling : PoolingNode,
     norm : NormalizationNode,

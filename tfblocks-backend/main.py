@@ -13,8 +13,8 @@ def receive_data():
     
     data = request.get_json()
     print(data)
-    input_shape, run_order, input_handle_dict, output_handle_dict, active_nodes, property_map, type_map = parse_json(data)
-    build_model(input_shape, run_order, input_handle_dict, output_handle_dict, active_nodes, property_map, type_map)
+    input_shape, networks, network_compile_order, input_handle_dict, output_handle_dict, type_map, property_map, dependency_map = parse_json(data)
+    build_model(input_shape, networks, network_compile_order, input_handle_dict, output_handle_dict, type_map, property_map, dependency_map)
     
     return jsonify({'message': f'Packets Successfully Received'}), 200
 

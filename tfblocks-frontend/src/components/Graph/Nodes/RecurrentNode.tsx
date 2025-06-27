@@ -19,7 +19,6 @@ const RecurrentNode = (props : NodeProps) =>{
     const {set_handle_shape} = handleController()
     const {set_properties, remove_properties} = propertyController()
 
-    const [hiddenUnits, setHiddenUnits] = useState(NaN)
     const [outputUnits, setOutputUnits] = useState(NaN)
 
     const [valid, setValid] = useState(false)
@@ -90,25 +89,21 @@ const RecurrentNode = (props : NodeProps) =>{
         set_outgoing_state_shape(undefined)
         setValid(false)
         set_properties(id, {"valid": false})
+        if(outputUnits){
+            set_outgoing_state_shape([outputUnits])
+            set_hidden_state_shape([outputUnits])
+        }
         if(IncomingParentShape && IncomingParentShape.length === 2){
             set_hidden_input_shape([IncomingParentShape[1]])
-            if(outputUnits){
-                set_outgoing_state_shape([IncomingParentShape[0], outputUnits])
-            }
-            if(hiddenUnits){
-                set_hidden_state_shape([hiddenUnits])
-            }
-
             if(outputUnits && 
-                hiddenUnits && 
                 IncomingHiddenShape && 
                 IncomingHiddenShape.length === 1 &&
-                hiddenUnits === IncomingHiddenShape[0])
+                outputUnits === IncomingHiddenShape[0])
                 {
                     set_properties(id, {"valid": true, 
                         "input_shape": IncomingParentShape,
                         "hidden_input_shape": IncomingParentShape[1], 
-                        "hidden_state_shape": hiddenUnits,
+                        "hidden_state_shape": outputUnits,
                         "outgoing_state_shape": [IncomingParentShape[0], outputUnits],
                         "external_parent_handle_id": ExternalParentHandle,
                         "hidden_parent_handle_id": HiddenParentHandle,
@@ -118,7 +113,7 @@ const RecurrentNode = (props : NodeProps) =>{
                     setValid(true)
                 }
         }
-    }, [IncomingHiddenShape, IncomingParentShape, hiddenUnits, outputUnits])
+    }, [IncomingHiddenShape, IncomingParentShape, outputUnits])
 
     useEffect(() => {
         set_handle_shape(outgoing_handle_id, outgoing_state_shape)
@@ -126,7 +121,7 @@ const RecurrentNode = (props : NodeProps) =>{
         set_handle_shape(outgoing_timestep_input_handle_id, hidden_input_shape)
     }, [outgoing_state_shape, hidden_state_shape, hidden_input_shape])
 
-    const optionsMenu = <RecurrentOptions setHidden = {setHiddenUnits} hiddenUnits = {hiddenUnits} setOutput = {setOutputUnits} outputUnits = {outputUnits}/>
+    const optionsMenu = <RecurrentOptions setOutput = {setOutputUnits} outputUnits = {outputUnits}/>
     return (
         <>
             <SingularConnection type="target" position={Position.Top} id={incoming_hidden_handle_id} style = {{left: "25%"}}/>
