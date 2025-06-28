@@ -60,7 +60,7 @@ const GRUNode = (props : NodeProps) =>{
     const optionsMenu = <GRUOptions units = {units} setUnits = {setUnits} id = {id}/>;
     
     return (
-        <div className = "w-[120px]">
+        <div>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
             <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"GRU"} 

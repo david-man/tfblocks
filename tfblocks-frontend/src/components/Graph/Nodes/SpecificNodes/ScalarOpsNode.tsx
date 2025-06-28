@@ -2,12 +2,12 @@ import { Position, useNodeConnections, type NodeConnection, type NodeProps} from
 import { Handle, useReactFlow} from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
-import DenseOptions from '../../NodeOptions/SpecificOptions/DenseOptions';
 import NodeComponent from '../NodeComponent';
 import handleController from '../../../../controllers/handleController';
 import { type HandleMap } from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
 import propertyController from "../../../../controllers/propertyController"
+import ScalarOpsOptions from '../../NodeOptions/SpecificOptions/ScalarOpsOptions';
 
 
 const ScalarOpsNode = (props : NodeProps) =>{
@@ -54,13 +54,13 @@ const ScalarOpsNode = (props : NodeProps) =>{
         set_handle_shape(outgoing_handle_id, data_shape)
     }, [data_shape])
 
-    const optionsMenu = <DenseOptions units = {units} setUnits = {setUnits} id = {id}/>;
+    const optionsMenu = <ScalarOpsOptions scalar = {scalar} setScalar = {setScalar} id = {id} operation = {operation} setOperation = {setOperation}/>;
     
     return (
-        <div className = "w-[120px]">
+        <div>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
-            <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Dense"} 
+            <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Scalar Operations"} 
             parent_handles = {[ParentHandle]}
             child_handles = {ChildHandles}
             {...props}/>

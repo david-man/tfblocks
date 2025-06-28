@@ -1,38 +1,36 @@
 const InputComponent = (props : any) => {
     const allowNegative = props?.allowNegative ? props.allowNegative : false;
-    const anyNumber = props?.anyNumber ? props.anyNumber : false;
+    const allowDecimal = props?.allowDecimal ? props.allowDecimal : false
 
     return (
-    <div className = "flex flex-col h-fit w-full items-center p-2">
+    <div className = "flex flex-col w-full items-center p-2">
         <label htmlFor={props.id} className = "text-xs">{props.label} </label>
-        <input id = {props.id} type = "number" className = "field-sizing-fixed w-[50px] border-1 border-black text-xs nopan nodrag"
+        <input id = {props.id} type = "number" className = "field-sizing-fixed w-[50px] border-1 border-black text-xs nopan nodrag text-center"
         onChange = {(evt) => {
+            let input = evt.target.value
+            let neg = false
             if(allowNegative){
-                let input_to_filter = evt.target.value
-                let neg = false;
-                if(input_to_filter.length >= 1 && input_to_filter.charAt(0) === '-'){
+                if(input.length >= 1 && input.charAt(0) === '-'){
                     neg = true;
-                    input_to_filter = evt.target.value.slice(1)
+                    input = evt.target.value.slice(1)
                 }
-                let filtered_input = input_to_filter.replace(/[^0-9]/g, '');
-                if(props.filter){
-                    filtered_input = props.filter(filtered_input) ? filtered_input : ''
-                }
-                if(neg){
-                    props.setFunction(filtered_input === '' ? NaN : Number(filtered_input) * -1)
+            }
+            if(allowDecimal){
+                let split_input = input.split('.')
+                if(split_input.length >= 2){//1 = no decimal, 2 = a decimal, 3+ = bad
+                    input = split_input[0].replace(/[^0-9]/g, '') + '.' + split_input[1].replace(/[^0-9]/g, '')
                 }
                 else{
-                    props.setFunction(filtered_input === '' ? NaN : Number(filtered_input))
+                    input = input.replace(/[^0-9]/g, '');
                 }
-                
             }
             else{
-                let filtered_input = evt.target.value.replace(/[^0-9]/g, '');
-                if(props.filter){
-                    filtered_input = props.filter(filtered_input) ? filtered_input : ''
-                }
-                props.setFunction(filtered_input === '' ? NaN : Number(filtered_input))
+                input = input.replace(/[^0-9]/g, '');
             }
+            if(props.filter){
+                input = props.filter(input) ? input : ''
+            }
+            props.setFunction(input === '' ? NaN : (neg ? -Number(input) : Number(input)))
             
         }}
         value = {!isNaN(props.value) ? props.value : ''}></input>

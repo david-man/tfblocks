@@ -19,6 +19,7 @@ import FlattenNode from './Nodes/SpecificNodes/FlattenNode';
 import OutputLayerNode from './Nodes/OutputLayerNode';
 import SubtractNode from './Nodes/SpecificNodes/SubtractNode';
 import MultiplyNode from './Nodes/SpecificNodes/MultiplyNode';
+import ScalarOpsNode from './Nodes/SpecificNodes/ScalarOpsNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -41,5 +42,6 @@ export const nodeTypes = {
     concatenate : ConcatenateNode,
     upscale : UpscaleNode,
     flatten : FlattenNode,
-    output_layer : OutputLayerNode
+    output_layer : OutputLayerNode,
+    scalar_ops : ScalarOpsNode
 }

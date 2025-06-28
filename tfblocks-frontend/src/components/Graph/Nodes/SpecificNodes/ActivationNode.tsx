@@ -55,7 +55,7 @@ const ActivationNode = (props : NodeProps) =>{
     const optionsMenu = <ActivationOptions id = {props.id} set_activation = {setActivation} activation = {activation}/>
 
     return (
-        <div className = "w-[120px]">
+        <div>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}></SingularConnection>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
             <NodeComponent valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Activation"} 

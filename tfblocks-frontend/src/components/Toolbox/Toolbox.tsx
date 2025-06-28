@@ -18,7 +18,8 @@ const Toolbox = (props) => {
                 <DragElement id = {'add'} name = {'Add Node'} activeID = {activeID}></DragElement>
                 <DragElement id = {'multiply'} name = {'Multiply Node'} activeID = {activeID}></DragElement>
                 <DragElement id = {'subtract'} name = {'Subtract Node'} activeID = {activeID}></DragElement>
-                <DragElement id = {'dotproduct'} name = {'Dot Product Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'dot_product'} name = {'Dot Product Node'} activeID = {activeID}></DragElement>
+                <DragElement id = {'scalar_ops'} name = {'Scalar Operation Node'} activeID = {activeID}></DragElement>
                 <hr className = "w-full border-1"></hr>
                 <DragElement id = {'transpose'} name = {'Transpose Node'} activeID = {activeID}></DragElement>
                 <DragElement id = {'cut'} name = {'Cut Node'} activeID = {activeID}></DragElement>
@@ -40,7 +41,8 @@ const Toolbox = (props) => {
                 <DragShadow id = {'conv'} name = {'Conv Layer'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'pooling'} name = {'Pooling Layer'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'add'} name = {'Add Node'} activeID = {activeID}></DragShadow>
-                <DragShadow id = {'dotproduct'} name = {'Dot Product Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'dot_product'} name = {'Dot Product Node'} activeID = {activeID}></DragShadow>
+                <DragShadow id = {'scalar_ops'} name = {'Scalar Operation Node'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'transpose'} name = {'Transpose Node'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'cut'} name = {'Cut Node'} activeID = {activeID}></DragShadow>
                 <DragShadow id = {'concatenate'} name = {'Concatenate Node'} activeID = {activeID}></DragShadow>

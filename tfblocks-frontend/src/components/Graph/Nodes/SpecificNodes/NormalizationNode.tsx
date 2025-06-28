@@ -77,7 +77,7 @@ const NormalizationNode = (props : NodeProps) =>{
     set_norm_type = {setNormType} norm_type = {normType}
     axis = {axis} set_axis = {setAxis}></NormalizationOptions>
     return (
-        <div className = "w-[140px]">
+        <div>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
             <NodeComponent neurons = {neurons} optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Normalization"} 

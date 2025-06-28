@@ -7,6 +7,7 @@ import handleController, {type HandleMap} from '../../../../controllers/handleCo
 import { useStore } from 'zustand';
 import UpscaleOptions from '../../NodeOptions/SpecificOptions/UpscaleOptions';
 import propertyController from '../../../../controllers/propertyController';
+import { NodeResizer } from '@xyflow/react';
 const UpscaleNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id = `${id}|output_handle_1`
@@ -54,7 +55,6 @@ const UpscaleNode = (props : NodeProps) =>{
     useEffect(() => {
         set_handle_shape(outgoing_handle_id, data_shape)
     }, [data_shape])
-
     const optionsMenu = <UpscaleOptions id = {id} axis = {axis} setAxis = {setAxis} />
     return (
         <>

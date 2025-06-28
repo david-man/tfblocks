@@ -97,7 +97,7 @@ const DropoutNode = (props : NodeProps) =>{
     />
 
     return (
-        <div className = "w-[150px]">
+        <div>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}></SingularConnection>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
             <NodeComponent filter = {(num : number) => (num <= 100)}

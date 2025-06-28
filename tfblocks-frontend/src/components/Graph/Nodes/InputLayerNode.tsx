@@ -5,7 +5,7 @@ import handleController from '../../../controllers/handleController';
 import propertyController from '../../../controllers/propertyController';
 
 const InputLayerNode = (props : NodeProps) =>{
-    const data_shape = [3, 16, 3]
+    const data_shape = [16, 3]
     const outgoing_handle_id = `in|output_handle`
     const {add_network_head, remove_network_head, remove_id, set_dependencies, set_children} = dependencyController()
     const {remove_handle, set_handle_shape} = handleController()

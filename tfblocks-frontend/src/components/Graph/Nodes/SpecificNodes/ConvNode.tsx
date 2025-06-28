@@ -195,7 +195,7 @@ const ConvNode = (props : NodeProps) =>{
         dim = {dimensionality} setDimensionality = {setDimensionality}/>;
 
     return (
-        <div className = "w-[120px]">
+        <div>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
             <NodeComponent width = "120px" optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Conv"} 
