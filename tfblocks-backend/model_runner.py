@@ -160,7 +160,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                             return
                 case 'rnn':
                     units = properties_map[node_id]['units']
-                    layers[node_id] = keras.layers.RNN(units = units)
+                    layers[node_id] = keras.layers.SimpleRNN(units = units)
                     return
                 case 'transpose':
                     axis_1 = properties_map[node_id]['axis_1']

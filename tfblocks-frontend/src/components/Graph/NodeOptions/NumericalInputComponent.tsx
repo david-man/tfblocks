@@ -3,9 +3,9 @@ const InputComponent = (props : any) => {
     const allowDecimal = props?.allowDecimal ? props.allowDecimal : false
 
     return (
-    <div className = "flex flex-col w-full items-center p-2">
-        <label htmlFor={props.id} className = "text-xs">{props.label} </label>
-        <input id = {props.id} type = "number" className = "field-sizing-fixed w-[50px] border-1 border-black text-xs nopan nodrag text-center"
+    <div className = "flex flex-row w-full items-center justify-center p-1 pt-2 text-[10px]">
+        <label htmlFor={props.id} className = "pr-[3px]">{props.label} </label>
+        <input id = {props.id} type = "number" className = "field-sizing-fixed w-[40px] border-1 rounded-sm border-black nopan nodrag text-center"
         onChange = {(evt) => {
             let input = evt.target.value
             let neg = false
