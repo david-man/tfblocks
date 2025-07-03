@@ -3,6 +3,7 @@ import handleController, { type HandleMap } from '../../../controllers/handleCon
 import { useStore } from 'zustand';
  
 const AnnotatedEdge = (props : EdgeProps) => {
+    //this is the connection line that has formed between two nodes
     const [edgePath, labelX, labelY] = getBezierPath({
         sourceX : props.sourceX,
         sourceY : props.sourceY,

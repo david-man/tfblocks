@@ -13,11 +13,11 @@ const OutputOverlay = (props : any) => {
                 setOutputShape(resp.data.output_data_shape)
             }
             catch(err){
-                console.log("Flask upload error!")
+                alert("Flask upload error! Perhaps the data isn't formatted correctly?")
             }
         }
         else{
-            console.log("File upload error!")
+            alert("File upload error! Perhaps the server isn't on?")
         }
         
     }

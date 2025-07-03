@@ -1,26 +1,45 @@
-import { useEffect , useState, useRef} from 'react';
-import { NodeResizer, NodeToolbar, Position, useNodesData, type Node, type NodeConnection } from '@xyflow/react';
+import { useEffect , useState} from 'react';
+import { NodeToolbar, Position, useNodesData} from '@xyflow/react';
 import { useReactFlow } from '@xyflow/react';
-import dependencyController from '../../../controllers/dependencyController';
-import propertyController from '../../../controllers/propertyController';
-import helpMenuController from '../../../controllers/helpMenuController';
+import dependencyController, {type DependencyMap} from '../../../controllers/dependencyController';
+import propertyController, {type IdPropertyMap} from '../../../controllers/propertyController';
+import helpMenuController, {type Help} from '../../../controllers/helpMenuController';
+import { useShallow } from 'zustand/shallow';
 
 
 const NodeComponent = (props : any) =>{
+    //Generic node component with generic style that interacts with general dependencies, properties, and can toggle the respective help menu
     const id = props.id
     const txt_color = props.txt_color ? props.txt_color : 'black'
     const bg_color = props.bg_color ? props.bg_color : null
     const border_color = props.valid_node ? "border-emerald-500" : "border-gray-500"
+
     const [selected, setSelected] = useState(false);
-    const {updateNodeData} = useReactFlow()
-    const {setMenu} = helpMenuController()
-    const {remove_properties} = propertyController()
-    
-    const {remove_id, set_dependencies, set_children} = dependencyController()
+
+    const {updateNodeData} = useReactFlow()//only used so that the canvas can let the node know to release its options menu
     const CanvasListener = useNodesData(id)
 
+    const {setMenu} = helpMenuController(useShallow((state : Help) => {
+        return {
+            setMenu : state.setMenu
+        }
+    }))
+    const {remove_properties} = propertyController(useShallow((state : IdPropertyMap) => {
+        return {
+            remove_properties : state.remove_properties
+        }
+    }))
+    
+    const {remove_id, set_dependencies, set_children} = dependencyController(useShallow((state : DependencyMap) => {
+        return {
+            remove_id: state.remove_id,
+            set_dependencies : state.set_dependencies,
+            set_children : state.set_children
+        }
+    }))
+    
+
     useEffect(() => {
-        console.log(props.type)
         return(() => {
             remove_id(id)
             remove_properties(id)

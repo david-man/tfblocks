@@ -1,19 +1,23 @@
-import { Handle, Position, useNodeConnections, useReactFlow, type NodeConnection, type NodeProps } from '@xyflow/react';
+import { Position, useNodeConnections} from '@xyflow/react';
 import { useEffect, useState} from 'react';
-import dependencyController from '../../../controllers/dependencyController';
+import dependencyController, { type DependencyMap } from '../../../controllers/dependencyController';
 import handleController, { type HandleMap } from '../../../controllers/handleController';
 import SingularConnection from '../Handles/SingularConnection';
 import NodeComponent from './NodeComponent';
 import { useStore } from 'zustand';
-import propertyController from '../../../controllers/propertyController';
-import nodeController, {type Graph} from '../../../controllers/nodeController';
+import propertyController, {type IdPropertyMap} from '../../../controllers/propertyController';
 import { useShallow } from 'zustand/shallow';
 const OutputLayerNode = (props : any) =>{
+    //special component that deals with output nodes
     const id = props.id.toString()
     const data_shape = props.data.shape
     const input_handle_id = `${id}|input_handle`
     const [valid, setValid] = useState(false)
-    const {set_properties} = propertyController()
+    const {set_properties} = propertyController(useShallow((state : IdPropertyMap) => {
+        return {
+            set_properties: state.set_properties
+        }
+    }))
     const {add_network_head, remove_network_head} = dependencyController()
     useEffect(() => {
         add_network_head('out')
@@ -29,7 +33,6 @@ const OutputLayerNode = (props : any) =>{
     const IncomingShape = useStore(handleController, (state : HandleMap) => state.get_handle_shape(ParentHandle))
     useEffect(() => {
         let validity = (JSON.stringify(IncomingShape) === JSON.stringify(data_shape))
-        console.log(validity)
         setValid(validity)
         set_properties(id, {"valid": validity, "parent_handle_id" : ParentHandle})
     }, [IncomingShape])

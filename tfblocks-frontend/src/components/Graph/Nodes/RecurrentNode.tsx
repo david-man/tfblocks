@@ -1,5 +1,5 @@
-import { Position, useNodeConnections, useNodesData, type NodeConnection, type NodeProps} from '@xyflow/react';
-import { Handle, useReactFlow} from '@xyflow/react';
+import { Position, useNodeConnections, type NodeConnection, type NodeProps} from '@xyflow/react';
+import { Handle} from '@xyflow/react';
 import SingularConnection from '../Handles/SingularConnection';
 import { useEffect, useState } from 'react';
 import NodeComponent from './NodeComponent';
@@ -9,6 +9,7 @@ import { useShallow } from 'zustand/shallow';
 import dependencyController from '../../../controllers/dependencyController';
 import propertyController from "../../../controllers/propertyController"
 const RecurrentNode = (props : NodeProps) =>{
+    //special component that deals specifically with Recurrent Nodes
     const id = props.id.toString()
     const outgoing_timestep_input_handle_id = `rec_hidden_${id}|timestep_handle`//handle gives the features at a given timestep
     const outgoing_hidden_state_handle_id = `rec_hidden_${id}|output_handle`//handle gives the last hidden state

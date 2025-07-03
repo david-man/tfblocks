@@ -1,4 +1,5 @@
 const InputComponent = (props : any) => {
+    //reusable component that creates a numerical input box that only enables valid inputs based on certain things(negative, decimal, etc.)
     const allowNegative = props?.allowNegative ? props.allowNegative : false;
     const allowDecimal = props?.allowDecimal ? props.allowDecimal : false
 

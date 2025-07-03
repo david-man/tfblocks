@@ -1,18 +1,32 @@
-import { Handle, Position, useNodeConnections, useReactFlow, type NodeConnection, type NodeProps } from '@xyflow/react';
+import { Handle, Position, useNodeConnections, type NodeConnection} from '@xyflow/react';
 import { useEffect} from 'react';
-import dependencyController from '../../../controllers/dependencyController';
-import handleController from '../../../controllers/handleController';
-import propertyController from '../../../controllers/propertyController';
-import nodeController, {type Graph} from '../../../controllers/nodeController';
+import dependencyController, {type DependencyMap} from '../../../controllers/dependencyController';
+import handleController, {type HandleMap} from '../../../controllers/handleController';
+import propertyController, {type IdPropertyMap} from '../../../controllers/propertyController';
 import { useShallow } from 'zustand/shallow';
 
 
 const InputLayerNode = (props : any) =>{
+    //Special node component designed specifically for inputs.
     const data_shape = props.data.shape
     const outgoing_handle_id = `in|output_handle`
-    const {add_network_head, remove_network_head, remove_id, set_dependencies, set_children} = dependencyController()
-    const {remove_handle, set_handle_shape} = handleController()
-    const {set_properties} = propertyController()
+    const {add_network_head, remove_network_head, remove_id, set_dependencies, set_children} = dependencyController(useShallow((state : DependencyMap) => {
+        return {add_network_head: state.add_network_head,
+        remove_network_head: state.remove_network_head,
+        remove_id: state.remove_id,
+        set_dependencies: state.set_dependencies,
+        set_children: state.set_children}}))
+    
+    const {remove_handle, set_handle_shape} = handleController(useShallow((state : HandleMap) => {
+        return {
+            remove_handle: state.remove_handle, 
+            set_handle_shape: state.set_handle_shape
+        }}))
+    const {set_properties} = propertyController(useShallow((state : IdPropertyMap) => {
+        return {
+            set_properties: state.set_properties
+        }
+    }))
     const id = props.id
     const selected = props.selected
 

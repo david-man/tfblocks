@@ -2,6 +2,7 @@ import { Dropdown, type DropdownChangeEvent } from "primereact/dropdown"
 
 
 const DropdownMenu = (props : any) => {
+    //reusable component that creates a Dropdown Menu with help from PrimeReact
     const handleValueChange = (event : DropdownChangeEvent) => {
         const val = (event.target as HTMLSelectElement).value;
         props.setValue(val ? val : undefined)

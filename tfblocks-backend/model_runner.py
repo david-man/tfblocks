@@ -291,7 +291,10 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
         print("INPUT SHAPE: ", input_shape)
         print("INPUT HANDLE DICT: ", input_handle_dict)
         print("OUTPUT HANDLE DICT: ", output_handle_dict)
-    mymodel = keras.Model(inputs = handle_results["in|output_handle"], outputs = handle_results['final_result'])
-    test_result = test_model(input_shape, mymodel)
-    mymodel.summary()
-    return mymodel, test_result
+    if(handle_results["in|output_handle"] == handle_results['final_result']):
+        return "NO MODEL", False
+    else:
+        mymodel = keras.Model(inputs = handle_results["in|output_handle"], outputs = handle_results['final_result'])
+        test_result = test_model(input_shape, mymodel)
+        mymodel.summary()
+        return mymodel, test_result

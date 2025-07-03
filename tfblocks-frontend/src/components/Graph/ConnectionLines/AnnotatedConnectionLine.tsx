@@ -3,6 +3,7 @@ import '../../../App.css'
 import handleController, { type HandleMap } from '../../../controllers/handleController';
 import { useStore } from 'zustand';
 const AnnotatedConnectionLine = (props : ConnectionLineComponentProps) => {
+  //this is the unconnected connection line that the user is currently holding out from a node.
   const sourceShape =  useStore(handleController, (state : HandleMap) => state.get_handle_shape(props.fromHandle?.id))
   const [edgePath] = getBezierPath({
           sourceX : props.fromX,

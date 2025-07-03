@@ -14,11 +14,11 @@ const InputOverlay = (props : any) => {
                 setInputShape(resp.data.input_data_shape)
             }
             catch(err){
-                console.log("Flask upload error!")
+                alert("Flask upload error! Perhaps the data isn't formatted correctly?")
             }
         }
         else{
-            console.log("File upload error!")
+            alert("File upload error! Perhaps the server isn't online?")
         }
         
     }
