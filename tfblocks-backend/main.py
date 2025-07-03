@@ -27,6 +27,7 @@ def receive_data():
 
             model.compile(optimizer = 'adam', loss = 'mse', metrics = ['mse'])
             model.fit(inputs, outputs, epochs = 10)
+
             return jsonify({'message': f"Model trained!"}), 200
         except:
             return jsonify({'message': f'You didn\'t give us an input or output file!'}), 200

@@ -63,6 +63,12 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                             return
                 case 'cut':
                     return#will be dealt with in runtime
+                case 'subtract':
+                    return #dealt with in runtime
+                case 'multiply':
+                    return#dealt with in runtime
+                case 'scalar_ops':
+                    return #dealt with in runtime
                 case 'dense':
                     units = properties_map[node_id]['units']
                     layers[node_id] = keras.layers.Dense(units = units)
@@ -204,6 +210,30 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                         input_handle_2 = input_handle_dict[node_id][1]
                         output_handle = output_handle_dict[node_id][0]
                         handle_results[output_handle] = handle_results[input_handle_1] + handle_results[input_handle_2]
+                    case 'subtract':
+                        input_handle_1 = input_handle_dict[node_id][0]
+                        input_handle_2 = input_handle_dict[node_id][1]
+                        output_handle = output_handle_dict[node_id][0]
+                        handle_results[output_handle] = handle_results[input_handle_1] + handle_results[input_handle_2]
+                    case 'multiply':
+                        input_handle_1 = input_handle_dict[node_id][0]
+                        input_handle_2 = input_handle_dict[node_id][1]
+                        output_handle = output_handle_dict[node_id][0]
+                        handle_results[output_handle] = handle_results[input_handle_1] + handle_results[input_handle_2]
+                    case 'scalar_ops':
+                        input_handle = input_handle_dict[node_id][0]
+                        output_handle = output_handle_dict[node_id][0]
+                        scalar = properties_map[node_id]['scalar']
+                        operation = properties_map[node_id]['operation']
+                        match operation:
+                            case 'add':
+                                handle_results[output_handle] = handle_results[input_handle] + scalar
+                            case 'multiply':
+                                handle_results[output_handle] = handle_results[input_handle] * scalar
+                            case 'exponentiate':
+                                handle_results[output_handle] = handle_results[input_handle] ** scalar
+                            case _:
+                                print("AAAAAAAAA")
                     case 'concatenate':
                         axis = properties_map[node_id]['axis']
                         input_handle_1 = input_handle_dict[node_id][0]
