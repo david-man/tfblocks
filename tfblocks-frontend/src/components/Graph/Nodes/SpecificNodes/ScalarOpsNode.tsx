@@ -63,6 +63,7 @@ const ScalarOpsNode = (props : NodeProps) =>{
             <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Scalar Operations"} 
             parent_handles = {[ParentHandle]}
             child_handles = {ChildHandles}
+            bg_color = 'bg-pink-400'
             {...props}/>
         </div>
     );

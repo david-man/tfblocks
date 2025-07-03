@@ -6,10 +6,11 @@ import SingularConnection from '../Handles/SingularConnection';
 import NodeComponent from './NodeComponent';
 import { useStore } from 'zustand';
 import propertyController from '../../../controllers/propertyController';
-
-const OutputLayerNode = (props : NodeProps) =>{
+import nodeController, {type Graph} from '../../../controllers/nodeController';
+import { useShallow } from 'zustand/shallow';
+const OutputLayerNode = (props : any) =>{
     const id = props.id.toString()
-    const data_shape = [3]
+    const data_shape = props.data.shape
     const input_handle_id = `${id}|input_handle`
     const [valid, setValid] = useState(false)
     const {set_properties} = propertyController()
@@ -36,6 +37,7 @@ const OutputLayerNode = (props : NodeProps) =>{
         <>
         <SingularConnection type="target" position={Position.Left} id={input_handle_id}/>
         <NodeComponent valid_node = {valid} mainText = {"Output Layer"} subtext = {`[${data_shape}]`}parent_handles = {[ParentHandle]}
+        bg_color = "bg-orange-400"
         {...props}/>
         </>
     );

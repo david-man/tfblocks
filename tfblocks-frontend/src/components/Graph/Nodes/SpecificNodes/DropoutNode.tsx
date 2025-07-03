@@ -104,7 +104,8 @@ const DropoutNode = (props : NodeProps) =>{
             valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Dropout"} 
             parents_handles = {[ParentHandle]} 
             child_handles = {ChildHandles}
-            width = {"150px"} {...props}/>
+            width = {"150px"} {...props}
+            bg_color = 'bg-purple-400'/>
         </div>
     );
 }

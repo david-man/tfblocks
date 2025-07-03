@@ -82,7 +82,8 @@ const NormalizationNode = (props : NodeProps) =>{
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
             <NodeComponent neurons = {neurons} optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Normalization"} 
             parent_handles = {[ParentHandle]} 
-            child_handles = {ChildHandles}{...props}/>
+            child_handles = {ChildHandles}{...props}
+            bg_color = 'bg-purple-400'/>
         </div>
     );
 }

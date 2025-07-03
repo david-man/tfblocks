@@ -15,11 +15,14 @@ const AnnotatedEdge = (props : EdgeProps) => {
     return (
         <>
         <BaseEdge path={edgePath} markerEnd = {props.markerEnd}/>
-        <EdgeLabelRenderer>
+        {props.selected ? <EdgeLabelRenderer>
             <div className = "absolute" style = {{transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}}>
-                <p className = "text-xs">From: {`${source_shape ? source_shape : "unknown"}`}</p>
+                <div className = 'w-fit h-fit p-[4px] bg-white border-1 border-black rounded-xl'>
+                    <p className = "text-xs">From: {`${source_shape ? source_shape : "unknown"}`}</p>
+                </div>
             </div>
-        </EdgeLabelRenderer>
+        </EdgeLabelRenderer> : null}
+        
         
         </>
     );

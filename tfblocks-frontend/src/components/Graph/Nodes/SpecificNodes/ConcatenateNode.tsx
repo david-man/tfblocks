@@ -76,7 +76,8 @@ const ConcatenateNode = (props : NodeProps) =>{
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id_B} style = {{top: "75%"}}/>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
             <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Concatenate"} parent_handles = {[ParentAHandle, ParentBHandle]}
-            child_handles = {ChildHandles} {...props}/>
+            child_handles = {ChildHandles} {...props}
+            bg_color = 'bg-stone-300'/>
         </>
     );
 }

@@ -24,7 +24,6 @@ const ConvNode = (props : NodeProps) =>{
     const [padding, setPadding] = useState("valid")
     const [dimensionality, setDimensionality] = useState(undefined)
 
-    const {updateNodeData} = useReactFlow()
     const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
         handleType: "target",
@@ -198,9 +197,10 @@ const ConvNode = (props : NodeProps) =>{
         <div>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
-            <NodeComponent width = "120px" optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Conv"} 
+            <NodeComponent width = "120px" optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Convolution"} 
             parent_handles = {[ParentHandle]}
             child_handles = {ChildHandles} 
+            bg_color = 'bg-blue-500'
             {...props}/>
         </div>
     );

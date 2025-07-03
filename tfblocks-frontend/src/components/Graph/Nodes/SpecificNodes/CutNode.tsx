@@ -77,7 +77,8 @@ const CutNode = (props : NodeProps) =>{
         <Handle type="source" position={Position.Right} id={outgoing_handle_id_2} style = {{top: "75%"}}/>
         <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Cut"} 
         parent_handles = {[ParentHandle]} 
-        child_handles = {ChildHandles}{...props}/>
+        child_handles = {ChildHandles}{...props}
+        bg_color = 'bg-stone-300'/>
         </>
     );
 }

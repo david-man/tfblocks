@@ -66,7 +66,8 @@ const GRUNode = (props : NodeProps) =>{
             <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"GRU"} 
             parent_handles = {[ParentHandle]}
             child_handles = {ChildHandles}
-            {...props}/>
+            {...props}
+            bg_color = 'bg-lime-400'/>
         </div>
     );
 }

@@ -11,12 +11,12 @@ import {
   type Connection,
   MarkerType
 } from "@xyflow/react";
-import { initialNodes } from "../components/Graph/initialNodes";
 
 type Graph = {
-  id: number,
+  id: number;
   nodes: Node[];
   edges: Edge[];
+  getNodes: () => Node[],
   onNodesChange: OnNodesChange<Node>;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
@@ -29,7 +29,7 @@ export type {Graph};
 
 const nodeController = create<Graph>((set, get) => ({
   id: 0,
-  nodes: initialNodes,
+  nodes: [],
   edges: [],
   onNodesChange: (changes) => {
     set({ nodes: applyNodeChanges(changes, get().nodes)});
@@ -53,6 +53,7 @@ const nodeController = create<Graph>((set, get) => ({
   setEdges: (edges) => {
     set({ edges });
   },
+  getNodes: () => get().nodes,
   setId: (id) => {set({id})}
 }));
 

@@ -77,7 +77,8 @@ const FlattenNode = (props : NodeProps) =>{
         <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
         <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Flatten"} 
         parent_handles = {[ParentHandle]} 
-        child_handles = {ChildHandles}{...props}/>
+        child_handles = {ChildHandles}{...props}
+        bg_color = 'bg-stone-300'/>
         </>
     );
 }

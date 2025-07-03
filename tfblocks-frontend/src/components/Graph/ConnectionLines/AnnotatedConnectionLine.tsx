@@ -1,10 +1,10 @@
-import { type ConnectionLineComponentProps, getBezierPath, Position, EdgeLabelRenderer} from '@xyflow/react';
+import { type ConnectionLineComponentProps, getBezierPath, Position, EdgeLabelRenderer, BaseEdge} from '@xyflow/react';
 import '../../../App.css'
 import handleController, { type HandleMap } from '../../../controllers/handleController';
 import { useStore } from 'zustand';
 const AnnotatedConnectionLine = (props : ConnectionLineComponentProps) => {
   const sourceShape =  useStore(handleController, (state : HandleMap) => state.get_handle_shape(props.fromHandle?.id))
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath] = getBezierPath({
           sourceX : props.fromX,
           sourceY : props.fromY,
           sourcePosition : props.fromHandle.position,
@@ -14,15 +14,12 @@ const AnnotatedConnectionLine = (props : ConnectionLineComponentProps) => {
       });
   return (
     <>
-      <path
-        fill="none"
-        stroke = "gray"
-        strokeWidth = "1.5"
-        d={edgePath}
-      />
+      <BaseEdge path={edgePath}/>
       <EdgeLabelRenderer>
-            <div className = "absolute" style = {{transform: `translate(-50%, -50%) translate(${labelX+10}px,${labelY-10}px)`}}>
-                <p className = "text-xs">From: {sourceShape ? sourceShape.toString() : "unknown"}</p>
+            <div className = "absolute" style = {{transform: `translate(-100%, -50%) translate(${props.toX}px,${props.toY}px)`}}>
+                <div className = 'w-fit h-fit p-[4px] bg-white border-1 border-black rounded-xl'>
+                    <p className = "text-xs nodrag nopan">From: {`${sourceShape ? sourceShape : "unknown"}`}</p>
+                </div>
             </div>
         </EdgeLabelRenderer>
     </>

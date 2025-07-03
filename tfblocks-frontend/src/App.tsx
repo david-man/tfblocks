@@ -11,6 +11,10 @@ import Toolbox from './components/Toolbox/Toolbox'
 import Header from './components/Header/Header'
 import Canvas from './components/Graph/Canvas'
 import nodeController from "./controllers/nodeController";
+import HelpMenu from './components/HelpMenu/HelpMenu'
+import helpMenuController from './controllers/helpMenuController'
+import InputOverlay from './components/InputOverlay'
+import OutputOverlay from './components/OutputOverlay'
 export type MousePosn = {
   x : number,
   y : number
@@ -21,6 +25,9 @@ function PreApp() {
   const [dragging, setDragging] = useState<boolean>(false);
   const {screenToFlowPosition} = useReactFlow();
   const [activeID, setActiveID] = useState<string | null>(null);
+  const {menuStatus} = helpMenuController()
+  const [inputShape, setInputShape] = useState(undefined)
+  const [outputShape, setOutputShape] = useState(undefined)
   const handleMouseMove = (event : MouseEvent<HTMLDivElement>) => {
     setMousePosn({x: event.clientX, y: event.clientY})
   }
@@ -38,23 +45,35 @@ function PreApp() {
     setActiveID(null);
   }
   return (
-    <div onMouseMove = {handleMouseMove} className = "w-full h-full">
-      <DndContext onDragEnd = {handleDragEnd} onDragStart = {handleDragStart} modifiers = {[restrictToWindowEdges]}>
-        <div className = "flex flex-col w-full h-full">
-          <div className = "p-2" style = {{height: `calc(12.5% - 2px)`}}>
-            <Header />
-          </div>
-          <div className = "h-7/8 w-full flex">
-            <div className = "w-1/4 h-full p-2">
-              <Toolbox activeID = {activeID}/>
+    <div onMouseMove = {handleMouseMove} className = "w-full h-full font-[roboto] font-weight-[400] relative">
+        {inputShape ? 
+          (outputShape ? null :
+             <div className = 'absolute top-1/20 left-1/20 w-9/10 h-9/10 z-10'>
+                <OutputOverlay setOutputShape = {setOutputShape}/>
             </div>
-            <div className = "flex-grow h-full p-2">
-              {dragging ? <DndOverlay /> : null}
-              <Canvas />
+          ) :
+          <div className = 'absolute top-1/20 left-1/20 w-9/10 h-9/10 z-10'>
+              <InputOverlay setInputShape = {setInputShape}/>
+          </div>}
+        <DndContext onDragEnd = {handleDragEnd} onDragStart = {handleDragStart} modifiers = {[restrictToWindowEdges]}>
+          <div className = "flex flex-col w-full h-full bg-blue-200">
+            <div className = "h-1/10 m-1 bg-white">
+              <Header />
+            </div>
+            <div className = "h-9/10 w-full flex mb-2 relative">
+              <div className = "w-23/100 min-w-fit h-full mt-1 ml-1 mb-1 bg-white">
+                <Toolbox activeID = {activeID}/>
+              </div>
+              <div className = "flex-grow h-full mt-1 mr-1 mb-1 bg-white">
+                {dragging ? <DndOverlay /> : null}
+                <Canvas input_shape = {inputShape} output_shape = {outputShape}/>
+              </div>
+              <div className = {`transition-all duration-300 h-full absolute top-0 right-0 mt-1 mr-1 mb-1 ${menuStatus() ? 'opacity-100 w-1/5' : 'opacity-0 w-0'}`}>
+                <HelpMenu />
+              </div>
             </div>
           </div>
-        </div>
-      </DndContext>
+        </DndContext>
     </div>
   )
 }

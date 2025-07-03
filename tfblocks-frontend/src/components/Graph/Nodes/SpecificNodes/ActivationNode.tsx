@@ -61,7 +61,8 @@ const ActivationNode = (props : NodeProps) =>{
             <NodeComponent valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Activation"} 
             parent_handles = {[ParentHandle]}
             child_handles = {ChildHandles}
-            width = {"120px"} {...props}/>
+            width = {"120px"} {...props}
+            bg_color = 'bg-blue-500'/>
         </div>
     );
 }

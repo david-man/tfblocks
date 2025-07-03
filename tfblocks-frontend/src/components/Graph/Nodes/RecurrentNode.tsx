@@ -129,7 +129,8 @@ const RecurrentNode = (props : NodeProps) =>{
             <Handle type="source" position={Position.Right} id={outgoing_timestep_input_handle_id} style = {{top: "75%"}}/>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
             <Handle type="source" position={Position.Bottom} id={outgoing_handle_id} style = {{left: "75%"}}/>
-            <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Recurrent Head"} {...props}/>
+            <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Recurrent Head"} {...props}
+            bg_color = 'bg-lime-400'/>
         </>
     );
 }

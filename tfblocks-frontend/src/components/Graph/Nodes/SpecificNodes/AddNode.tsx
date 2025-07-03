@@ -66,6 +66,7 @@ const AddNode = (props : NodeProps) =>{
             <NodeComponent valid_node = {valid} mainText = {"Add"} 
             parent_handles = {[ParentAHandle, ParentBHandle]}
             child_handles = {ChildHandles}
+            bg_color = 'bg-yellow-300'
              {...props}/>
         </>
     );

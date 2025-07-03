@@ -3,18 +3,24 @@ import { NodeResizer, NodeToolbar, Position, useNodesData, type Node, type NodeC
 import { useReactFlow } from '@xyflow/react';
 import dependencyController from '../../../controllers/dependencyController';
 import propertyController from '../../../controllers/propertyController';
+import helpMenuController from '../../../controllers/helpMenuController';
 
 
 const NodeComponent = (props : any) =>{
     const id = props.id
+    const txt_color = props.txt_color ? props.txt_color : 'black'
+    const bg_color = props.bg_color ? props.bg_color : null
+    const border_color = props.valid_node ? "border-emerald-500" : "border-gray-500"
     const [selected, setSelected] = useState(false);
     const {updateNodeData} = useReactFlow()
+    const {setMenu} = helpMenuController()
     const {remove_properties} = propertyController()
     
     const {remove_id, set_dependencies, set_children} = dependencyController()
     const CanvasListener = useNodesData(id)
 
     useEffect(() => {
+        console.log(props.type)
         return(() => {
             remove_id(id)
             remove_properties(id)
@@ -47,12 +53,21 @@ const NodeComponent = (props : any) =>{
             {props?.neurons != undefined && !isNaN(props.neurons) ? 
                 <NodeToolbar isVisible = {props?.selected} position = {Position.Top}>
                     <div className = "rounded-xl bg-gray-700 flex flex-col justify-center items-center font-[roboto]">
-                        <p className = 'text-center text-white text-nowrap p-2'>Neurons: {props.neurons}</p>
+                        <p className = 'text-center text-white text-nowrap p-2'>Trainable Weights: {props.neurons}</p>
                     </div>
                 </NodeToolbar> 
                 : null}
-            <div className = {`h-full w-full p-1 border-2 rounded-lg flex flex-col justify-center items-center text-nowrap font-[roboto]`}
-            style = {{backgroundColor: (props.valid_node ? "green" : "red"), borderColor: (selected ? "blue" : "black")}}>
+            <div className = {`relative h-full w-full p-1 border-2 rounded-lg flex flex-col justify-center items-center text-nowrap font-[roboto] 
+            ${selected ? 'shadow-2xl/50' : null} 
+            ${bg_color}
+            ${border_color}`}
+            style = {{color: (txt_color)}}>
+            
+                <button onClick = {() => setMenu(props.type)}>
+                    <div className = 'absolute top-[5px] right-[5px] z-1 cursor-pointer'>
+                        <img src="question.png" alt="help" width = "12px" height = "12px"/>
+                    </div>
+                </button>
                 <div className = 'p-[9px]'>
                     <p className = "text-center">{props.mainText}</p>
                     {props.subtext ? <p className = "text-center">{props.subtext}</p> : null}

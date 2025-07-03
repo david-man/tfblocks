@@ -66,6 +66,7 @@ const SubtractNode = (props : NodeProps) =>{
             <NodeComponent valid_node = {valid} mainText = {"Subtract"} 
             parent_handles = {[ParentAHandle, ParentBHandle]}
             child_handles = {ChildHandles}
+            bg_color = 'bg-yellow-300'
              {...props}/>
         </>
     );

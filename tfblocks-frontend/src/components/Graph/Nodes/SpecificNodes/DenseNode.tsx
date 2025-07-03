@@ -20,7 +20,6 @@ const DenseNode = (props : NodeProps) =>{
     const [neurons, setNeurons] = useState(NaN)
     const [units, setUnits] = useState(NaN)
     const [valid, setValid] = useState(false)
-    const {updateNodeData} = useReactFlow()
     const incomingConnection = useNodeConnections({
         handleType: "target",
         handleId: incoming_handle_id
@@ -66,6 +65,7 @@ const DenseNode = (props : NodeProps) =>{
             <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Dense"} 
             parent_handles = {[ParentHandle]}
             child_handles = {ChildHandles}
+            bg_color = 'bg-blue-500'
             {...props}/>
         </div>
     );

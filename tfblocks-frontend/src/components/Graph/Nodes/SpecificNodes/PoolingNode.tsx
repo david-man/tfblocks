@@ -158,7 +158,8 @@ const PoolingNode = (props : NodeProps) =>{
             <NodeComponent valid_node = {valid} optionsMenu = {optionsMenu} mainText = {"Pooling"} 
             parent_handles = {[ParentHandle]} 
             child_handles = {ChildHandles}
-            width = {"150px"} {...props}/>
+            width = {"150px"} {...props}
+            bg_color = 'bg-purple-400'/>
         </div>
     );
 }

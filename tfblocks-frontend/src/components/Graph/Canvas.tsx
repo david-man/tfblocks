@@ -27,12 +27,14 @@ const selector = (state: Graph) => ({
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
 });
-const Canvas = () => {
+const Canvas = (props : any) => {
+  const input_shape = props.input_shape
+  const output_shape = props.output_shape
   const ref = useRef(null)
   const { nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect} = nodeController(useShallow(selector));
-  const {get_child_map, get_network_heads, get_dep_map, get_dependencies, get_children} = dependencyController()
+  const {get_network_heads, get_dep_map, get_dependencies, get_children} = dependencyController()
   const { updateNodeData } = useReactFlow()
-
+  
   const has_dependency = (child_id : String, comparison: String) => {
     if(child_id === comparison){
       return true;
@@ -138,10 +140,20 @@ const Canvas = () => {
       }
     }
   }
-
-
+  useEffect(() => {
+    if(input_shape){
+      const newNode : Node = { id: 'in', type: 'input_layer', position: { x: 100, y: 150 }, data: { label: 'Input Layer', shape: input_shape}, deletable : false}
+      setNodes(nodes.concat(newNode))
+    }
+  }, [input_shape])
+  useEffect(() => {
+    if(output_shape){
+      const newNode : Node= { id: 'out', type: 'output_layer', position: { x: 400, y: 150 }, data: { label: 'Output Layer', shape: output_shape }, deletable : false }
+      setNodes(nodes.concat(newNode))
+    }
+  }, [output_shape])
   return (
-    <div style={{ width: "100%", height: "100%", border: "3px solid black" }}>
+    <div style={{ width: "100%", height: "100%"}}  className = 'border-gray-500 border-2'>
       <ReactFlow
         ref = {ref}
         nodes={nodes}
@@ -163,7 +175,7 @@ const Canvas = () => {
         fitView = {false}
         defaultViewport={{x:0, y:0, zoom: 3}}
       >
-        <Background />
+        <Background/>
         <MiniMap />
         <Controls />
       </ReactFlow>

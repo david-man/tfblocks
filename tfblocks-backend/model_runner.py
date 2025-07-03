@@ -283,13 +283,14 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                 run_order.append(node_id)
                 nodes_to_add.remove(node_id)
                 break
+    
+    for i in run_order:
+        run_node(i)
     if(_debug):
         print("RUN ORDER: ", run_order)
         print("INPUT SHAPE: ", input_shape)
+        print("INPUT HANDLE DICT: ", input_handle_dict)
         print("OUTPUT HANDLE DICT: ", output_handle_dict)
-    for i in run_order:
-        run_node(i)
-   
     mymodel = keras.Model(inputs = handle_results["in|output_handle"], outputs = handle_results['final_result'])
     test_result = test_model(input_shape, mymodel)
     mymodel.summary()

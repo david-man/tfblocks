@@ -65,7 +65,8 @@ const DotProductNode = (props : NodeProps) =>{
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id_B} style = {{top: "75%"}}/>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
             <NodeComponent valid_node = {valid} mainText = {"Dot"} parent_handles = {[ParentAHandle, ParentBHandle]}
-            child_handles = {ChildHandles} {...props}/>
+            child_handles = {ChildHandles} {...props}
+            bg_color = 'bg-yellow-300'/>
         </>
     );
 }
