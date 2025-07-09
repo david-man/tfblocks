@@ -9,7 +9,7 @@ import { useState} from 'react'
 import TrainingElement from './TrainingElement'
 import IdleElement from './IdleElement'
 
-const Header = () => {
+const Header = (props: any) => {
     const {nodes} = nodeController()
     const {get_map, get_properties} = propertyController()
     const {get_dep_map, get_child_map, get_network_heads, get_dependencies, get_children} = dependencyController()
@@ -66,6 +66,18 @@ const Header = () => {
                     child_map : [...get_child_map()],
                     network_heads : filtered_network_heads
                 })
+                if(resp.status == 200){
+                    const download = await axios.get('http://localhost:8000/api/getLastModel/', {responseType: 'blob'})
+                    // Create a URL for the blob and trigger a download
+                    const url = window.URL.createObjectURL(new Blob([download.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'model.keras'); // Use the desired filename
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    window.URL.revokeObjectURL(url); // Clean up the URL object
+                }
             }
             catch (err){
                 alert("ERROR: " + err.response.data.message.toString())

@@ -33,6 +33,8 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                     return# dealt with in runtime
                 case 'concatenate':
                     return# dealt with in runtime
+                case 'reshape':
+                    return# dealt with in runtime
                 case 'conv':
                     dim = properties_map[node_id]['dim']
                     filters = properties_map[node_id]['filters']
@@ -59,8 +61,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                                                         padding = padding)
                             return layers
                         case _:
-                            print("CONVOLUTIONAL ERROR")
-                            return
+                            raise Exception("Convolutional Error!")
                 case 'cut':
                     return#will be dealt with in runtime
                 case 'subtract':
@@ -92,8 +93,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                             layers[node_id] = keras.layers.Dropout(rate = rate)
                             return
                         case _:
-                            print("DROPOUT ERROR")
-                            return
+                            raise Exception("Dropout Error!")
                 case 'flatten':
                     resulting_shape = properties_map[node_id]['output_shape']
                     layers[node_id] = keras.layers.Reshape(target_shape = resulting_shape)
@@ -120,8 +120,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                             layers[node_id] = keras.layers.LayerNormalization(axis = axis)
                             return
                         case _:
-                            print("NORMALIZATION ERROR")
-                            return
+                            raise Exception("Normalization Error!")
                 case 'pooling':
                     dim = properties_map[node_id]['dim']
                     pooling_size = properties_map[node_id]['pooling_size']
@@ -138,8 +137,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                                     layers[node_id] = keras.layers.AveragePooling1D(pool_size=pooling_size, strides = stride, padding = padding)
                                     return
                                 case _:
-                                    print("POOLING ERROR")
-                                    return
+                                    raise Exception("Pooling Error!")
                         case '2d':
                             match pooling_type:
                                 case 'maxpool':
@@ -149,7 +147,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                                     layers[node_id] =  keras.layers.AveragePooling2D(pool_size=pooling_size, strides = stride, padding = padding)
                                     return
                                 case _:
-                                    print("POOLING ERROR")
+                                    raise Exception("Pooling Error!")
                         case '3d':
                             match pooling_type:
                                 case 'maxpool':
@@ -159,11 +157,9 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                                     layers[node_id] =  keras.layers.AveragePooling3D(pool_size=pooling_size, strides = stride, padding = padding)
                                     return
                                 case _:
-                                    print("POOLING ERROR")
-                                    return
+                                    raise Exception("Pooling Error!")
                         case _:
-                            print("POOLING ERROR")
-                            return
+                            raise Exception("Pooling Error!")
                 case 'rnn':
                     units = properties_map[node_id]['units']
                     layers[node_id] = keras.layers.SimpleRNN(units = units)
@@ -183,8 +179,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                     layers[node_id] = keras.layers.Reshape(target_shape=output_shape)
                     return
                 case _:
-                    print("LAYER TYPE NOT FOUND")
-                    return
+                    raise Exception("Layer type not found!")
     
     def run_node(node_id):
         if(not _preloaded):
@@ -233,7 +228,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                             case 'exponentiate':
                                 handle_results[output_handle] = handle_results[input_handle] ** scalar
                             case _:
-                                print("AAAAAAAAA")
+                                raise Exception("ScalarOps Error!")
                     case 'concatenate':
                         axis = properties_map[node_id]['axis']
                         input_handle_1 = input_handle_dict[node_id][0]
@@ -252,6 +247,11 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                         input_handle_2 = input_handle_dict[node_id][1]
                         output_handle = output_handle_dict[node_id][0]
                         handle_results[output_handle] = keras.ops.dot(handle_results[input_handle_1], handle_results[input_handle_2])
+                    case 'reshape':
+                        output_shape = properties_map[node_id]['output_shape']
+                        input_handle = input_handle_dict[node_id][0]
+                        output_handle = output_handle_dict[node_id][0]
+                        handle_results[output_handle] = keras.ops.reshape(handle_results[input_handle], output_shape)
                     case _:
                         input_handle = input_handle_dict[node_id][0]
                         output_handle = output_handle_dict[node_id][0]
@@ -268,7 +268,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                 self.raw_id = self.rec_node_id.replace("rec_hidden_", "")
                 self.layers = []
                 for node in self.run_order:
-                    if(node != rec_node_id):
+                    if(node != rec_node_id and node in layers):
                         self.layers.append(layers[node])#forces Keras to acknowledge the existence of the inner layers
             def call(self, inputs, states):
                 handle_results[f'{self.rec_node_id}|timestep_handle'] = inputs

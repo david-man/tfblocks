@@ -20,6 +20,7 @@ import OutputLayerNode from './Nodes/OutputLayerNode';
 import SubtractNode from './Nodes/SpecificNodes/SubtractNode';
 import MultiplyNode from './Nodes/SpecificNodes/MultiplyNode';
 import ScalarOpsNode from './Nodes/SpecificNodes/ScalarOpsNode';
+import ReshapeNode from './Nodes/SpecificNodes/ReshapeNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -43,5 +44,6 @@ export const nodeTypes = {
     upscale : UpscaleNode,
     flatten : FlattenNode,
     output_layer : OutputLayerNode,
-    scalar_ops : ScalarOpsNode
+    scalar_ops : ScalarOpsNode,
+    reshape : ReshapeNode
 }

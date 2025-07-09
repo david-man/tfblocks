@@ -2,9 +2,10 @@ const InputComponent = (props : any) => {
     //reusable component that creates a numerical input box that only enables valid inputs based on certain things(negative, decimal, etc.)
     const allowNegative = props?.allowNegative ? props.allowNegative : false;
     const allowDecimal = props?.allowDecimal ? props.allowDecimal : false
+    const topPadding = (props.topPadding !== undefined) ? props.topPadding : true
 
     return (
-    <div className = "flex flex-row w-full items-center justify-center p-1 pt-2 text-[10px]">
+    <div className = {`flex flex-row w-full items-center justify-center p-1 ${topPadding ? 'pt-2' : 'pt-1'} text-[10px]`}>
         <label htmlFor={props.id} className = "pr-[3px]">{props.label} </label>
         <input id = {props.id} type = "number" className = "field-sizing-fixed w-[40px] border-1 rounded-sm border-black nopan nodrag text-center"
         onChange = {(evt) => {

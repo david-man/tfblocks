@@ -1,9 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS, cross_origin
 from data_parsing import parse_json
 from model_runner import build_model
 import io
 import numpy as np
+import os
 app = Flask(__name__)
 cors = CORS(app, origins= "*")  # Enable CORS for all routes
 current_progress = 0
@@ -12,25 +13,24 @@ current_progress = 0
 def receive_data():
     data = request.get_json()
     input_shape, networks, network_compile_order, input_handle_dict, output_handle_dict, type_map, property_map, dependency_map = parse_json(data)
-    model, model_result = build_model(input_shape, networks, network_compile_order, input_handle_dict, output_handle_dict, type_map, property_map, dependency_map)
-    if(not model_result):
-        if(model == 'NO MODEL'):
-            return jsonify({'message': f"You have no model. Sorry!"}), 400
-        else:
-            return jsonify({'message': f"Something went wrong!"}), 400
+    try:
+        model, model_result = build_model(input_shape, networks, network_compile_order, input_handle_dict, output_handle_dict, type_map, property_map, dependency_map)
+        model.save('newest_model.keras')
+        return jsonify({'message': f"Model compilation succeeded!"}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({'message': f"Model compilation failed. Sorry!"}), 400
+
+@app.route('/api/getLastModel/', methods = ["GET"])
+@cross_origin()
+def send_model():
+    current_directory = os.getcwd()
+    file_path = os.path.join(current_directory, "newest_model.keras")
+    if(os.path.exists(file_path)):
+        return send_file(file_path, as_attachment=True, download_name='model.keras')
     else:
-        try:
-            inputs = np.load('input.npy')
-            outputs = np.load('output.npy')
-            inputs = np.reshape(inputs, (1, ) + inputs.shape)
-            outputs = np.reshape(outputs, (1, ) + outputs.shape)
-
-            model.compile(optimizer = 'adam', loss = 'mse', metrics = ['mse'])
-            model.fit(inputs, outputs, epochs = 10)
-
-            return jsonify({'message': f"Model trained!"}), 200
-        except:
-            return jsonify({'message': f'You didn\'t give us an input or output file!'}), 200
+        return {}, 400
+    
 
 @app.route('/api/setInputData/', methods = ['POST'])
 @cross_origin()

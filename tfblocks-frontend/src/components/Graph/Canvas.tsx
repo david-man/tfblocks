@@ -22,16 +22,15 @@ import dependencyController from "../../controllers/dependencyController";
 const selector = (state: Graph) => ({
   nodes: state.nodes,
   edges: state.edges,
+  getNodes : state.getNodes,
   setNodes : state.setNodes,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
 });
 const Canvas = (props : any) => {
-  const input_shape = props.input_shape
-  const output_shape = props.output_shape
   const ref = useRef(null)
-  const { nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect} = nodeController(useShallow(selector));
+  const { nodes, edges, getNodes, setNodes, onNodesChange, onEdgesChange, onConnect} = nodeController(useShallow(selector));
   const {get_network_heads, get_dep_map, get_dependencies, get_children} = dependencyController()
   const { updateNodeData } = useReactFlow()
   
@@ -87,8 +86,6 @@ const Canvas = (props : any) => {
     const target_source = new_connection?.targetHandle.split("|")[0]
     const connection_net = findNetwork(connection_source)
     const target_net = findNetwork(target_source)
-    console.log(connection_source, target_source)
-    console.log(connection_net, target_net)
     if(connection_source.includes('in') || connection_source.includes('rec_hidden')){
       if(target_net === connection_source || target_net === 'hanging'){
         onConnect(new_connection)
@@ -98,9 +95,11 @@ const Canvas = (props : any) => {
       }
     }
     else if(target_source.includes('rec_hidden')){
-      
       if(connection_net === target_source){
         onConnect(new_connection)
+      }
+      else if(connection_source.includes('rec_external')){
+        alert("Unfortunately, nested RNN's are not supported due to their complex dynamics. For hierarchical temporal processing, consider using a CNN or Attention model instead.")
       }
       else if(connection_net === 'hanging'){
         const external_equivalent = target_source.replace('rec_hidden', 'rec_external')
@@ -141,17 +140,10 @@ const Canvas = (props : any) => {
     }
   }
   useEffect(() => {
-    if(input_shape){
-      const newNode : Node = { id: 'in', type: 'input_layer', position: { x: 100, y: 150 }, data: { label: 'Input Layer', shape: input_shape}, deletable : false}
-      setNodes(nodes.concat(newNode))
-    }
-  }, [input_shape])
-  useEffect(() => {
-    if(output_shape){
-      const newNode : Node= { id: 'out', type: 'output_layer', position: { x: 400, y: 150 }, data: { label: 'Output Layer', shape: output_shape }, deletable : false }
-      setNodes(nodes.concat(newNode))
-    }
-  }, [output_shape])
+    const input : Node = { id: 'in', type: 'input_layer', position: { x: 100, y: 150 }, data: { label: 'Input Layer', shape: undefined}, deletable : false}
+    const out : Node= { id: 'out', type: 'output_layer', position: { x: 400, y: 150 }, data: { label: 'Output Layer', shape: undefined }, deletable : false }
+    setNodes([input, out])
+  }, [])
   return (
     <div style={{ width: "100%", height: "100%"}}  className = 'border-gray-500 border-2'>
       <ReactFlow

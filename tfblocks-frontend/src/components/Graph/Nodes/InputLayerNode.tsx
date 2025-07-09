@@ -1,14 +1,18 @@
 import { Handle, Position, useNodeConnections, type NodeConnection} from '@xyflow/react';
-import { useEffect} from 'react';
+import { useEffect, useState} from 'react';
 import dependencyController, {type DependencyMap} from '../../../controllers/dependencyController';
 import handleController, {type HandleMap} from '../../../controllers/handleController';
 import propertyController, {type IdPropertyMap} from '../../../controllers/propertyController';
 import { useShallow } from 'zustand/shallow';
+import NodeComponent from './NodeComponent';
+import InputOptions from '../NodeOptions/SpecificOptions/InputLayerOptions';
 
 
 const InputLayerNode = (props : any) =>{
     //Special node component designed specifically for inputs.
-    const data_shape = props.data.shape
+    const id = 'in'
+    const [data_shape, setDataShape] = useState(undefined)
+    const [valid, setValid] = useState(false)
     const outgoing_handle_id = `in|output_handle`
     const {add_network_head, remove_network_head, remove_id, set_dependencies, set_children} = dependencyController(useShallow((state : DependencyMap) => {
         return {add_network_head: state.add_network_head,
@@ -27,16 +31,12 @@ const InputLayerNode = (props : any) =>{
             set_properties: state.set_properties
         }
     }))
-    const id = props.id
-    const selected = props.selected
 
     const outgoingConnection = useNodeConnections({
             handleType: "source",
             handleId: outgoing_handle_id
         })
     useEffect(() => {
-        set_handle_shape(outgoing_handle_id, data_shape)
-        set_properties(id, {"valid": true, "input_shape": data_shape})
         set_dependencies(id, [])
         add_network_head('in')
         return (() => {
@@ -45,6 +45,16 @@ const InputLayerNode = (props : any) =>{
             remove_handle(id)
         })
     }, [])
+
+    useEffect(() => {
+        set_handle_shape(outgoing_handle_id, data_shape)
+        setValid(false)
+        set_properties(id, {"valid": false, "input_shape": data_shape})
+        if(data_shape){
+            set_properties(id, {"valid": true, "input_shape": data_shape})
+            setValid(true)
+        }
+    }, [data_shape])
     useEffect(() => {
         let children : String []= []
         outgoingConnection.map((connection : NodeConnection) => {
@@ -54,16 +64,15 @@ const InputLayerNode = (props : any) =>{
         })
         set_children('in', children)
     }, [outgoingConnection])
+
+    const optionsMenu = <InputOptions id = {id} setDataShape = {setDataShape} data_shape = {data_shape} />
     return (
         <>
         <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
-        <div className = {`h-full w-full bg-orange-400 p-1 border-2 rounded-lg flex flex-col justify-center items-center text-nowrap font-[roboto] 
-            ${selected ? 'shadow-2xl/50' : null} border-black`}>
-            <div className = 'p-[9px]'>
-                <p className = "text-center">Input Layer</p>
-                <p className = "text-center">[{data_shape.toString()}]</p>
-            </div>
-        </div>
+        <NodeComponent valid_node = {valid} mainText = {"Input Layer"} subtext = {`[${data_shape ? data_shape.toString() : ''}]`} parent_handles = {[]}
+        bg_color = "bg-orange-400"
+        optionsMenu = {optionsMenu}
+        {...props}/>
         </>
     );
 }

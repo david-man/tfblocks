@@ -1,5 +1,4 @@
 import InputComponent from "../NumericalInputComponent";
-
 const DenseOptions = (props : any) => 
 {
     return (

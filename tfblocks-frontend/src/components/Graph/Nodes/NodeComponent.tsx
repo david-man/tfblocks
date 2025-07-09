@@ -21,7 +21,7 @@ const NodeComponent = (props : any) =>{
 
     const {setMenu} = helpMenuController(useShallow((state : Help) => {
         return {
-            setMenu : state.setMenu
+            setMenu : state.setHelpMenu
         }
     }))
     const {remove_properties} = propertyController(useShallow((state : IdPropertyMap) => {
