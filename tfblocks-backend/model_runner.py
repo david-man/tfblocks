@@ -15,6 +15,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
     layers = {}#special dictionary mapping cells to normal layers
     handle_results = {}
     _preloaded = False
+    print(properties_map)
     def preload_layer(node_id):
         if(node_id == 'in'):
             layers[node_id] = keras.Input(shape = input_shape)
@@ -180,7 +181,13 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                     return
                 case _:
                     raise Exception("Layer type not found!")
-    
+    def build_node(node_id):
+        if(node_id not in layers):
+            return
+        else:
+            input_shape = (None, ) + tuple(properties_map[node_id]['input_shape'])
+            layers[node_id].build(input_shape)
+
     def run_node(node_id):
         if(not _preloaded):
             raise Exception("run_node ran before layers were properly preloaded. Exiting")
@@ -257,6 +264,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                         output_handle = output_handle_dict[node_id][0]
                         handle_results[output_handle] = layers[node_id](handle_results[input_handle])
     def assembleRNNs():
+        @keras.saving.register_keras_serializable()
         class CustomRNNCell(keras.Layer):#REMAKE FOR WEIGHTS
             def __init__(self, input_shape, state_shape, rec_node_id, run_order):
                 super().__init__()
@@ -280,6 +288,11 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                         run_node(node)
                 final_handle = properties_map[raw_id]['hidden_parent_handle_id']
                 return handle_results[final_handle], [handle_results[final_handle]]
+            def build(self, input_shape):
+                for node in self.run_order:
+                    if(node in layers and node != self.rec_node_id):
+                        build_node(node)
+                super(CustomRNNCell, self).build(input_shape)
             
 
         for network in networks_compile_order:
@@ -288,7 +301,6 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                 hidden_input_shape = properties_map[raw_id]['hidden_input_shape']
                 hidden_state_shape = properties_map[raw_id]['hidden_state_shape']
                 isolated_net = copy.copy(networks[network])
-                isolated_net.remove(network)
                 run_order = [network]
                 while(not(len(isolated_net) == 0)):
                     for node in isolated_net:
@@ -297,7 +309,7 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                             isolated_net.remove(node)
                             break
                 RNNs[network] = keras.layers.RNN(cell = CustomRNNCell(hidden_input_shape, hidden_state_shape, network, run_order))
-    
+                RNNs[network].build(sequences_shape = (None, hidden_input_shape))
     #PRELOADING DATA
     for node_id in type_map.keys():
         preload_layer(node_id)
@@ -313,7 +325,6 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                 run_order.append(node_id)
                 nodes_to_add.remove(node_id)
                 break
-    
     for i in run_order:
         run_node(i)
     if(_debug):

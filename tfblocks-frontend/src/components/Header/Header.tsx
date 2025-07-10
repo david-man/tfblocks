@@ -47,8 +47,19 @@ const Header = (props: any) => {
     const handleClick = async () => {
         let send = true;
         nodes.map((node : Node) => {
-            if((!get_properties(node.id) || !(get_properties(node.id)?.valid)) && findNetwork(node.id) != 'hanging'){
-                send = false;
+            const id = node.id
+            if(node.type == 'recurrent_head'){
+                const external_id = 'rec_hidden_' + id.toString()
+                if(!get_properties(id) || !get_properties(id)?.valid){
+                    if(findNetwork(external_id) != 'hanging'){
+                        send = false
+                    }
+                }
+            }
+            else {
+                if((!get_properties(id) || !(get_properties(id)?.valid)) && findNetwork(id) != 'hanging'){
+                    send = false;
+                }
             }
         })
         if(!send){

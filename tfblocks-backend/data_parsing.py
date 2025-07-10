@@ -91,18 +91,21 @@ def _organize_networks(nodes_ids, network_heads, dependency_map, child_map):
         return to_ret
     for node in nodes_ids:
         networks[findNetwork(node)].append(node)
-
+    for head in network_heads:
+        if head != 'in':
+            external_node_id = head.replace('rec_hidden_', 'rec_external_')
+            networks[findNetwork(external_node_id)].append(external_node_id)
     network_dependencies = {}
     for head in network_heads:
         network_dependencies[head] = []
         network = networks[head]
-        for node in network:
-            if(node == head):
+        for dependent_node in network:
+            if(dependent_node == head):
                 continue
             else:
-                if('rec_external_' in node):
-                    hidden_id = node.replace("rec_external_", "rec_hidden_")
-                    network_dependencies[head].append(hidden_id)
+                if('rec_external_' in dependent_node):
+                    hidden_network_dependency = dependent_node.replace("rec_external_", "rec_hidden_")
+                    network_dependencies[head].append(hidden_network_dependency)
     network_compile_order = []
     heads_to_add = copy.copy(network_heads)
     while(not(len(heads_to_add) == 0)):

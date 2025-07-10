@@ -8,8 +8,10 @@ const SingularConnection = (props) => {
   });
   return (
     <Handle
-      {...props}
-      style = {{background: (connections.length == 1 ? '#2c7d41' : '#97a5a6')}}
+      type = {props.type}
+      id = {props.id}
+      position = {props.position}
+      style = {{...props.style, background: (connections.length == 1 ? '#2c7d41' : '#97a5a6')}}
       isConnectable={connections.length < 1}
     />
   );

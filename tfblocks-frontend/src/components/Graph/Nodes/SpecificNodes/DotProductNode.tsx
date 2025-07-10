@@ -53,6 +53,18 @@ const DotProductNode = (props : NodeProps) =>{
                     "output_handle_id": outgoing_handle_id,
                 })
             }
+            else if(IncomingShapeA.length === 1 && IncomingShapeB.length === 1 &&
+                IncomingShapeA[0] === IncomingShapeB[0]
+            )
+            {
+                set_data_shape([1])
+                setValid(true)
+                set_properties(id, {"valid": true, "input_shape_1": IncomingShapeA, "input_shape_2": IncomingShapeB,
+                    "parent_handle_id_1": ParentAHandle,
+                    "parent_handle_id_2": ParentBHandle,
+                    "output_handle_id": outgoing_handle_id,
+                })
+            }
         }
     }, [IncomingShapeA, IncomingShapeB])
 

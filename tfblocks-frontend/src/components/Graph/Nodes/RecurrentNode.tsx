@@ -1,7 +1,7 @@
 import { Position, useNodeConnections, type NodeConnection, type NodeProps} from '@xyflow/react';
 import { Handle} from '@xyflow/react';
 import SingularConnection from '../Handles/SingularConnection';
-import { useEffect, useState } from 'react';
+import { useEffect,  useState } from 'react';
 import NodeComponent from './NodeComponent';
 import handleController, {type HandleMap} from '../../../controllers/handleController';
 import RecurrentOptions from '../NodeOptions/SpecificOptions/RecurrentOptions';
@@ -101,6 +101,7 @@ const RecurrentNode = (props : NodeProps) =>{
                 IncomingHiddenShape.length === 1 &&
                 outputUnits === IncomingHiddenShape[0])
                 {
+                    console.log(IncomingHiddenShape)
                     set_properties(id, {"valid": true, 
                         "input_shape": IncomingParentShape,
                         "hidden_input_shape": IncomingParentShape[1], 
@@ -125,11 +126,11 @@ const RecurrentNode = (props : NodeProps) =>{
     const optionsMenu = <RecurrentOptions setOutput = {setOutputUnits} outputUnits = {outputUnits}/>
     return (
         <>
-            <SingularConnection type="target" position={Position.Top} id={incoming_hidden_handle_id} style = {{left: "25%"}}/>
-            <Handle type="source" position={Position.Right} id={outgoing_hidden_state_handle_id} style = {{top: "25%"}}/>
-            <Handle type="source" position={Position.Right} id={outgoing_timestep_input_handle_id} style = {{top: "75%"}}/>
+            <SingularConnection type="target" position={Position.Top} id={incoming_hidden_handle_id} style = {{left: "90%"}}/>
+            <Handle type="source" position={Position.Top} id={outgoing_hidden_state_handle_id} style = {{left: "15%"}}/>
+            <Handle type="source" position={Position.Top} id={outgoing_timestep_input_handle_id} style = {{left: "30%"}}/>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
-            <Handle type="source" position={Position.Bottom} id={outgoing_handle_id} style = {{left: "75%"}}/>
+            <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
             <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} mainText = {"Recurrent Head"} {...props}
             bg_color = 'bg-lime-400'/>
         </>

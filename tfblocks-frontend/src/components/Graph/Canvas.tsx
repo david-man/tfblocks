@@ -86,8 +86,12 @@ const Canvas = (props : any) => {
     const target_source = new_connection?.targetHandle.split("|")[0]
     const connection_net = findNetwork(connection_source)
     const target_net = findNetwork(target_source)
+    console.log(connection_net, target_source)
     if(connection_source.includes('in') || connection_source.includes('rec_hidden')){
       if(target_net === connection_source || target_net === 'hanging'){
+        if(target_source.includes('rec_external_') && connection_source != 'in'){
+          alert("Because of the complex network gradients and building process involved with nested custom RNNs, while we can still compile a model, we HIGHLY recommend you switch to something else.")
+        }
         onConnect(new_connection)
       }
       else{
@@ -97,9 +101,6 @@ const Canvas = (props : any) => {
     else if(target_source.includes('rec_hidden')){
       if(connection_net === target_source){
         onConnect(new_connection)
-      }
-      else if(connection_source.includes('rec_external')){
-        alert("Unfortunately, nested RNN's are not supported due to their complex dynamics. For hierarchical temporal processing, consider using a CNN or Attention model instead.")
       }
       else if(connection_net === 'hanging'){
         const external_equivalent = target_source.replace('rec_hidden', 'rec_external')
@@ -115,6 +116,10 @@ const Canvas = (props : any) => {
       }
     }
     else{
+      if(target_source.includes('rec_external') && connection_net.includes('rec_hidden_')){
+        alert("Because of the complex network gradients and building process involved with nested custom RNNs, while we can still compile a model, we HIGHLY recommend you switch to something else.")
+      }
+      
       if(target_net === 'hanging' && connection_net === 'hanging'){
         if(has_dependency(connection_source, target_source)){
           alert("This connection is illegal(illegal looping)")
