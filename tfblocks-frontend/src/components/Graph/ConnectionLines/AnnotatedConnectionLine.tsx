@@ -19,7 +19,7 @@ const AnnotatedConnectionLine = (props : ConnectionLineComponentProps) => {
       <EdgeLabelRenderer>
             <div className = "absolute" style = {{transform: `translate(-100%, -50%) translate(${props.toX}px,${props.toY}px)`}}>
                 <div className = 'w-fit h-fit p-[4px] bg-white border-1 border-black rounded-xl'>
-                    <p className = "text-xs nodrag nopan">From: {`${sourceShape ? sourceShape : "unknown"}`}</p>
+                    <p className = "text-xs nodrag nopan">Shape: {`${sourceShape ? sourceShape : "unknown"}`}</p>
                 </div>
             </div>
         </EdgeLabelRenderer>

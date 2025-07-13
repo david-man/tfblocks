@@ -13,6 +13,7 @@ import Canvas from './components/Graph/Canvas'
 import nodeController from "./controllers/nodeController";
 import HelpMenu from './components/HelpMenu/HelpMenu'
 import helpMenuController from './controllers/helpMenuController'
+import TutorialMenu from './components/TutorialScreen/Tutorial'
 export type MousePosn = {
   x : number,
   y : number
@@ -23,7 +24,8 @@ function PreApp() {
   const [dragging, setDragging] = useState<boolean>(false);
   const {screenToFlowPosition} = useReactFlow();
   const [activeID, setActiveID] = useState<string | null>(null);
-  const {isHelpMenuOn, turnHelpMenuOff} = helpMenuController()
+  const {isHelpMenuOn} = helpMenuController()
+  const [showTutorial, setShowTutorial] = useState(true)
 
 
   const handleMouseMove = (event : MouseEvent<HTMLDivElement>) => {
@@ -45,8 +47,13 @@ function PreApp() {
 
 
   return (
-    <div onMouseMove = {handleMouseMove} className = "w-full h-full font-[roboto] font-weight-[400] relative">
+    <div onMouseMove = {handleMouseMove} className = "w-full h-full font-[DynaPuff] font-weight-[400] relative">
         <DndContext onDragEnd = {handleDragEnd} onDragStart = {handleDragStart} modifiers = {[restrictToWindowEdges]}>
+          {showTutorial ? 
+          <div className = 'absolute top-0 left-0 w-full h-full z-1'>
+            <TutorialMenu turnOff = {() => setShowTutorial(false)}/>
+          </div> : 
+          null}
           <div className = "flex flex-col w-full h-full bg-blue-200">
             <div className = "h-1/10 m-1 bg-white">
               <Header/>

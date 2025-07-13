@@ -71,6 +71,8 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                     return#dealt with in runtime
                 case 'scalar_ops':
                     return #dealt with in runtime
+                case 'custom_matrix':
+                    return #dealt with in runtime
                 case 'dense':
                     units = properties_map[node_id]['units']
                     layers[node_id] = keras.layers.Dense(units = units)
@@ -222,6 +224,10 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                         input_handle_2 = input_handle_dict[node_id][1]
                         output_handle = output_handle_dict[node_id][0]
                         handle_results[output_handle] = handle_results[input_handle_1] + handle_results[input_handle_2]
+                    case 'custom_matrix':
+                        np_array = np.load(f'{node_id}.npy')
+                        output_handle = output_handle_dict[node_id][0]
+                        handle_results[output_handle] = keras.ops.array(np_array)
                     case 'scalar_ops':
                         input_handle = input_handle_dict[node_id][0]
                         output_handle = output_handle_dict[node_id][0]

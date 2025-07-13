@@ -8,9 +8,11 @@ import type { Node } from '@xyflow/react'
 import { useState} from 'react'
 import TrainingElement from './TrainingElement'
 import IdleElement from './IdleElement'
+import FileController from '../../controllers/fileManager'
 
 const Header = (props: any) => {
     const {nodes} = nodeController()
+    const {get_file} = FileController()
     const {get_map, get_properties} = propertyController()
     const {get_dep_map, get_child_map, get_network_heads, get_dependencies, get_children} = dependencyController()
     const [trainingState, setTrainingState] = useState(false)
@@ -46,6 +48,8 @@ const Header = (props: any) => {
 
     const handleClick = async () => {
         let send = true;
+        let files : File[] = []
+        let file_ids : string[] = []
         nodes.map((node : Node) => {
             const id = node.id
             if(node.type == 'recurrent_head'){
@@ -60,12 +64,44 @@ const Header = (props: any) => {
                 if((!get_properties(id) || !(get_properties(id)?.valid)) && findNetwork(id) != 'hanging'){
                     send = false;
                 }
+
+                if(node.type == 'custom_matrix'){
+                    if(get_file(id)){
+                        files.push(get_file(id)!)
+                        file_ids.push(id)
+                    }
+                    else{
+                        alert("Something went wrong when retrieving your custom matrices. Aborting compilation.")
+                        return
+                    }
+                }
             }
         })
+        let i = 0
+        while(i < files.length){
+            const file = files[i]
+            const formData = new FormData()
+            formData.append('matrix', file)
+            formData.append('save_as', file_ids[i])
+            try{
+                const resp = await axios.post('http://localhost:8000/api/sendMatrices/', formData)
+                if(resp.status != 200){
+                    alert("Something went wrong when uploading your custom matrices. Aborting compilation.")
+                    return
+                }
+                i = i+1
+            }
+            catch(err){
+                alert("Something went wrong when uploading your custom matrices. Aborting compilation.")
+                return
+            }
+            
+        }
         if(!send){
             alert("This graph isn't ready to be parsed yet! Make sure you have a valid configuration!")
         }
         else{
+            console.log(files)
             const filtered_network_heads = get_network_heads().filter((id : string) => (id != 'out'))
             try{
                 const resp = await axios.post('http://localhost:8000/api/sendModel/', {
@@ -89,9 +125,12 @@ const Header = (props: any) => {
                     link.remove();
                     window.URL.revokeObjectURL(url); // Clean up the URL object
                 }
+                else{
+                    alert("There was an error in the backend somewhere! Sorry :(")
+                }
             }
             catch (err){
-                alert("ERROR: " + err.response.data.message.toString())
+                alert("There was an error uploading your model! Perhaps the backend server is down :(")
             }
         }
     }
@@ -100,12 +139,17 @@ const Header = (props: any) => {
             <div className = 'h-full w-1/12 flex flex-col items-center justify-center absolute left-8'>
                 <img src = {'logo.png'} width = '60px' height = '60px'></img>
             </div>
-            <div className = "absolute top-1/8 right-10 h-3/4 w-1/10 rounded-xl border-2 border-gray-500 bg-amber-300 flex justify-center items-center">
-                <button onClick = {handleClick} className = 'w-full h-full'>Train!</button>
+            <div className = "absolute top-1/8 right-10 h-3/4 rounded-full border-2 border-gray-500 bg-green-300 flex flex-col justify-center items-center aspect-square">
+                <button onClick = {handleClick} className = 'text-[10px] flex flex-col justify-center items-center cursor-pointer'>
+                    <img src = 'upload.png' height = {25} width = {25}></img>
+                    <p>Compile!</p>
+                </button>
             </div>
-            <div className = 'absolute top-1/8 right-2/5 w-1/5 h-3/4'>
+            {/* <div className = 'absolute top-1/8 right-2/5 w-1/5 h-3/4'>
                 {trainingState ? <TrainingElement setTrainingState = {setTrainingState}/> : <IdleElement setTrainingState = {setTrainingState}/>}
-            </div>
+            </div> 
+            this element will only be included on the desktop version
+            */}
         </div>
     )
 }

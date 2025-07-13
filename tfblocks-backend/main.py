@@ -27,42 +27,32 @@ def send_model():
     current_directory = os.getcwd()
     file_path = os.path.join(current_directory, "newest_model.keras")
     if(os.path.exists(file_path)):
-        return send_file(file_path, as_attachment=True, download_name='model.keras')
+        return send_file(file_path, as_attachment=True, download_name='model.keras'), 200
     else:
         return {}, 400
-    
-
-@app.route('/api/setInputData/', methods = ['POST'])
+@app.route('/api/getMatrixShape/', methods = ['POST'])
 @cross_origin()
-def validateInputData():
+def getInputShape():
     data = request.files['input_file']
     try:
         data_bytes = io.BytesIO(data.read())
         loaded_array = np.load(data_bytes)
-        np.save('input.npy', loaded_array)
-        return jsonify({'input_data_shape': loaded_array.shape}), 200
+        return jsonify({'data_shape': loaded_array.shape}), 200
     except:
         return jsonify({'message': 'input invalid'}), 400
-    
-@app.route('/api/setOutputData/', methods = ['POST'])
+
+@app.route('/api/sendMatrices/', methods = ["POST"])
 @cross_origin()
-def validateOutputData():
-    data = request.files['output_file']
+def receive_matrices():
+    data_id = request.form.get('save_as')
+    data = request.files['matrix']
     try:
         data_bytes = io.BytesIO(data.read())
         loaded_array = np.load(data_bytes)
-        np.save('output.npy', loaded_array)
-        return jsonify({'output_data_shape': loaded_array.shape}), 200
+        np.save(f'{data_id}.npy', loaded_array)
+        return jsonify({'message' : 'matrix saved'}), 200
     except:
         return jsonify({'message': 'input invalid'}), 400
-        
-
-@app.route('/api/progressStatus/', methods = ['GET'])
-@cross_origin()
-def send_data():
-    global current_progress
-    current_progress += 1
-    return jsonify({'progress': current_progress}), 200
 
 if __name__ == '__main__':
     app.run(host='localhost', port=8000, debug = True)

@@ -6,7 +6,6 @@ def parse_json(data):
     if(not data["active_nodes"] or not data["properties_map"] or not data["dependency_map"] or not data["network_heads"]):
         raise Exception("Incomplete Data")
     else:
-        print("DATA RECEIVED")
         active_node_ids = []
         active_nodes = []
         type_map = {}
@@ -38,7 +37,7 @@ def parse_json(data):
 
         input_handle_dict = {}
         for node in active_nodes:
-            if(node['id'] != 'in'):
+            if(node['id'] != 'in' and type_map[node['id']] != 'custom_matrix'):
                 if('parent_handle_id' in properties_map[node['id']].keys()):
                     input_handle_dict[node['id']] = [properties_map[node['id']]['parent_handle_id']]
                 else:

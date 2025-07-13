@@ -43,6 +43,7 @@ const Blocks = (props) => {
         </>)],
         ['Custom', (<>
             <DragElement id = {'scalar_ops'} name = {'Scalar Operation Node'} activeID = {activeID} color = 'bg-pink-400'></DragElement>
+            <DragElement id = {'custom_matrix'} name = {'Custom Matrix Node'} activeID = {activeID} color = 'bg-pink-400'></DragElement>
         </>)]
         ])
     
@@ -67,6 +68,7 @@ const Blocks = (props) => {
                 <DragShadow id = {'subtract'} name = {'Subtract Node'} activeID = {activeID} color = 'bg-yellow-300'></DragShadow>
                 <DragShadow id = {'dot_product'} name = {'Dot Product Node'} activeID = {activeID} color = 'bg-yellow-300'></DragShadow>
                 <DragShadow id = {'scalar_ops'} name = {'Scalar Operation Node'} activeID = {activeID} color = 'bg-pink-400'></DragShadow>
+                <DragShadow id = {'custom_matrix'} name = {'Custom Matrix Node'} activeID = {activeID} color = 'bg-pink-400'></DragShadow>
                 <DragShadow id = {'transpose'} name = {'Transpose Node'} activeID = {activeID} color = 'bg-stone-300'></DragShadow>
                 <DragShadow id = {'cut'} name = {'Cut Node'} activeID = {activeID} color = 'bg-stone-300'></DragShadow>
                 <DragShadow id = {'concatenate'} name = {'Concatenate Node'} activeID = {activeID} color = 'bg-stone-300'></DragShadow>

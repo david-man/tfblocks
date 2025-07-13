@@ -2,7 +2,7 @@ import helpMenuController from "../../controllers/helpMenuController"
 
 const HelpMenu = () => {
     const {turnHelpMenuOff, currentHelpMenu} = helpMenuController()
-    const current_menu = currentHelpMenu() ? currentHelpMenu() : 'none'
+    const current_menu = currentHelpMenu() ? currentHelpMenu() : ''
     return (
         <div className = 'w-full h-full bg-amber-300 border-2 border-gray-500 relative'>
             <button onClick = {turnHelpMenuOff}>

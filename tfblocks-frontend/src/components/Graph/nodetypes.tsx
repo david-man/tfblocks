@@ -21,6 +21,7 @@ import SubtractNode from './Nodes/SpecificNodes/SubtractNode';
 import MultiplyNode from './Nodes/SpecificNodes/MultiplyNode';
 import ScalarOpsNode from './Nodes/SpecificNodes/ScalarOpsNode';
 import ReshapeNode from './Nodes/SpecificNodes/ReshapeNode';
+import CustomMatrixNode from './Nodes/SpecificNodes/CustomMatrixNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -45,5 +46,6 @@ export const nodeTypes = {
     flatten : FlattenNode,
     output_layer : OutputLayerNode,
     scalar_ops : ScalarOpsNode,
-    reshape : ReshapeNode
+    reshape : ReshapeNode,
+    custom_matrix : CustomMatrixNode
 }

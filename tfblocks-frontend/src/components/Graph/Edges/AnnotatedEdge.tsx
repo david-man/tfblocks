@@ -19,7 +19,7 @@ const AnnotatedEdge = (props : EdgeProps) => {
         {props.selected ? <EdgeLabelRenderer>
             <div className = "absolute" style = {{transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}}>
                 <div className = 'w-fit h-fit p-[4px] bg-white border-1 border-black rounded-xl'>
-                    <p className = "text-xs">From: {`${source_shape ? source_shape : "unknown"}`}</p>
+                    <p className = "text-xs">Shape: {`${source_shape ? source_shape : "unknown"}`}</p>
                 </div>
             </div>
         </EdgeLabelRenderer> : null}

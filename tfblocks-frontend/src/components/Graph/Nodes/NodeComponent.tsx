@@ -10,6 +10,7 @@ import { useShallow } from 'zustand/shallow';
 const NodeComponent = (props : any) =>{
     //Generic node component with generic style that interacts with general dependencies, properties, and can toggle the respective help menu
     const id = props.id
+    const dummy = props?.dummy ? props.dummy : false
     const txt_color = props.txt_color ? props.txt_color : 'black'
     const bg_color = props.bg_color ? props.bg_color : null
     const border_color = props.valid_node ? "border-emerald-500" : "border-gray-500"
@@ -71,19 +72,19 @@ const NodeComponent = (props : any) =>{
         <>
             {props?.neurons != undefined && !isNaN(props.neurons) ? 
                 <NodeToolbar isVisible = {props?.selected} position = {Position.Top}>
-                    <div className = "rounded-xl bg-gray-700 flex flex-col justify-center items-center font-[roboto]">
+                    <div className = "rounded-xl bg-gray-700 flex flex-col justify-center items-center">
                         <p className = 'text-center text-white text-nowrap p-2'>Trainable Weights: {props.neurons}</p>
                     </div>
                 </NodeToolbar> 
                 : null}
-            <div className = {`relative h-full w-full p-1 border-2 rounded-lg flex flex-col justify-center items-center text-nowrap font-[roboto] 
+            <div className = {`relative h-full w-full p-1 border-2 rounded-lg flex flex-col justify-center items-center text-nowrap 
             ${selected ? 'shadow-2xl/50' : null} 
             ${bg_color}
             ${border_color}`}
             style = {{color: (txt_color)}}>
             
-                <button onClick = {() => setMenu(props.type)}>
-                    <div className = 'absolute top-[5px] right-[5px] z-1 cursor-pointer'>
+                <button onClick = {() => !dummy ? setMenu(props.type) : null}>
+                    <div className = 'absolute top-[5px] right-[5px] z-1 cursor-help'>
                         <img src="question.png" alt="help" width = "12px" height = "12px"/>
                     </div>
                 </button>
@@ -94,8 +95,8 @@ const NodeComponent = (props : any) =>{
                 {props.optionsMenu ? 
                 <>
                     <div className = {`flex flex-col justify-center items-center transition-transform ease-linear duration-200 ${CanvasListener?.data?.showMenu ? 'transform rotate-180' : ''}`}>
-                        <button onClick = {() => {updateNodeData(id, {showMenu: !CanvasListener?.data?.showMenu})}}>
-                            <img src = "arrow-down-angle.svg" alt = "▲" className = "w-[8px] h-[8px]"/>
+                        <button onClick = {() => {!dummy ? updateNodeData(id, {showMenu: !CanvasListener?.data?.showMenu}): null} }>
+                            <img src = "arrow-down-angle.svg" alt = "▲" className = "w-[8px] h-[8px] cursor-pointer "/>
                         </button> 
                     </div>
                     <div className = {`ease-in-out transition-all duration-300 ${CanvasListener?.data?.showMenu ? 'opacity-100 max-h-[900px]' : 'opacity-0 max-h-0'}`}>
