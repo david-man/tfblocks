@@ -24,7 +24,7 @@ function PreApp() {
   const [dragging, setDragging] = useState<boolean>(false);
   const {screenToFlowPosition} = useReactFlow();
   const [activeID, setActiveID] = useState<string | null>(null);
-  const {isHelpMenuOn} = helpMenuController()
+  const {isHelpMenuOn, setHelpMenu} = helpMenuController()
   const [showTutorial, setShowTutorial] = useState(true)
 
 
@@ -45,7 +45,10 @@ function PreApp() {
     setActiveID(null);
   }
 
-
+  //ONLY FOR DEVELOPMENT
+  useEffect(() => {
+    setHelpMenu('pool')
+  }, [])
   return (
     <div onMouseMove = {handleMouseMove} className = "w-full h-full font-[DynaPuff] font-weight-[400] relative">
         <DndContext onDragEnd = {handleDragEnd} onDragStart = {handleDragStart} modifiers = {[restrictToWindowEdges]}>
@@ -66,7 +69,7 @@ function PreApp() {
                 {dragging ? <DndOverlay /> : null}
                 <Canvas />
               </div>
-              <div className = {`transition-all duration-300 h-full absolute top-0 right-0 mt-1 mr-1 mb-1 ${isHelpMenuOn() ? 'opacity-100 w-1/5' : 'opacity-0 w-0'}`}>
+              <div className = {`transition-all duration-300 h-full absolute top-0 right-0 mt-1 mr-1 mb-1 ${isHelpMenuOn() ? 'opacity-100 w-3/10' : 'opacity-0 w-0'}`}>
                 <HelpMenu />
               </div>
             </div>

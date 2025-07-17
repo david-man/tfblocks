@@ -18,6 +18,7 @@ import AnnotatedConnectionLine from "./ConnectionLines/AnnotatedConnectionLine";
 import '../../App.css'
 import nodeController from "../../controllers/nodeController";
 import dependencyController from "../../controllers/dependencyController";
+import helpMenuController from "../../controllers/helpMenuController";
 
 const selector = (state: Graph) => ({
   nodes: state.nodes,
@@ -33,6 +34,7 @@ const Canvas = (props : any) => {
   const { nodes, edges, getNodes, setNodes, onNodesChange, onEdgesChange, onConnect} = nodeController(useShallow(selector));
   const {get_network_heads, get_dep_map, get_dependencies, get_children} = dependencyController()
   const { updateNodeData } = useReactFlow()
+  const {turnHelpMenuOff} = helpMenuController()
   
   const has_dependency = (child_id : String, comparison: String) => {
     if(child_id === comparison){
@@ -78,10 +80,6 @@ const Canvas = (props : any) => {
     return to_ret
   }
   const handleConnect = (new_connection : Connection) => {
-    /**
-     * Need to deal with multi-layered RNN's. 
-     * Basically, need to redo the network checking to be based on targetHandles. external handles for recurrent blocks should belong to the outer network, while hidden handles are for the inner network
-     */
     const connection_source = new_connection?.sourceHandle.split("|")[0]
     const target_source = new_connection?.targetHandle.split("|")[0]
     const connection_net = findNetwork(connection_source)
@@ -166,7 +164,8 @@ const Canvas = (props : any) => {
           updateNodeData(node.id, {showMenu:true})}}
         onPaneClick={(event) => {
           event.preventDefault()
-          setNodes(nodes.map((node : Node) => ({ ...node, data: {...node.data, showMenu: false}, selected: false })));
+          setNodes(nodes.map((node : Node) => ({ ...node, data: {...node.data, showMenu: false}, selected: false })));//shuts off all node options menus
+          turnHelpMenuOff()
         }}
 
         fitView = {false}

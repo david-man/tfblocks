@@ -5,17 +5,19 @@ import nodeController from '../../controllers/nodeController'
 import propertyController from '../../controllers/propertyController'
 import axios from 'axios'
 import type { Node } from '@xyflow/react'
-import { useState} from 'react'
-import TrainingElement from './TrainingElement'
-import IdleElement from './IdleElement'
 import FileController from '../../controllers/fileManager'
+import helpMenuController, { type Help } from '../../controllers/helpMenuController'
 
 const Header = (props: any) => {
     const {nodes} = nodeController()
     const {get_file} = FileController()
     const {get_map, get_properties} = propertyController()
     const {get_dep_map, get_child_map, get_network_heads, get_dependencies, get_children} = dependencyController()
-    const [trainingState, setTrainingState] = useState(false)
+    const {setMenu} = helpMenuController(useShallow((state : Help) => {
+        return {
+            setMenu : state.setHelpMenu
+        }
+    }))
 
     const findNetwork = (id : String) => {
         let to_ret = "hanging"
@@ -139,12 +141,18 @@ const Header = (props: any) => {
             <div className = 'h-full w-1/12 flex flex-col items-center justify-center absolute left-8'>
                 <img src = {'logo.png'} width = '60px' height = '60px'></img>
             </div>
-            <div className = "absolute top-1/8 right-10 h-3/4 rounded-full border-2 border-gray-500 bg-green-300 flex flex-col justify-center items-center aspect-square">
+            <div className = "absolute top-1/8 right-10 h-3/4 rounded-full border-2 border-gray-500 bg-green-300 flex justify-center items-center aspect-square">
                 <button onClick = {handleClick} className = 'text-[10px] flex flex-col justify-center items-center cursor-pointer'>
                     <img src = 'upload.png' height = {25} width = {25}></img>
                     <p>Compile!</p>
                 </button>
             </div>
+            <div className = 'absolute top-1/8 right-0 h-3/4 flex justify-center items-center aspect-square'>
+                <button onClick = {() => setMenu('Compilation')} className = 'cursor-help'>
+                    <img src="question.png" alt="help" width = "12px" height = "12px"/>
+                </button>
+            </div>
+            
             {/* <div className = 'absolute top-1/8 right-2/5 w-1/5 h-3/4'>
                 {trainingState ? <TrainingElement setTrainingState = {setTrainingState}/> : <IdleElement setTrainingState = {setTrainingState}/>}
             </div> 
