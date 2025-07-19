@@ -42,24 +42,28 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                     kernel_size = properties_map[node_id]['kernel_size']
                     stride = properties_map[node_id]['stride']
                     padding = properties_map[node_id]['padding']
+                    bias = properties_map[node_id]['bias']
                     match dim:
                         case '1d':
                             layers[node_id] =  keras.layers.Conv1D(filters = filters,
                                                         kernel_size = kernel_size,
                                                         strides = stride,
-                                                        padding = padding)
+                                                        padding = padding,
+                                                        use_bias = bias)
                             return
                         case '2d':
                             layers[node_id] = keras.layers.Conv2D(filters = filters,
                                                         kernel_size = kernel_size,
                                                         strides = stride,
-                                                        padding = padding)
+                                                        padding = padding,
+                                                        use_bias = bias)
                             return
                         case '3d':
                             layers[node_id] = keras.layers.Conv3D(filters = filters,
                                                         kernel_size = kernel_size,
                                                         strides = stride,
-                                                        padding = padding)
+                                                        padding = padding,
+                                                        use_bias = bias)
                             return layers
                         case _:
                             raise Exception("Convolutional Error!")
@@ -69,13 +73,16 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                     return #dealt with in runtime
                 case 'multiply':
                     return#dealt with in runtime
+                case 'divide':
+                    return#dealt with in runtime
                 case 'scalar_ops':
                     return #dealt with in runtime
                 case 'custom_matrix':
                     return #dealt with in runtime
                 case 'dense':
                     units = properties_map[node_id]['units']
-                    layers[node_id] = keras.layers.Dense(units = units)
+                    bias = properties_map[node_id]['bias']
+                    layers[node_id] = keras.layers.Dense(units = units, use_bias = bias)
                     return
                 case 'dot_product':
                     return#dealt with in runtime
@@ -112,15 +119,16 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                 case 'norm':
                     axis = properties_map[node_id]['axis']
                     normtype = properties_map[node_id]['norm_type']
+                    scale = properties_map[node_id]['scale']
                     match normtype:
                         case 'unit':
                             layers[node_id] = keras.layers.UnitNormalization(axis = axis)
                             return
                         case 'batch':
-                            layers[node_id] = keras.layers.BatchNormalization(axis = axis)
+                            layers[node_id] = keras.layers.BatchNormalization(axis = axis, scale = scale, center = scale)
                             return
                         case 'layer':
-                            layers[node_id] = keras.layers.LayerNormalization(axis = axis)
+                            layers[node_id] = keras.layers.LayerNormalization(axis = axis, scale = scale, center = scale)
                             return
                         case _:
                             raise Exception("Normalization Error!")
@@ -218,12 +226,17 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                         input_handle_1 = input_handle_dict[node_id][0]
                         input_handle_2 = input_handle_dict[node_id][1]
                         output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = handle_results[input_handle_1] + handle_results[input_handle_2]
+                        handle_results[output_handle] = handle_results[input_handle_1] - handle_results[input_handle_2]
                     case 'multiply':
                         input_handle_1 = input_handle_dict[node_id][0]
                         input_handle_2 = input_handle_dict[node_id][1]
                         output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = handle_results[input_handle_1] + handle_results[input_handle_2]
+                        handle_results[output_handle] = keras.ops.multiply(handle_results[input_handle_1], handle_results[input_handle_2])
+                    case 'divide':
+                        input_handle_1 = input_handle_dict[node_id][0]
+                        input_handle_2 = input_handle_dict[node_id][1]
+                        output_handle = output_handle_dict[node_id][0]
+                        handle_results[output_handle] = keras.ops.divide(handle_results[input_handle_1], handle_results[input_handle_2])
                     case 'custom_matrix':
                         np_array = np.load(f'{node_id}.npy')
                         output_handle = output_handle_dict[node_id][0]

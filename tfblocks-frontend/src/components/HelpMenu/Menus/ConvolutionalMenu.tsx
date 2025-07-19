@@ -20,7 +20,7 @@ const ConvolutionalMenu = () => {
                             <li>Valid: Don't pad the input</li>
                         </ul>
                     </li>
-                    <li><b>Dimensionality</b> — Spatial dimensionality of the input. Note that we require that channels are placed last.</li>
+                    <li><b>Dimensionality</b> — Spatial dimensionality of the input. Note that we require that channels are on the last axis.</li>
                     <li><b>Bias</b> — Whether to add a bias to the final output of each kernel or not</li>
                 </ul>
             </li>

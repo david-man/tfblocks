@@ -23,8 +23,9 @@ const Blocks = (props) => {
         </>)],
         ['Operations',  (<>
             <DragElement id = {'add'} name = {'Add Node'} activeID = {activeID} color = 'bg-yellow-300'></DragElement>
-                <DragElement id = {'multiply'} name = {'Multiply Node'} activeID = {activeID} color = 'bg-yellow-300'></DragElement>
                 <DragElement id = {'subtract'} name = {'Subtract Node'} activeID = {activeID} color = 'bg-yellow-300'></DragElement>
+                <DragElement id = {'multiply'} name = {'Multiply Node'} activeID = {activeID} color = 'bg-yellow-300'></DragElement>
+                <DragElement id = {'divide'} name = {'Divide Node'} activeID = {activeID} color = 'bg-yellow-300'></DragElement>
                 <DragElement id = {'dot_product'} name = {'Dot Product Node'} activeID = {activeID} color = 'bg-yellow-300'></DragElement>
         </>)],
         ['Reshape', (<>
@@ -65,6 +66,7 @@ const Blocks = (props) => {
                 <DragShadow id = {'dropout'} name = {'Dropout Layer'} activeID = {activeID} color = 'bg-purple-400'></DragShadow>
                 <DragShadow id = {'add'} name = {'Add Node'} activeID = {activeID} color = 'bg-yellow-300'></DragShadow>
                 <DragShadow id = {'multiply'} name = {'Multiply Node'} activeID = {activeID} color = 'bg-yellow-300'></DragShadow>
+                <DragShadow id = {'divide'} name = {'Divide Node'} activeID = {activeID} color = 'bg-yellow-300'></DragShadow>
                 <DragShadow id = {'subtract'} name = {'Subtract Node'} activeID = {activeID} color = 'bg-yellow-300'></DragShadow>
                 <DragShadow id = {'dot_product'} name = {'Dot Product Node'} activeID = {activeID} color = 'bg-yellow-300'></DragShadow>
                 <DragShadow id = {'scalar_ops'} name = {'Scalar Operation Node'} activeID = {activeID} color = 'bg-pink-400'></DragShadow>

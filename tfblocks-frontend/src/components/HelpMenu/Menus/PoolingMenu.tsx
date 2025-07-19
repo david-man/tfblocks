@@ -20,7 +20,7 @@ const PoolingMenu = () => {
                             <li>Valid: Don't pad the input</li>
                         </ul>
                     </li>
-                    <li><b>Dimensionality</b> — Spatial dimensionality of the input. Note that we require that channels are placed last.</li>
+                    <li><b>Dimensionality</b> — Spatial dimensionality of the input. Note that we require that channels are on the last axis.</li>
                 </ul>
             </li>
         </ul>
@@ -44,8 +44,8 @@ const PoolingMenu = () => {
             <li>That is because the primary strength of pooling layers is that they are designed to <i>preserve important information and features</i> while downscaling the input.</li>
             <li>This can be particularly helpful if you want to feed the output of a convolution into a Dense layer, which are notoriously <i>computationally expensive</i></li>
             <hr className = 'w-4/5 rounded-2xl border-black border-1 m-5' />
-            <li>Often, we want to keep consumed information <i>separate</i> during pooling so that we don't highlight the same feature twice.</li>
-            <li>This is why its recommended to use larger strides to minimize overlap between windows.</li>
+            <li>Often, we want to keep filtered information <i>separate</i> during pooling so that we don't highlight the same feature twice.</li>
+            <li>This is why its recommended to use larger strides and smaller kernels to minimize overlap between windows.</li>
             <li>This is also why we don't allow information to leak between channels. In other words, pooling layers operate independently on each channel.</li>
             <hr className = 'w-4/5 rounded-2xl border-black border-1 m-5' />
             <li>You can learn more about pooling layers and their uses <Link href = 'https://www.geeksforgeeks.org/deep-learning/cnn-introduction-to-pooling-layer/'>here</Link></li>

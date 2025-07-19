@@ -17,6 +17,7 @@ const ConvNode = (props : NodeProps) =>{
     const [valid, setValid] = useState(false)
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
     const [neurons, setNeurons] = useState(NaN)
+    const [bias, setBias ] = useState(true)
 
     const [filters, setFilters] = useState(NaN)
     const [kernelSize, setKernelSize] = useState(NaN)
@@ -53,12 +54,13 @@ const ConvNode = (props : NodeProps) =>{
                             if(IncomingShape.length === 2  && Math.floor((IncomingShape[0] - kernelSize) / stride) + 1 > 0 )
                             {
                                 set_data_shape([Math.floor((IncomingShape[0] - kernelSize) / stride) + 1, filters])
-                                setNeurons(channels * filters * kernelSize)
+                                setNeurons((channels * kernelSize + (bias ? 1 : 0)) * filters)
                                 setValid(true)
                                 set_properties(id, {"valid": true,
                                     "input_shape": IncomingShape,
                                      "dim": dimensionality, "filters": filters, 
                                     "kernel_size": kernelSize, "stride": stride, "padding": padding,
+                                    "bias": bias,
                                     "parent_handle_id": ParentHandle,
                                     "output_handle_id": outgoing_handle_id
                                 })
@@ -69,13 +71,14 @@ const ConvNode = (props : NodeProps) =>{
                             if(IncomingShape.length === 2  && Math.ceil((IncomingShape[0]) / stride) > 0 )
                             {
                                 set_data_shape([Math.ceil((IncomingShape[0]) / stride), filters])
-                                setNeurons(channels * filters * kernelSize)
+                                setNeurons((channels * kernelSize + (bias ? 1 : 0)) * filters)
                                 setValid(true)
                                 set_properties(id, {"valid": true,
                                     "input_shape": IncomingShape,
                                      "dim": dimensionality, "filters": filters, 
                                     "kernel_size": kernelSize, "stride": stride, 
                                     "padding": padding,
+                                    "bias": bias,
                                     "parent_handle_id": ParentHandle,
                                     "output_handle_id": outgoing_handle_id,
                                 })
@@ -92,13 +95,14 @@ const ConvNode = (props : NodeProps) =>{
                                     Math.floor((IncomingShape[0] - kernelSize) / stride) + 1, 
                                     Math.floor((IncomingShape[1] - kernelSize) / stride) + 1,
                                     filters])
-                                setNeurons(channels * filters * (kernelSize**2))
+                                setNeurons((channels * (kernelSize**2) + (bias ? 1 : 0)) * filters)
                                 setValid(true)
                                 set_properties(id, {"valid": true,
                                     "input_shape": IncomingShape,
                                      "dim": dimensionality, "filters": filters, 
                                     "kernel_size": kernelSize, "stride": stride, 
                                     "padding": padding,
+                                    "bias": bias,
                                     "parent_handle_id": ParentHandle,
                                     "output_handle_id": outgoing_handle_id,
                                 })
@@ -112,12 +116,13 @@ const ConvNode = (props : NodeProps) =>{
                             {
                                 set_data_shape([Math.ceil((IncomingShape[0]) / stride), 
                                 Math.ceil((IncomingShape[1]) / stride), filters])
-                                setNeurons(channels * filters * (kernelSize**2))
+                                setNeurons((channels * (kernelSize**2) + (bias ? 1 : 0)) * filters)
                                 setValid(true)
                                 set_properties(id, {"valid": true,
                                     "input_shape": IncomingShape,
                                      "dim": dimensionality, "filters": filters, 
                                     "kernel_size": kernelSize, "stride": stride, 
+                                    "bias": bias,
                                     "padding": padding,
                                     "parent_handle_id": ParentHandle,
                                     "output_handle_id": outgoing_handle_id,
@@ -137,13 +142,14 @@ const ConvNode = (props : NodeProps) =>{
                                     Math.floor((IncomingShape[1] - kernelSize) / stride) + 1,
                                     Math.floor((IncomingShape[2] - kernelSize) / stride) + 1,
                                     filters])
-                                setNeurons(channels * filters * (kernelSize**3))
+                                setNeurons((channels * (kernelSize**3) + (bias ? 1 : 0)) * filters)
                                 setValid(true)
                                 set_properties(id, {"valid": true,
                                     "input_shape": IncomingShape,
                                      "dim": dimensionality, "filters": filters, 
                                     "kernel_size": kernelSize, "stride": stride,
                                     "padding": padding,
+                                    "bias": bias,
                                     "parent_handle_id": ParentHandle,
                                     "output_handle_id": outgoing_handle_id,
                                 })
@@ -161,12 +167,13 @@ const ConvNode = (props : NodeProps) =>{
                                     Math.ceil((IncomingShape[1]) / stride), 
                                     Math.ceil((IncomingShape[2]) / stride),
                                     filters])
-                                setNeurons(channels * filters * (kernelSize**3))
+                                setNeurons((channels * (kernelSize**3) + (bias ? 1 : 0)) * filters)
                                 setValid(true)
                                 set_properties(id, {"valid": true,
                                     "input_shape": IncomingShape,
                                      "dim": dimensionality, "filters": filters, 
                                     "kernel_size": kernelSize, "stride": stride,
+                                    "bias": bias,
                                     "padding": padding,
                                     "parent_handle_id": ParentHandle,
                                     "output_handle_id": outgoing_handle_id,
@@ -180,18 +187,19 @@ const ConvNode = (props : NodeProps) =>{
                 }
             }
         }
-    }, [IncomingShape, filters, kernelSize, stride, padding, dimensionality])
+    }, [IncomingShape, filters, kernelSize, stride, padding, dimensionality, bias])
 
     useEffect(() => {
         set_handle_shape(outgoing_handle_id, data_shape)
-    }, [filters, kernelSize, neurons, data_shape, stride, padding, dimensionality])
+    }, [filters, kernelSize, neurons, data_shape, stride, padding, dimensionality, bias])
 
     const optionsMenu = <ConvOptions id = {id} 
         filters = {filters} setFilters = {setFilters} 
         kernel = {kernelSize} setKernel = {setKernelSize}
         stride = {stride} setStride = {setStride}
         padding = {padding} setPadding = {setPadding}
-        dim = {dimensionality} setDimensionality = {setDimensionality}/>;
+        dim = {dimensionality} setDimensionality = {setDimensionality}
+        bias = {bias} setBias = {setBias}/>;
 
     return (
         <div>

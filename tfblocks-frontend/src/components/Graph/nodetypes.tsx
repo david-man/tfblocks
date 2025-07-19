@@ -22,6 +22,7 @@ import MultiplyNode from './Nodes/SpecificNodes/MultiplyNode';
 import ScalarOpsNode from './Nodes/SpecificNodes/ScalarOpsNode';
 import ReshapeNode from './Nodes/SpecificNodes/ReshapeNode';
 import CustomMatrixNode from './Nodes/SpecificNodes/CustomMatrixNode';
+import DivideNode from './Nodes/SpecificNodes/DivideNode';
 
 export const nodeTypes = {
     input_layer : InputLayerNode,
@@ -47,5 +48,6 @@ export const nodeTypes = {
     output_layer : OutputLayerNode,
     scalar_ops : ScalarOpsNode,
     reshape : ReshapeNode,
-    custom_matrix : CustomMatrixNode
+    custom_matrix : CustomMatrixNode,
+    divide : DivideNode
 }

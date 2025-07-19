@@ -18,6 +18,7 @@ const NormalizationNode = (props : NodeProps) =>{
     const [neurons, setNeurons] = useState(NaN)
 
     const [axis, setAxis] = useState(-1)
+    const [scale, setScale] = useState(true)
     const [normType, setNormType] = useState(undefined)
 
     const {updateNodeData} = useReactFlow()
@@ -51,23 +52,25 @@ const NormalizationNode = (props : NodeProps) =>{
                         setNeurons(0)
                         break
                     case "batch":
-                        setNeurons(Shape[a] * 2)
+                        setNeurons((scale ? Shape[a] * 2 : 0))
                         break
                     case "layer":
-                        setNeurons(Shape[a] * 2)
+                        setNeurons((scale ? Shape[a] * 2 : 0))
                         break
                     default:
                         break
                 }
                 
                 setValid(true)
-                set_properties(id, {"valid": true, "input_shape": IncomingShape, "norm_type": normType, "axis": a - IncomingShape.length,
+                set_properties(id, {"valid": true, "input_shape": IncomingShape, "norm_type": normType, 
+                    "axis": a - IncomingShape.length,
+                    "scale": scale,
                     "parent_handle_id": ParentHandle,
                     "output_handle_id": outgoing_handle_id,
                 })
             }
         }
-    }, [IncomingShape, normType, axis])
+    }, [IncomingShape, normType, axis, scale])
 
     useEffect(() => {
         set_handle_shape(outgoing_handle_id, data_shape)
@@ -75,7 +78,8 @@ const NormalizationNode = (props : NodeProps) =>{
 
     const optionsMenu = <NormalizationOptions id = {id} 
     set_norm_type = {setNormType} norm_type = {normType}
-    axis = {axis} set_axis = {setAxis}></NormalizationOptions>
+    axis = {axis} set_axis = {setAxis}
+    scale = {scale} set_scale = {setScale}></NormalizationOptions>
     return (
         <div>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>

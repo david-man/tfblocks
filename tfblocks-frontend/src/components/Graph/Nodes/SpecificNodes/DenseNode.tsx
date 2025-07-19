@@ -19,6 +19,7 @@ const DenseNode = (props : NodeProps) =>{
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
     const [neurons, setNeurons] = useState(NaN)
     const [units, setUnits] = useState(NaN)
+    const [bias, setBias] = useState(true)
     const [valid, setValid] = useState(false)
     const incomingConnection = useNodeConnections({
         handleType: "target",
@@ -42,21 +43,22 @@ const DenseNode = (props : NodeProps) =>{
             if(IncomingShape.length >= 1 && !isNaN(IncomingShape[IncomingShape.length - 1] * units) && units >= 1)
             {
                 set_data_shape([...IncomingShape.slice(0, IncomingShape.length - 1), units])
-                setNeurons(units * IncomingShape[IncomingShape.length - 1])
+                setNeurons(units * IncomingShape[IncomingShape.length - 1] + (bias ? units : 0))
                 set_properties(id, {"valid": true, "input_shape": IncomingShape, "units": units,
+                    "bias": bias,
                                     "parent_handle_id": ParentHandle,
                                     "output_handle_id": outgoing_handle_id
                 })
                 setValid(true)
             }
         }
-    }, [IncomingShape, units])
+    }, [IncomingShape, units, bias])
 
     useEffect(() => {
         set_handle_shape(outgoing_handle_id, data_shape)
     }, [units, neurons, data_shape])
 
-    const optionsMenu = <DenseOptions units = {units} setUnits = {setUnits} id = {id}/>;
+    const optionsMenu = <DenseOptions units = {units} setUnits = {setUnits} id = {id} bias = {bias} setBias = {setBias}/>;
     
     return (
         <div className = 'w-[100px]'>
