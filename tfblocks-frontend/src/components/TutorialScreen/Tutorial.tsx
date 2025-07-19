@@ -26,6 +26,7 @@ import Slide26 from "./TutorialSlides/slide26";
 import Slide11 from "./TutorialSlides/slide11";
 import Slide8 from "./TutorialSlides/slide8";
 import Slide7 from "./TutorialSlides/slide7";
+import Slide25a from "./TutorialSlides/slide25a";
 
 const TutorialMenu = ({turnOff} : any) => {
     const [slide, setSlide] = useState<number>(0)
@@ -56,6 +57,7 @@ const TutorialMenu = ({turnOff} : any) => {
                                            <Slide23 setHole = {setHole}/>,
                                             <Slide24 />,
                                              <Slide25 />,
+                                             <Slide25a />,
                                               <Slide26 />]
     const slideToShow = () => {
         if(slide < slides.length){

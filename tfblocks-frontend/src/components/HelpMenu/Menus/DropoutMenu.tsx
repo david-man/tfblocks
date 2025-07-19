@@ -4,7 +4,7 @@ const DropoutMenu = () => {
         <p className = "text-3xl text-center p-2 ">Dropout Layers</p>
         <hr className = 'w-5/6 border-black border-1 rounded-2xl'></hr>
         <p className = 'text-2xl text-center p-1 pt-3'>Reference Sheet</p>
-        <ul className = 'list-disc list-inside pl-1 pb-3'>
+        <ul className = 'list-disc list-inside pl-1 pb-3 w-full'>
             <li><b>Input Dimensionality</b>: Dependent</li>
             <li><b>Output Dimensionality</b>: Same as input</li>
             <li><b>Training Load</b>: None</li>
@@ -20,7 +20,10 @@ const DropoutMenu = () => {
         <p className = 'text-2xl text-center p-1 pt-3'>Guide</p>
          <ul className = 'list-disc list-inside pl-2 pb-3 pr-3'>
             <li>Dropout layers are layers used to decrease the chance of model overfitting, which is where a model learns all the noise and irrelevant patterns in the training data</li>
-            <li>At their core, they do this by randomly 'turning off' certain neurons, forcing the model to learn more general features</li>
+            <li>At their core, they do this by randomly 'turning off' certain neurons each training iteration, forcing the model to learn more general features</li>
+            <li className = 'pb-2'>This GIF by <Link href = 'https://tahera-firdose.medium.com/dropouts-enhancing-training-stability-and-generalization-badd5069a744'>Tahera Firdose</Link> does a good job of showing a dropout layer in action.
+                <img src = 'dropout-gif.gif' className = 'object-cover'></img>
+            </li>
             <hr className = 'w-4/5 rounded-2xl border-black border-1 m-5' />
             <li>Dropout layers are separated by type:
                 <ul className = 'list-disc list-inside pl-4'>

@@ -1,8 +1,8 @@
 import helpMenuController from "../../controllers/helpMenuController"
-import ReshapeNode from "../Graph/Nodes/SpecificNodes/ReshapeNode"
 import ActivationMenu from "./Menus/ActivationMenu"
 import ConcatenateMenu from "./Menus/ConcatenateMenu"
 import ConvolutionalMenu from "./Menus/ConvolutionalMenu"
+import CustomMatrixMenu from "./Menus/CustomMatrixMenu"
 import CutMenu from "./Menus/CutMenu"
 import DenseMenu from "./Menus/DenseMenu"
 import DropoutMenu from "./Menus/DropoutMenu"
@@ -11,6 +11,7 @@ import NormalizationMenu from "./Menus/NormalizationMenu"
 import OperationsMenu from "./Menus/OperationsMenu"
 import PoolingMenu from "./Menus/PoolingMenu"
 import ReshapeMenu from "./Menus/ReshapeMenu"
+import ScaleOpsMenu from "./Menus/ScalarOperationsMenu"
 import UpscaleMenu from "./Menus/UpscaleMenu"
 
 const HelpMenu = () => {
@@ -32,7 +33,9 @@ const HelpMenu = () => {
         'concatenate': <ConcatenateMenu />,
         'upscale': <UpscaleMenu />,
         'flatten': <FlattenMenu />,
-        'reshape': <ReshapeMenu />
+        'reshape': <ReshapeMenu />,
+        'scalar_ops': <ScaleOpsMenu />,
+        'custom_matrix': <CustomMatrixMenu />
         
     }
     return (

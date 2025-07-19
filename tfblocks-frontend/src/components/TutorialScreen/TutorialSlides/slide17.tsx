@@ -13,9 +13,9 @@ const Slide17 = () => {
                 <img src = 'white-down-angle.png' height = {32} width = {32} className = 'transform rotate-330'></img>
             </div>
             <div className = 'absolute z-10 top-0 left-0 h-6/10 w-full flex flex-col justify-center items-center'>
-                <p className = 'text-white text-[25px]'>Handles that look like these are called input handles.</p>
-                <p className = 'text-white text-[25px]'>These handles tell tfBlocks where the inputs to a layer should come from.</p>
-                <p className = 'text-white text-[25px]'>They make connections with output handles</p>
+                <p className = 'text-white text-[25px] text-center'>Handles that look like these are called input handles.</p>
+                <p className = 'text-white text-[25px] text-center'>These handles tell tfBlocks where the inputs to a layer should come from.</p>
+                <p className = 'text-white text-[25px] text-center'>They make connections with output handles</p>
             </div>
             {exampleNode}
         </div>

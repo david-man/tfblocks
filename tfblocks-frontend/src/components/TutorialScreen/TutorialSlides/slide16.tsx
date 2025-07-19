@@ -16,9 +16,9 @@ const Slide16 = () => {
                 <img src = 'white-down-angle.png' height = {32} width = {32} className = 'transform rotate-30'></img>
             </div>
             <div className = 'absolute z-10 top-0 left-0 h-6/10 w-full flex flex-col justify-center items-center'>
-                <p className = 'text-white text-[25px]'>All layers have these attached parts called handles.</p>
-                <p className = 'text-white text-[25px]'>Dragging a handle will create an edge, which can be attached to other handles to form connections.</p>
-                <p className = 'text-white text-[25px]'>Connections are how you can connect layers together to make your model!</p>
+                <p className = 'text-white text-[25px] text-center'>All layers have these attached parts called handles.</p>
+                <p className = 'text-white text-[25px] text-center'>Dragging a handle will create an edge, which can be attached to other handles to form connections.</p>
+                <p className = 'text-white text-[25px] text-center'>Connections are how you can connect layers together to make your model!</p>
             </div>
             {exampleNode}
         </div>

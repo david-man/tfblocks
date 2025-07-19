@@ -13,9 +13,9 @@ const Slide18 = () => {
                 <img src = 'white-down-angle.png' height = {32} width = {32} className = 'transform rotate-330'></img>
             </div>
             <div className = 'absolute z-10 top-0 left-0 h-6/10 w-full flex flex-col justify-center items-center'>
-                <p className = 'text-white text-[25px]'>All layers need to be given the right amount of inputs.</p>
+                <p className = 'text-white text-[25px] text-center'>All layers need to be given the right amount of inputs.</p>
                 <p className = 'text-white text-[25px] text-center'>tfBlocks makes sure this happens by giving you a certain amount of input handles per layer and only allowing you to make one connection per handle.</p>
-                <p className = 'text-white text-[25px]'>You'll know if an input handle is properly connected when it turns this shade.</p>
+                <p className = 'text-white text-[25px] text-center'>You'll know if an input handle is properly connected when it turns this shade.</p>
             </div>
             {exampleNode}
         </div>

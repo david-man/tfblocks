@@ -4,7 +4,7 @@ const ConcatenateMenu = () => {
         <p className = "text-3xl text-center p-2 ">Concatenate Layers</p>
         <hr className = 'w-5/6 border-black border-1 rounded-2xl'></hr>
         <p className = 'text-2xl text-center p-1 pt-3'>Reference Sheet</p>
-        <ul className = 'list-disc list-inside pl-1 pb-3'>
+        <ul className = 'list-disc list-inside pl-1 pb-3 w-full'>
             <li><b>Input Dimensionality</b>: 1-D or greater. Inputs must be of same dimension.</li>
             <li><b>Output Dimensionality</b>: Same as input</li>
             <li><b>Training Load</b>: None</li>

@@ -4,7 +4,7 @@ const ConvolutionalMenu = () => {
         <p className = "text-3xl text-center p-2 ">Convolutional Layers</p>
         <hr className = 'w-5/6 border-black border-1 rounded-2xl'></hr>
         <p className = 'text-2xl text-center p-1 pt-3'>Reference Sheet</p>
-        <ul className = 'list-disc list-inside pl-1 pb-3'>
+        <ul className = 'list-disc list-inside pl-1 pb-3 w-full'>
             <li><b>Input Dimensionality</b>: 2-D or higher</li>
             <li><b>Output Dimensionality</b>: Same as input</li>
             <li><b>Training Load</b>: Low/Medium</li>
@@ -29,13 +29,16 @@ const ConvolutionalMenu = () => {
         <p className = 'text-2xl text-center p-1 pt-3'>Guide</p>
          <ul className = 'list-disc list-inside pl-2 pb-3 pr-3 flex flex-col justify-center items-center'>
             <li>Convolutional Layers are the fundamental building block for analysis of things with spatial relationships, like images and videos. They're also an auxiliary tool for temporal analysis.</li>
-            <li>At their core, their job is to train a set of convolutional kernels. You can think of these as filters designed to learn and highlight certain important features in an input.</li>
+            <li>At their core, their job is to train a set of convolutional kernels. You can think of these as filters designed to learn and highlight certain important aspects of an input.</li>
             <li>While it might sound crazy that filters like these can exist, convolutions have been used for decades for image processing tools like image blurring.</li>
             <hr className = 'w-4/5 rounded-2xl border-black border-1 m-5' />
-            <li>When given an input, each filter will move across the input, weighing each region it comes across in a spatially-aware manner and outputting a number corresponding to how present a feature is in the region. Just like Dense layers, this output may be shifted by a trainable <i>bias</i> for flexibility.</li>
-            <li>After going through an input, they will have effectively made a feature map!</li>
-            <li className = 'pb-2'>This GIF from <Link href = 'https://commons.wikimedia.org/wiki/File:Convolution_arithmetic_-_Padding_strides.gif#filelinks'>Wikipedia</Link> does a good job of showing one filter acting on an image.
+            <li>When given an input, each filter will move across the input, weighing each region it comes across in a spatially-aware manner and outputting a number corresponding to how present an aspect is in the region. Just like Dense layers, this output may be shifted by a trainable <i>bias</i> for flexibility.</li>
+            <li className = 'pb-2'>This GIF from <Link href = 'https://commons.wikimedia.org/wiki/File:Convolution_arithmetic_-_Padding_strides.gif#filelinks'>Wikipedia</Link> shows how a convolution moves over an input.
                 <img src = 'convolutional_gif.gif' className = 'object-cover'></img>
+            </li>
+            <li>After going through an input, they will have effectively made a feature map!</li>
+            <li className = 'pb-2'>This GIF from <Link href = 'https://compneuro.neuromatch.io/tutorials/W1D5_DeepLearning/student/W1D5_Tutorial2.html'>Jorge A. Menendez & Carsen Stringer</Link> shows how convolutions can highlight aspects of an input. 
+                <img src = 'convolutional-gif-2.gif' className = 'object-cover'></img>
             </li>
             <li>Because there can be multiple filters, the convolutional layer will repeat this process for each one to get a stack of different feature maps.</li>
             <li>The convolutional layer will simply stack these feature maps on top of each other to make its output.</li>

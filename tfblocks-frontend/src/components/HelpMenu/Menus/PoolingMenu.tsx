@@ -48,6 +48,12 @@ const PoolingMenu = () => {
             <li>This is why its recommended to use larger strides and smaller kernels to minimize overlap between windows.</li>
             <li>This is also why we don't allow information to leak between channels. In other words, pooling layers operate independently on each channel.</li>
             <hr className = 'w-4/5 rounded-2xl border-black border-1 m-5' />
+            <li>It's imperative to note that, despite everything said above, Pooling layers <i>are</i> decreasing information, and that always comes with drawbacks.</li>
+            <li className = 'pb-2'>This image by <Link href = 'https://towardsai.net/p/l/introduction-to-pooling-layers-in-cnn'>Rafay Qayyum</Link> demonstrates situations where pooling layers can lose you valuable information. 
+                <img src = 'pooling-img.png' className = 'object-cover'></img>
+            </li>
+            <li>Obviously, this is not to say that pooling is bad. Rather, this is to show that pooling can be detrimental, and that you should be wary of using it too much.</li>
+            <hr className = 'w-4/5 rounded-2xl border-black border-1 m-5' />
             <li>You can learn more about pooling layers and their uses <Link href = 'https://www.geeksforgeeks.org/deep-learning/cnn-introduction-to-pooling-layer/'>here</Link></li>
          </ul>
     </div>

@@ -11,8 +11,8 @@ const Slide14 = () => {
         <div className = 'absolute z-5 h-full w-full flex flex-col justify-center items-center'>
             <div className = 'absolute z-10 top-[calc(20%+30px)] h-4/5 flex flex-col justify-center items-center'>
                 <img src = 'white-down-angle.png' height = {16} width = {16} className = 'transform rotate-180'></img>
-                <p className = 'text-[25px] text-white'>Many layers will have options that you can access by clicking this button.</p>
-                <p className = 'text-[25px] text-white'>If it doesn't have an options button, that means it doesn't need to be configured.</p>
+                <p className = 'text-[25px] text-white text-center'>Many layers will have options that you can access by clicking this button.</p>
+                <p className = 'text-[25px] text-white text-center'>If it doesn't have an options button, that means it doesn't need to be configured.</p>
             </div>
             {exampleNode}
         </div>
