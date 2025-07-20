@@ -1,5 +1,5 @@
 import { useEffect , useState} from 'react';
-import { NodeToolbar, Position, useNodesData} from '@xyflow/react';
+import { NodeToolbar, Position, useNodesData, useUpdateNodeInternals} from '@xyflow/react';
 import { useReactFlow } from '@xyflow/react';
 import dependencyController, {type DependencyMap} from '../../../controllers/dependencyController';
 import propertyController, {type IdPropertyMap} from '../../../controllers/propertyController';
@@ -10,6 +10,7 @@ import { useShallow } from 'zustand/shallow';
 const NodeComponent = (props : any) =>{
     //Generic node component with generic style that interacts with general dependencies, properties, and can toggle the respective help menu
     const id = props.id
+    const updateNodeInternals = useUpdateNodeInternals();
     const dummy = props?.dummy ? props.dummy : false
     const txt_color = props.txt_color ? props.txt_color : 'black'
     const bg_color = props.bg_color ? props.bg_color : null
@@ -95,12 +96,17 @@ const NodeComponent = (props : any) =>{
                 {props.optionsMenu ? 
                 <>
                     <div className = {`flex flex-col justify-center items-center transition-transform ease-linear duration-200 ${CanvasListener?.data?.showMenu ? 'transform rotate-180' : ''}`}>
-                        <button onClick = {() => {!dummy ? updateNodeData(id, {showMenu: !CanvasListener?.data?.showMenu}): null} }>
+                        <button onClick = {() => {
+                                if(!dummy){
+                                    updateNodeData(id, {showMenu: !CanvasListener?.data?.showMenu})
+                                    updateNodeInternals(id)
+                                }
+                            }}>
                             <img src = "arrow-down-angle.svg" alt = "▲" className = "w-[8px] h-[8px] cursor-pointer "/>
                         </button> 
                     </div>
                     <div className = {`ease-in-out transition-all duration-300 ${CanvasListener?.data?.showMenu ? 'opacity-100 max-h-[900px]' : 'opacity-0 max-h-0'}`}>
-                        {props.optionsMenu}
+                        {CanvasListener?.data?.showMenu ? props.optionsMenu : null}
                     </div>
                 </>
                 : null}
