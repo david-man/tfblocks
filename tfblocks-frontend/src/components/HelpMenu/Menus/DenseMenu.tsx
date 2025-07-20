@@ -20,7 +20,7 @@ const DenseMenu = () => {
         <p className = 'text-2xl text-center p-1 pt-3'>Guide</p>
          <ul className = 'list-disc list-inside pl-2 pb-3 pr-3'>
             <li>Dense layers are the fundamental building blocks of modern machine learning models.</li>
-            <li>At their core, their job is to turn an input vector with 'F' features into an output vector with 'U' features/units. They do this by computing a weighted sum of all input features for every unit.</li>
+            <li>At their core, their job is to turn an input vector with 'F' features into an output vector with 'U' units. They do this by computing a weighted sum of all input features for every unit.</li>
             <li className = 'pb-2'>This GIF by <Link href = 'https://pub.aimind.so/convolutional-neural-networks-cnns-for-image-recognition-2d584775205b'>Sunghyun An</Link> does a good job of showing this aspect.
                 <img src = 'dense_gif.gif' className = 'object-cover'></img>
             </li>

@@ -7,10 +7,14 @@ import CutMenu from "./Menus/CutMenu"
 import DenseMenu from "./Menus/DenseMenu"
 import DropoutMenu from "./Menus/DropoutMenu"
 import FlattenMenu from "./Menus/FlattenMenu"
+import GeneralRecurrentMenu from "./Menus/GeneralRecurrentMenu"
+import GRUMenu from "./Menus/GRUMenu"
+import LSTMMenu from "./Menus/LSTMMenu"
 import NormalizationMenu from "./Menus/NormalizationMenu"
 import OperationsMenu from "./Menus/OperationsMenu"
 import PoolingMenu from "./Menus/PoolingMenu"
 import ReshapeMenu from "./Menus/ReshapeMenu"
+import RNNMenu from "./Menus/RNNMenu"
 import ScaleOpsMenu from "./Menus/ScalarOperationsMenu"
 import UpscaleMenu from "./Menus/UpscaleMenu"
 
@@ -35,7 +39,11 @@ const HelpMenu = () => {
         'flatten': <FlattenMenu />,
         'reshape': <ReshapeMenu />,
         'scalar_ops': <ScaleOpsMenu />,
-        'custom_matrix': <CustomMatrixMenu />
+        'custom_matrix': <CustomMatrixMenu />,
+        'recurrent-general': <GeneralRecurrentMenu />,
+        'rnn': <RNNMenu />,
+        'lstm': <LSTMMenu />,
+        'gru': <GRUMenu />
         
     }
     return (

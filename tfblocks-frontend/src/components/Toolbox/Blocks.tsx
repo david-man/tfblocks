@@ -2,12 +2,19 @@ import '../../App.css'
 import { useState, useEffect } from 'react'
 import { DragOverlay } from '@dnd-kit/core'
 import {DragElement, DragShadow} from './DragElement'
+import helpMenuController, { type Help } from '../../controllers/helpMenuController'
+import { useShallow } from 'zustand/shallow'
 
 const Blocks = (props) => {
     const [activeID, setActiveID] = useState<string | null>(null)
     useEffect(() => {
         setActiveID(props.activeID)
     }, [props.activeID])
+    const {setMenu} = helpMenuController(useShallow((state : Help) => {
+        return {
+            setMenu : state.setHelpMenu
+        }
+    }))
     const menuOn = props.menu
 
     const menus = new Map([
@@ -52,9 +59,15 @@ const Blocks = (props) => {
     return (
         <>
             <div className = "border-t-2 border-l-2 border-b-2 border-gray-500 w-full h-full overflow-y-auto overflow-x-clip">
-                <div className = "mt-3 mb-1 ml-3 mr-2 w-full">
-                    <p className = "text-[18px] font-bold">{menuOn}</p>
+                <div className = "mt-3 mb-1 ml-3 mr-2 w-full flex">
+                    <p className = "text-[18px] font-bold pr-[5px]">{menuOn}</p>
+                    {menuOn === 'Recurrent' ? <button onClick = {() => setMenu('recurrent-general')}>
+                        <div className = 'w-[12px] h-[12px] cursor-help'>
+                            <img src="question.png" alt="help" width = "12px" height = "12px"/>
+                        </div>
+                    </button> : null}
                 </div>
+                
                 {menus.get(menuOn)}
             </div>
             <DragOverlay>

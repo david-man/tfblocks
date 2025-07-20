@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react'
 import Blocks from './Blocks'
 
 
-const Toolbox = (props) => {
+const Toolbox = (props : any) => {
     const [menuOn, setMenuOn] = useState('Common')
-    const Choice = (props) => {
+    const Choice = (props : any) => {
         return <div className = {`w-full flex justify-center items-center ${menuOn == props.choice ? 'bg-gray-200' : ''}`}>
                     <button className = 'w-1/4 cursor-pointer aspect-square mt-[18px] mb-[6px] flex flex-col justify-center items-center' onClick = {() => setMenuOn(props.choice)}>
                         <div className = {`w-full h-full rounded-full ${props.bgColor} border-black border-1`}></div>

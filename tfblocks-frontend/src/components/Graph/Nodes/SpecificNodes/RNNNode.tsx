@@ -65,7 +65,7 @@ const RNNNode = (props : NodeProps) =>{
         <div>
             <SingularConnection type="target" position={Position.Left} id={incoming_handle_id}/>
             <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
-            <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"RNN"} 
+            <NodeComponent optionsMenu = {optionsMenu} valid_node = {valid} neurons = {neurons} mainText = {"Simple RNN"} 
             parent_handles = {[ParentHandle]}
             child_handles = {ChildHandles}
             {...props}

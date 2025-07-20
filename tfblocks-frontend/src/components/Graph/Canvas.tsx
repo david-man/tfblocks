@@ -84,7 +84,12 @@ const Canvas = (props : any) => {
     const target_source = new_connection?.targetHandle.split("|")[0]
     const connection_net = findNetwork(connection_source)
     const target_net = findNetwork(target_source)
-    console.log(connection_net, target_source)
+    if(connection_source === 'in' && target_source === 'out'){
+        alert("You can't directly connect the input layer to the output layer! Try putting a layer in between")
+        return
+    }
+
+    
     if(connection_source.includes('in') || connection_source.includes('rec_hidden')){
       if(target_net === connection_source || target_net === 'hanging'){
         if(target_source.includes('rec_external_') && connection_source != 'in'){

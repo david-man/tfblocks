@@ -7,17 +7,15 @@ import axios from 'axios'
 import type { Node } from '@xyflow/react'
 import FileController from '../../controllers/fileManager'
 import helpMenuController, { type Help } from '../../controllers/helpMenuController'
+import { useState } from 'react'
+import CompilationMenu from './CompilationMenu'
 
 const Header = (props: any) => {
     const {nodes} = nodeController()
     const {get_file} = FileController()
     const {get_map, get_properties} = propertyController()
     const {get_dep_map, get_child_map, get_network_heads, get_dependencies, get_children} = dependencyController()
-    const {setMenu} = helpMenuController(useShallow((state : Help) => {
-        return {
-            setMenu : state.setHelpMenu
-        }
-    }))
+    const [userCompile, setUserCompile] = useState(false)
 
     const findNetwork = (id : String) => {
         let to_ret = "hanging"
@@ -48,10 +46,44 @@ const Header = (props: any) => {
         return to_ret
     }
 
+    const upload = async () => {
+        const filtered_network_heads = get_network_heads().filter((id : string) => (id != 'out'))
+        try{
+            const resp = await axios.post('http://localhost:8000/api/sendModel/', {
+                active_nodes : [...nodes.map((node : Node) => {
+                    return {id: node.id, type: node.type}
+                }).filter((node) => findNetwork(node.id) != 'hanging')],//active nodes defined as nodes that aren't floating around
+                properties_map: [...get_map()],
+                dependency_map : [...get_dep_map()],
+                child_map : [...get_child_map()],
+                network_heads : filtered_network_heads
+            })
+            if(resp.status == 200){
+                const download = await axios.get('http://localhost:8000/api/getLastModel/', {responseType: 'blob'})
+                // Create a URL for the blob and trigger a download
+                const url = window.URL.createObjectURL(new Blob([download.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'model.keras'); // Use the desired filename
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url); // Clean up the URL object
+            }
+            else{
+                alert("There was an error in the backend somewhere! Sorry :(")
+            }
+        }
+        catch (err){
+            alert("There was an error uploading your model! Perhaps the backend server is down :(")
+        }
+    }
+
     const handleClick = async () => {
         let send = true;
         let files : File[] = []
         let file_ids : string[] = []
+        let relevant_nodes : string[] = []
         nodes.map((node : Node) => {
             const id = node.id
             if(node.type == 'recurrent_head'){
@@ -65,6 +97,9 @@ const Header = (props: any) => {
             else {
                 if((!get_properties(id) || !(get_properties(id)?.valid)) && findNetwork(id) != 'hanging'){
                     send = false;
+                }
+                else{
+                    relevant_nodes = [...relevant_nodes, id]
                 }
 
                 if(node.type == 'custom_matrix'){
@@ -103,62 +138,30 @@ const Header = (props: any) => {
             alert("This graph isn't ready to be parsed yet! Make sure you have a valid configuration!")
         }
         else{
-            console.log(files)
-            const filtered_network_heads = get_network_heads().filter((id : string) => (id != 'out'))
-            try{
-                const resp = await axios.post('http://localhost:8000/api/sendModel/', {
-                    active_nodes : [...nodes.map((node : Node) => {
-                        return {id: node.id, type: node.type}
-                    }).filter((node) => findNetwork(node.id) != 'hanging')],//active nodes defined as nodes that aren't floating around
-                    properties_map: [...get_map()],
-                    dependency_map : [...get_dep_map()],
-                    child_map : [...get_child_map()],
-                    network_heads : filtered_network_heads
-                })
-                if(resp.status == 200){
-                    const download = await axios.get('http://localhost:8000/api/getLastModel/', {responseType: 'blob'})
-                    // Create a URL for the blob and trigger a download
-                    const url = window.URL.createObjectURL(new Blob([download.data]));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', 'model.keras'); // Use the desired filename
-                    document.body.appendChild(link);
-                    link.click();
-                    link.remove();
-                    window.URL.revokeObjectURL(url); // Clean up the URL object
-                }
-                else{
-                    alert("There was an error in the backend somewhere! Sorry :(")
-                }
-            }
-            catch (err){
-                alert("There was an error uploading your model! Perhaps the backend server is down :(")
-            }
+            setUserCompile(true)
         }
     }
     return (
-        <div className = "border-2 border-gray-500 w-full h-full relative">
-            <div className = 'h-full w-1/12 flex flex-col items-center justify-center absolute left-8'>
-                <img src = {'logo.png'} width = '60px' height = '60px'></img>
+        <>
+            {userCompile ? <CompilationMenu turnOff = {() => setUserCompile(false)} upload = {() => upload()}/> : null}
+            <div className = "border-2 border-gray-500 w-full h-full relative">
+                <div className = 'h-full w-1/12 flex flex-col items-center justify-center absolute left-8'>
+                    <img src = {'logo.png'} width = '60px' height = '60px'></img>
+                </div>
+                <div className = "absolute top-1/8 right-10 h-3/4 rounded-full border-2 border-gray-500 bg-green-300 flex justify-center items-center aspect-square">
+                    <button onClick = {handleClick} className = 'text-[10px] flex flex-col justify-center items-center cursor-pointer'>
+                        <img src = 'upload.png' height = {25} width = {25}></img>
+                        <p>Compile!</p>
+                    </button>
+                </div>
+                
+                {/* <div className = 'absolute top-1/8 right-2/5 w-1/5 h-3/4'>
+                    {trainingState ? <TrainingElement setTrainingState = {setTrainingState}/> : <IdleElement setTrainingState = {setTrainingState}/>}
+                </div> 
+                this element will only be included on the desktop version
+                */}
             </div>
-            <div className = "absolute top-1/8 right-10 h-3/4 rounded-full border-2 border-gray-500 bg-green-300 flex justify-center items-center aspect-square">
-                <button onClick = {handleClick} className = 'text-[10px] flex flex-col justify-center items-center cursor-pointer'>
-                    <img src = 'upload.png' height = {25} width = {25}></img>
-                    <p>Compile!</p>
-                </button>
-            </div>
-            <div className = 'absolute top-1/8 right-0 h-3/4 flex justify-center items-center aspect-square'>
-                <button onClick = {() => setMenu('Compilation')} className = 'cursor-help'>
-                    <img src="question.png" alt="help" width = "12px" height = "12px"/>
-                </button>
-            </div>
-            
-            {/* <div className = 'absolute top-1/8 right-2/5 w-1/5 h-3/4'>
-                {trainingState ? <TrainingElement setTrainingState = {setTrainingState}/> : <IdleElement setTrainingState = {setTrainingState}/>}
-            </div> 
-            this element will only be included on the desktop version
-            */}
-        </div>
+        </>
     )
 }
 export default Header
