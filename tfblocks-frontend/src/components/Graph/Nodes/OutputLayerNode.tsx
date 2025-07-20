@@ -41,7 +41,7 @@ const OutputLayerNode = (props : any) =>{
     return (
         <>
         <SingularConnection type="target" position={Position.Left} id={input_handle_id}/>
-        <NodeComponent valid_node = {valid} mainText = {"Output Layer"} subtext = {`[${data_shape ? data_shape.toString() : ''}]`}parent_handles = {[ParentHandle]}
+        <NodeComponent id = {id} valid_node = {valid} mainText = {"Output Layer"} subtext = {`[${data_shape ? data_shape.toString() : ''}]`}parent_handles = {[ParentHandle]}
         bg_color = "bg-orange-400"
         optionsMenu = {optionsMenu}
         {...props}/>

@@ -69,7 +69,7 @@ const InputLayerNode = (props : any) =>{
     return (
         <>
         <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
-        <NodeComponent valid_node = {valid} mainText = {"Input Layer"} subtext = {`[${data_shape ? data_shape.toString() : ''}]`} parent_handles = {[]}
+        <NodeComponent id = {id} valid_node = {valid} mainText = {"Input Layer"} subtext = {`[${data_shape ? data_shape.toString() : ''}]`} parent_handles = {[]}
         bg_color = "bg-orange-400"
         optionsMenu = {optionsMenu}
         {...props}/>
