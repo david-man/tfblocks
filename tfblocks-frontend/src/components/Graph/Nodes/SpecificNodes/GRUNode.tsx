@@ -19,6 +19,7 @@ const GRUNode = (props : NodeProps) =>{
     const [neurons, setNeurons] = useState(NaN)
     const [units, setUnits] = useState(NaN)
     const [valid, setValid] = useState(false)
+    const [seq2seq, setSeq2Seq] = useState(false)
     const {updateNodeData} = useReactFlow()
     const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
@@ -42,22 +43,23 @@ const GRUNode = (props : NodeProps) =>{
         if(IncomingShape && units){
             if(IncomingShape.length === 2 && units >= 1)
             {
-                set_data_shape([units])
-                setNeurons(3 * units * ((IncomingShape[1] + units)))//+1 if/when including bias
+                set_data_shape(seq2seq ? [IncomingShape[0], units] : [units])
+                setNeurons(3 * units * ((IncomingShape[1] + units + 1)))//+1 if/when including bias
                 setValid(true)
                 set_properties(id, {"valid": true, "input_shape": IncomingShape, "units": units,
+                    "seq2seq": seq2seq,
                     "parent_handle_id": ParentHandle,
                     "output_handle_id": outgoing_handle_id,
                 })
             }
         }
-    }, [IncomingShape, units])
+    }, [IncomingShape, units, seq2seq])
 
     useEffect(() => {
         set_handle_shape(outgoing_handle_id, data_shape)
     }, [units, neurons, data_shape])
 
-    const optionsMenu = <GRUOptions units = {units} setUnits = {setUnits} id = {id}/>;
+    const optionsMenu = <GRUOptions units = {units} setUnits = {setUnits} id = {id} seq2seq = {seq2seq} setSeq2Seq = {setSeq2Seq}/>;
     
     return (
         <div>

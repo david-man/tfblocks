@@ -110,11 +110,13 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                     return
                 case 'gru':
                     units = properties_map[node_id]['units']
-                    layers[node_id] = keras.layers.GRU(units = units)
+                    seq2seq = properties_map[node_id]['seq2seq']
+                    layers[node_id] = keras.layers.GRU(units = units, return_sequences=seq2seq, return_state=seq2seq)
                     return
                 case 'lstm':
                     units = properties_map[node_id]['units']
-                    layers[node_id] = keras.layers.LSTM(units = units)
+                    seq2seq = properties_map[node_id]['seq2seq']
+                    layers[node_id] = keras.layers.LSTM(units = units, return_sequences=seq2seq, return_state=seq2seq)
                     return
                 case 'norm':
                     axis = properties_map[node_id]['axis']
@@ -173,7 +175,8 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                             raise Exception("Pooling Error!")
                 case 'rnn':
                     units = properties_map[node_id]['units']
-                    layers[node_id] = keras.layers.SimpleRNN(units = units)
+                    seq2seq = properties_map[node_id]['seq2seq']
+                    layers[node_id] = keras.layers.SimpleRNN(units = units, return_sequences=seq2seq, return_state=seq2seq)
                     return
                 case 'transpose':
                     axis_1 = properties_map[node_id]['axis_1']
@@ -211,7 +214,12 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                 layer = RNNs[network_id]
                 input_handle = properties_map[raw_id]['external_parent_handle_id']
                 output_handle = properties_map[raw_id]['external_output_handle_id']
-                handle_results[output_handle] = layer(handle_results[input_handle])
+                seq2seq = properties_map[raw_id]['seq2seq']
+                if(seq2seq):
+                    handle_results[output_handle], _ = layer(handle_results[input_handle])
+                else:
+                    handle_results[output_handle] = layer(handle_results[input_handle])
+                return
             elif(node_id == 'out'):
                 input_handle = input_handle_dict['out'][0]
                 handle_results['final_result'] = handle_results[input_handle]
@@ -278,6 +286,30 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                         input_handle = input_handle_dict[node_id][0]
                         output_handle = output_handle_dict[node_id][0]
                         handle_results[output_handle] = keras.ops.reshape(handle_results[input_handle], output_shape)
+                    case 'RNN':
+                        input_handle = input_handle_dict[node_id][0]
+                        output_handle = output_handle_dict[node_id][0]
+                        seq2seq = properties_map[node_id]['seq2seq']
+                        if(seq2seq):
+                            handle_results[output_handle], _ = layers[node_id](handle_results[input_handle])
+                        else:
+                            handle_results[output_handle] = layers[node_id](handle_results[input_handle])
+                    case 'LSTM':
+                        input_handle = input_handle_dict[node_id][0]
+                        output_handle = output_handle_dict[node_id][0]
+                        seq2seq = properties_map[node_id]['seq2seq']
+                        if(seq2seq):
+                            handle_results[output_handle], _ = layers[node_id](handle_results[input_handle])
+                        else:
+                            handle_results[output_handle] = layers[node_id](handle_results[input_handle])
+                    case 'GRU':
+                        input_handle = input_handle_dict[node_id][0]
+                        output_handle = output_handle_dict[node_id][0]
+                        seq2seq = properties_map[node_id]['seq2seq']
+                        if(seq2seq):
+                            handle_results[output_handle], _ = layers[node_id](handle_results[input_handle])
+                        else:
+                            handle_results[output_handle] = layers[node_id](handle_results[input_handle])
                     case _:
                         input_handle = input_handle_dict[node_id][0]
                         output_handle = output_handle_dict[node_id][0]
@@ -327,7 +359,9 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                             run_order.append(node)
                             isolated_net.remove(node)
                             break
-                RNNs[network] = keras.layers.RNN(cell = CustomRNNCell(hidden_input_shape, hidden_state_shape, network, run_order))
+                seq2seq = properties_map[raw_id]['seq2seq']
+
+                RNNs[network] = keras.layers.RNN(cell = CustomRNNCell(hidden_input_shape, hidden_state_shape, network, run_order), return_sequences=seq2seq, return_state=seq2seq)
                 RNNs[network].build(sequences_shape = (None, hidden_input_shape))
     #PRELOADING DATA
     for node_id in type_map.keys():

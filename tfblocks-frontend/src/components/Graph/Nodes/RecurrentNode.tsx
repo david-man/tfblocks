@@ -16,13 +16,14 @@ const RecurrentNode = (props : NodeProps) =>{
     const incoming_hidden_handle_id = `rec_hidden_${id}|state_handle`//handle that takes in the new hidden state
     const incoming_handle_id = `rec_external_${id}|input_handle`//handle that takes in all the inputs coming in
     const outgoing_handle_id = `rec_external_${id}|output_handle`//output of the entire RNN
-
+    
     const {set_handle_shape} = handleController()
     const {set_properties, remove_properties} = propertyController()
 
     const [outputUnits, setOutputUnits] = useState(NaN)
 
     const [valid, setValid] = useState(false)
+    const [seq2seq, setSeq2Seq] = useState(false)
     const [hidden_input_shape, set_hidden_input_shape] = useState<Array<number> | undefined>(undefined)//data shape of each input([B, T, F] => [B, F])
     const [hidden_state_shape, set_hidden_state_shape] = useState<Array<number> | undefined>(undefined)//data shape of the hidden state([B, T, F] => [B, H])
     const [outgoing_state_shape, set_outgoing_state_shape] = useState<Array<number> | undefined>(undefined)//data shape that will leave([B, T, F] => [B, T, H])
@@ -91,22 +92,25 @@ const RecurrentNode = (props : NodeProps) =>{
         setValid(false)
         set_properties(id, {"valid": false})
         if(outputUnits){
-            set_outgoing_state_shape([outputUnits])
             set_hidden_state_shape([outputUnits])
+            if(!seq2seq){
+                set_outgoing_state_shape([outputUnits])
+            }
         }
         if(IncomingParentShape && IncomingParentShape.length === 2){
+            set_outgoing_state_shape(seq2seq ?  [IncomingParentShape[0], outputUnits] : [outputUnits])
             set_hidden_input_shape([IncomingParentShape[1]])
             if(outputUnits && 
                 IncomingHiddenShape && 
                 IncomingHiddenShape.length === 1 &&
                 outputUnits === IncomingHiddenShape[0])
                 {
-                    console.log(IncomingHiddenShape)
                     set_properties(id, {"valid": true, 
+                        "seq2seq": seq2seq,
                         "input_shape": IncomingParentShape,
                         "hidden_input_shape": IncomingParentShape[1], 
                         "hidden_state_shape": outputUnits,
-                        "outgoing_state_shape": [IncomingParentShape[0], outputUnits],
+                        "outgoing_state_shape": (seq2seq ?  [IncomingParentShape[0], outputUnits] : [outputUnits]),
                         "external_parent_handle_id": ExternalParentHandle,
                         "hidden_parent_handle_id": HiddenParentHandle,
                         "external_output_handle_id": outgoing_handle_id,
@@ -115,7 +119,7 @@ const RecurrentNode = (props : NodeProps) =>{
                     setValid(true)
                 }
         }
-    }, [IncomingHiddenShape, IncomingParentShape, outputUnits])
+    }, [IncomingHiddenShape, IncomingParentShape, outputUnits, seq2seq])
 
     useEffect(() => {
         set_handle_shape(outgoing_handle_id, outgoing_state_shape)
@@ -123,7 +127,7 @@ const RecurrentNode = (props : NodeProps) =>{
         set_handle_shape(outgoing_timestep_input_handle_id, hidden_input_shape)
     }, [outgoing_state_shape, hidden_state_shape, hidden_input_shape])
 
-    const optionsMenu = <RecurrentOptions setOutput = {setOutputUnits} outputUnits = {outputUnits}/>
+    const optionsMenu = <RecurrentOptions setOutput = {setOutputUnits} outputUnits = {outputUnits} seq2seq = {seq2seq} setSeq2Seq = {setSeq2Seq}/>
     return (
         <>
             <SingularConnection type="target" position={Position.Top} id={incoming_hidden_handle_id} style = {{left: "90%"}}/>
