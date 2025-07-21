@@ -1,5 +1,5 @@
 import { Position, useNodeConnections, type NodeConnection, type NodeProps} from '@xyflow/react';
-import { Handle, useReactFlow} from '@xyflow/react';
+import { Handle } from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
 import NodeComponent from '../NodeComponent';
@@ -20,7 +20,6 @@ const LSTMNode = (props : NodeProps) =>{
     const [units, setUnits] = useState(NaN)
     const [valid, setValid] = useState(false)
     const [seq2seq, setSeq2Seq] = useState(false)
-    const {updateNodeData} = useReactFlow()
     const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
         handleType: "target",

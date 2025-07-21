@@ -1,5 +1,5 @@
-import { Position, useNodeConnections, useNodesData, type NodeConnection, type NodeProps} from '@xyflow/react';
-import { Handle, useReactFlow} from '@xyflow/react';
+import { Position, useNodeConnections, type NodeConnection, type NodeProps} from '@xyflow/react';
+import { Handle} from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
 import NodeComponent from '../NodeComponent';
@@ -7,7 +7,6 @@ import handleController, {type HandleMap} from '../../../../controllers/handleCo
 import { useStore } from 'zustand';
 import UpscaleOptions from '../../NodeOptions/SpecificOptions/UpscaleOptions';
 import propertyController from '../../../../controllers/propertyController';
-import { NodeResizer } from '@xyflow/react';
 const UpscaleNode = (props : NodeProps) =>{
     const id = props.id.toString()
     const outgoing_handle_id = `${id}|output_handle_1`

@@ -3,9 +3,6 @@ import { useState } from "react"
 const ArrayInputComponent = (props : any) => {
 
     const [raw_str, setRawStr] = useState('')
-    const allowNegative = props?.allowNegative ? props.allowNegative : false
-    const allowDecimal = props?.allowDecimal ? props.allowDecimal : false
-    const array = props.array
     const setArray = props.setArray
     const id = props.id
     const label = props.label
@@ -23,25 +20,6 @@ const ArrayInputComponent = (props : any) => {
                         new_str = new_str + ','
                     }
                     else{
-                        let neg = false
-                        if(allowNegative){
-                            if(num.length >= 1 && num.charAt(0) === '-'){
-                                neg = true;
-                                num = num.slice(1)
-                            }
-                        }
-                        if(allowDecimal){
-                            let split_input = num.split('.', 2)
-                            if(split_input.length == 2){
-                                num = split_input[0].replace(/[^0-9]/g, '') + '.' + split_input[1].replace(/[^0-9]/g, '')
-                            }
-                            else{
-                                num = num.replace(/[^0-9]/g, '');
-                            }
-                        }
-                        else{
-                            num = num.replace(/[^0-9]/g, '');
-                        }
                         if(props.filter){
                             num = props.filter(num) ? num : ''
                         }

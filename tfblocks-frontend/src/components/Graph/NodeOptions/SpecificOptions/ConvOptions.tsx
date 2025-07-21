@@ -32,7 +32,7 @@ const ConvOptions = (props : any) =>
             <InputComponent id = {`${props.id}_text_3`} setFunction={props.setFilters} value = {props.stride} label = {"Stride Size: "}></InputComponent>
             <div className = 'flex flex-row w-full items-center justify-center p-1 text-[10px]'>   
                 <label htmlFor = {`${props.id}_bias`} className = 'pr-[3px]'>Use Bias: </label>
-                <input id = {`${props.id}_bias`} type = 'checkbox' checked = {props.bias} onChange = {(event) => props.setBias(!props.bias)}></input>
+                <input id = {`${props.id}_bias`} type = 'checkbox' checked = {props.bias} onChange = {() => props.setBias(!props.bias)}></input>
             </div>
         </div>
     </div>)

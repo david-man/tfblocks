@@ -1,4 +1,3 @@
-import type { FormEventHandler } from "react"
 import InputComponent from "../NumericalInputComponent"
 
 const PoolingOptions = (props : any) => 
@@ -6,15 +5,15 @@ const PoolingOptions = (props : any) =>
     const pooling_id = `${props.id}_select_pool`
     const type_id = `${props.id}_select_type`
     const padding_id = `${props.id}_select_padding`
-    const handlePoolChange : FormEventHandler = (event) => {
+    const handlePoolChange  = (event : any) => {
         const val = event.target.value;
         props.set_pool(val ? val : undefined)
     }
-    const handleDimChange : FormEventHandler = (event) => {
+    const handleDimChange  = (event : any) => {
         const val = event.target.value;
         props.set_dim(val ? val : undefined)
     }
-    const handlePaddingChange : FormEventHandler = (event) => {
+    const handlePaddingChange  = (event : any) => {
         const val = event.target.value;
         props.set_padding(val ? val : undefined)
     }

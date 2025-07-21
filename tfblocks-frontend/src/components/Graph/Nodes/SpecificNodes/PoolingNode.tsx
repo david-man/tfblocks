@@ -1,5 +1,5 @@
-import { Position, useNodeConnections, useNodesData, type NodeConnection, type NodeProps} from '@xyflow/react';
-import { Handle, useReactFlow} from '@xyflow/react';
+import { Position, useNodeConnections , type NodeConnection, type NodeProps} from '@xyflow/react';
+import { Handle } from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState } from 'react';
 import NodeComponent from '../NodeComponent';
@@ -22,7 +22,6 @@ const PoolingNode = (props : NodeProps) =>{
     const [strideSize, setStrideSize] = useState(1)
 
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
-    const {updateNodeData} = useReactFlow()
     const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
         handleType: "target",

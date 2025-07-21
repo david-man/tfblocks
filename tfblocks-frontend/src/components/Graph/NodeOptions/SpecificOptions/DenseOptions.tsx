@@ -7,7 +7,7 @@ const DenseOptions = (props : any) =>
         <InputComponent id = {`${props.id}_text_1`} setFunction={props.setUnits} value = {props.units} label = {"Units: "}></InputComponent>
         <div className = 'flex flex-row w-full items-center justify-center p-1 text-[10px]'>   
             <label htmlFor = {`${props.id}_bias`} className = 'pr-[3px]'>Use Bias: </label>
-            <input id = {`${props.id}_bias`} type = 'checkbox' checked = {props.bias} onChange = {(event) => props.setBias(!props.bias)}></input>
+            <input id = {`${props.id}_bias`} type = 'checkbox' checked = {props.bias} onChange = {() => props.setBias(!props.bias)}></input>
         </div>
     </div>)
 }

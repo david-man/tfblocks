@@ -2,7 +2,7 @@ import type { FormEventHandler } from "react";
 import InputComponent from "../NumericalInputComponent";
 
 const NormalizationOptions = (props : any) => {
-    const handleTypeChange : FormEventHandler= (event) => {
+    const handleTypeChange : FormEventHandler= (event : any) => {
         const val = event.target.value;
         props.set_norm_type(val ? val : undefined)
     }
@@ -20,7 +20,7 @@ const NormalizationOptions = (props : any) => {
         <InputComponent id = {`${props.id}_text_1`} setFunction={props.set_axis} value = {props.axis} label = {"Axis: "} allowNegative = {true}></InputComponent>
         <div className = 'flex flex-row w-full items-center justify-center p-1 text-[10px]'>   
             <label htmlFor = {`${props.id}_scale`} className = 'pr-[3px]'>Scale: </label>
-            <input id = {`${props.id}_scale`} type = 'checkbox' checked = {props.scale} onChange = {(event) => props.set_scale(!props.scale)}></input>
+            <input id = {`${props.id}_scale`} type = 'checkbox' checked = {props.scale} onChange = {() => props.set_scale(!props.scale)}></input>
         </div>
     </div>)
 }

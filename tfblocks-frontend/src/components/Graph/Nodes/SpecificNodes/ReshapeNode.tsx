@@ -1,11 +1,10 @@
-import { Position, useNodeConnections, useNodesData, type NodeConnection, type NodeProps} from '@xyflow/react';
-import { Handle, useReactFlow} from '@xyflow/react';
+import { Position, useNodeConnections, type NodeConnection, type NodeProps} from '@xyflow/react';
+import { Handle} from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
 import NodeComponent from '../NodeComponent';
 import handleController, {type HandleMap} from '../../../../controllers/handleController';
 import { useStore } from 'zustand';
-import FlattenOptions from '../../NodeOptions/SpecificOptions/FlattenOptions';
 import propertyController from '../../../../controllers/propertyController';
 import ReshapeOptions from '../../NodeOptions/SpecificOptions/ReshapeOptions';
 const ReshapeNode = (props : NodeProps) =>{

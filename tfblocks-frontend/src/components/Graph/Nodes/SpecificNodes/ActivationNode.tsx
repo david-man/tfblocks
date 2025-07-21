@@ -1,5 +1,5 @@
-import { Position, useNodeConnections, useNodesData, type NodeConnection, type NodeProps} from '@xyflow/react';
-import { Handle, useReactFlow} from '@xyflow/react';
+import { Position, useNodeConnections , type NodeConnection, type NodeProps} from '@xyflow/react';
+import { Handle } from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState } from 'react';
 import NodeComponent from '../NodeComponent';
@@ -20,7 +20,6 @@ const ActivationNode = (props : NodeProps) =>{
     const [valid, setValid] = useState(false)
     const [activation, setActivation] = useState(undefined)
     const [data_shape, set_data_shape] = useState<Array<number> | undefined>(undefined)
-    const {updateNodeData} = useReactFlow()
     const incomingConnection = useNodeConnections({
         handleType: "target",
         handleId: incoming_handle_id

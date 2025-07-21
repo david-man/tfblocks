@@ -1,5 +1,5 @@
 import { Position, useNodeConnections, type NodeConnection, type NodeProps} from '@xyflow/react';
-import { Handle, useReactFlow} from '@xyflow/react';
+import { Handle} from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
 import NodeComponent from '../NodeComponent';
@@ -20,7 +20,6 @@ const ScalarOpsNode = (props : NodeProps) =>{
     const [operation, setOperation] = useState<String>("")
     const [scalar, setScalar] = useState<number>(NaN)
     const [valid, setValid] = useState(false)
-    const {updateNodeData} = useReactFlow()
     const incomingConnection = useNodeConnections({
         handleType: "target",
         handleId: incoming_handle_id

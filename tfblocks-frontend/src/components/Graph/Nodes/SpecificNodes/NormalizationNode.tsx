@@ -1,5 +1,5 @@
-import { Position, useNodeConnections, useNodesData, type NodeConnection, type NodeProps} from '@xyflow/react';
-import { Handle, useReactFlow} from '@xyflow/react';
+import { Position, useNodeConnections , type NodeConnection, type NodeProps} from '@xyflow/react';
+import { Handle } from '@xyflow/react';
 import SingularConnection from '../../Handles/SingularConnection';
 import { useEffect, useState} from 'react';
 import NodeComponent from '../NodeComponent';
@@ -21,7 +21,6 @@ const NormalizationNode = (props : NodeProps) =>{
     const [scale, setScale] = useState(true)
     const [normType, setNormType] = useState(undefined)
 
-    const {updateNodeData} = useReactFlow()
     const {set_properties} = propertyController()
     const incomingConnection = useNodeConnections({
         handleType: "target",
