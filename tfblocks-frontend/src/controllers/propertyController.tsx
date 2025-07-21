@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
 type IdPropertyMap = {
-    id_map : Map<String, Object | undefined | null>,
-    get_map : () => Map<String, Object | undefined | null>,
-    set_properties : (id : String, map : Object) => void,
-    get_properties : (id: String | undefined) => Object | undefined | null,
+    id_map : Map<String, any | undefined | null>,
+    get_map : () => Map<String, any | undefined | null>,
+    set_properties : (id : String, map : any) => void,
+    get_properties : (id: String | undefined) => any | undefined | null,
     remove_properties : (id : String | undefined) => void
 }
 
@@ -13,7 +13,7 @@ export type {IdPropertyMap};
 const propertyController = create<IdPropertyMap>((set, get) => ({
     id_map: new Map(),
     get_map : () => get().id_map,
-    set_properties: (id : String, map : Object) => {
+    set_properties: (id : String, map : any) => {
         let new_map  =get().id_map
         new_map.set(id, map)
         set({id_map: new_map})

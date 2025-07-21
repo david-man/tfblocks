@@ -11,7 +11,7 @@ import InputOptions from '../NodeOptions/SpecificOptions/InputLayerOptions';
 const InputLayerNode = (props : any) =>{
     //Special node component designed specifically for inputs.
     const id = 'in'
-    const [data_shape, setDataShape] = useState(undefined)
+    const [data_shape, setDataShape] = useState<Array<number> | undefined>(undefined)
     const [valid, setValid] = useState(false)
     const outgoing_handle_id = `in|output_handle`
     const {add_network_head, remove_network_head, remove_id, set_dependencies, set_children} = dependencyController(useShallow((state : DependencyMap) => {
@@ -69,7 +69,7 @@ const InputLayerNode = (props : any) =>{
     return (
         <>
         <Handle type="source" position={Position.Right} id={outgoing_handle_id}/>
-        <NodeComponent id = {id} valid_node = {valid} mainText = {"Input Layer"} subtext = {`[${data_shape ? data_shape.toString() : ''}]`} parent_handles = {[]}
+        <NodeComponent id = {id} valid_node = {valid} mainText = {"Input Layer"} subtext = {`[${(!data_shape == undefined) ? data_shape!.toString() : ''}]`} parent_handles = {[]}
         bg_color = "bg-orange-400"
         optionsMenu = {optionsMenu}
         {...props}/>

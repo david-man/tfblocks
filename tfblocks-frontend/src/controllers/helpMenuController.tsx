@@ -1,18 +1,18 @@
 import { create } from "zustand";
 
 type Help = {
-    helpMenu : String | undefined,
+    helpMenu : string | undefined,
     on : boolean,
-    setHelpMenu : (new_menu : String) => void,
+    setHelpMenu : (new_menu : string) => void,
     turnHelpMenuOff : () => void,
     isHelpMenuOn: () => boolean,
-    currentHelpMenu: () => String | undefined,
+    currentHelpMenu: () => string | undefined,
 }
 export type {Help}
 const helpMenuController = create<Help>((set, get) => ({
     on : false,
     helpMenu : undefined,
-    setHelpMenu: (new_menu : String) => {
+    setHelpMenu: (new_menu : string) => {
         set({on: true, helpMenu: new_menu})
     },
     turnHelpMenuOff: () => {

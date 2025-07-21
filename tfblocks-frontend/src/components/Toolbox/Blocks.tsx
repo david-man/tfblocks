@@ -5,7 +5,7 @@ import {DragElement, DragShadow} from './DragElement'
 import helpMenuController, { type Help } from '../../controllers/helpMenuController'
 import { useShallow } from 'zustand/shallow'
 
-const Blocks = (props) => {
+const Blocks = (props : any) => {
     const [activeID, setActiveID] = useState<string | null>(null)
     useEffect(() => {
         setActiveID(props.activeID)
@@ -44,7 +44,7 @@ const Blocks = (props) => {
                 <DragElement id = {'reshape'} name = {'Reshape Node'} activeID = {activeID} color = 'bg-stone-300'></DragElement>  
         </>)],
         ['Recurrent', (<>
-            <DragElement id = {'recurrent_head'} name = {'Recurrent Head'} activeID = {activeID} color = 'bg-lime-400'></DragElement>
+            {/* <DragElement id = {'recurrent_head'} name = {'Recurrent Head'} activeID = {activeID} color = 'bg-lime-400'></DragElement> */}
                 <DragElement id = {'lstm'} name = {'LSTM'} activeID = {activeID} color = 'bg-lime-400'></DragElement>
                 <DragElement id = {'gru'} name = {'GRU'} activeID = {activeID} color = 'bg-lime-400'></DragElement>
                 <DragElement id = {'rnn'} name = {'RNN'} activeID = {activeID} color = 'bg-lime-400'></DragElement>
@@ -90,7 +90,7 @@ const Blocks = (props) => {
                 <DragShadow id = {'upscale'} name = {'Upscale Node'} activeID = {activeID} color = 'bg-stone-300'></DragShadow>
                 <DragShadow id = {'flatten'} name = {'Flatten Node'} activeID = {activeID} color = 'bg-stone-300'></DragShadow>
                 <DragShadow id = {'reshape'} name = {'Reshape Node'} activeID = {activeID}  color = 'bg-stone-400'></DragShadow>
-                <DragShadow id = {'recurrent_head'} name = {'Recurrent Head'} activeID = {activeID}  color = 'bg-lime-400'></DragShadow>
+                {/* <DragShadow id = {'recurrent_head'} name = {'Recurrent Head'} activeID = {activeID}  color = 'bg-lime-400'></DragShadow> */}
                 <DragShadow id = {'lstm'} name = {'LSTM'} activeID = {activeID}  color = 'bg-lime-400'></DragShadow>
                 <DragShadow id = {'gru'} name = {'GRU'} activeID = {activeID}  color = 'bg-lime-400'></DragShadow>
                 <DragShadow id = {'rnn'} name = {'RNN'} activeID = {activeID}  color = 'bg-lime-400'></DragShadow>

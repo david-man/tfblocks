@@ -23,7 +23,7 @@ import UpscaleMenu from "./Menus/UpscaleMenu"
 const HelpMenu = () => {
     const {turnHelpMenuOff, currentHelpMenu} = helpMenuController()
     const current_menu = currentHelpMenu() ? currentHelpMenu() : ""
-    const menuMap : Object = {
+    const menuMap : any = {
         'dense': <DenseMenu />,
         'conv': <ConvolutionalMenu />,
         'activation': <ActivationMenu />,
@@ -48,7 +48,6 @@ const HelpMenu = () => {
         'gru': <GRUMenu />,
         'input_layer': <InputMenu />,
         'output_layer': <OutputMenu />
-        
     }
     return (
         <div className = 'w-full h-full bg-gray-100 rounded-2xl border-2 border-gray-500 relative p-[10px]'>
@@ -57,7 +56,7 @@ const HelpMenu = () => {
                     <img src="cross.png" alt="x" />
                 </div>
             </button>
-           {menuMap.hasOwnProperty(current_menu) ? menuMap[current_menu] : null}
+           {menuMap.hasOwnProperty(current_menu!) ? menuMap[current_menu!] : null}
         </div>
     )
 }

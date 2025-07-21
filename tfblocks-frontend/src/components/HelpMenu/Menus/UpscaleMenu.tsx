@@ -1,4 +1,3 @@
-import Link from "../../../link"
 const UpscaleMenu = () => {
     return <div className = 'w-full h-95/100 flex flex-col items-center overflow-y-scroll rounded-3xl'>
         <p className = "text-3xl text-center p-2 ">Upscale Layers</p>

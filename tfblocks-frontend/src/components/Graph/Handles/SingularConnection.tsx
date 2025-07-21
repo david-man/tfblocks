@@ -1,6 +1,6 @@
 import { Handle, useNodeConnections} from '@xyflow/react';
  
-const SingularConnection = (props) => {
+const SingularConnection = (props : any) => {
   //simple component that creates a handle that can only handle one connection. Used for all input handles
   const connections = useNodeConnections({
     handleType: props.type,

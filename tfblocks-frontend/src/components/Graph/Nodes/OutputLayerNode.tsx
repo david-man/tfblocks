@@ -1,6 +1,6 @@
 import { Position, useNodeConnections} from '@xyflow/react';
 import { useEffect, useState} from 'react';
-import dependencyController, { type DependencyMap } from '../../../controllers/dependencyController';
+import dependencyController from '../../../controllers/dependencyController';
 import handleController, { type HandleMap } from '../../../controllers/handleController';
 import SingularConnection from '../Handles/SingularConnection';
 import NodeComponent from './NodeComponent';
@@ -11,7 +11,7 @@ import OutputOptions from '../NodeOptions/SpecificOptions/OutputLayerOptions';
 const OutputLayerNode = (props : any) =>{
     //special component that deals with output nodes
     const id = props.id.toString()
-    const [data_shape, setDataShape] = useState(undefined)
+    const [data_shape, setDataShape] = useState<Array<number> | undefined>(undefined)
     const input_handle_id = `${id}|input_handle`
     const [valid, setValid] = useState(false)
     const {set_properties} = propertyController(useShallow((state : IdPropertyMap) => {
@@ -33,7 +33,7 @@ const OutputLayerNode = (props : any) =>{
     const ParentHandle = incomingConnection[0]?.sourceHandle
     const IncomingShape = useStore(handleController, (state : HandleMap) => state.get_handle_shape(ParentHandle))
     useEffect(() => {
-        let validity = (data_shape && JSON.stringify(IncomingShape) === JSON.stringify(data_shape))
+        let validity : boolean = ((!data_shape == undefined) && JSON.stringify(IncomingShape) === JSON.stringify(data_shape))
         setValid(validity)
         set_properties(id, {"valid": validity, "parent_handle_id" : ParentHandle})
     }, [IncomingShape, data_shape])
@@ -41,7 +41,7 @@ const OutputLayerNode = (props : any) =>{
     return (
         <>
         <SingularConnection type="target" position={Position.Left} id={input_handle_id}/>
-        <NodeComponent id = {id} valid_node = {valid} mainText = {"Output Layer"} subtext = {`[${data_shape ? data_shape.toString() : ''}]`}parent_handles = {[ParentHandle]}
+        <NodeComponent id = {id} valid_node = {valid} mainText = {"Output Layer"} subtext = {`[${(!data_shape == undefined) ? data_shape?.toString() : ''}]`}parent_handles = {[ParentHandle]}
         bg_color = "bg-orange-400"
         optionsMenu = {optionsMenu}
         {...props}/>

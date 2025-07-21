@@ -9,7 +9,6 @@ import {
   useReactFlow,
   type Node,
   type Connection,
-  type NodeMouseHandler
 } from "@xyflow/react";
 import { nodeTypes } from "./nodetypes";
 import { edgeTypes } from "./edgetypes";
@@ -29,9 +28,9 @@ const selector = (state: Graph) => ({
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
 });
-const Canvas = (props : any) => {
+const Canvas = () => {
   const ref = useRef(null)
-  const { nodes, edges, getNodes, setNodes, onNodesChange, onEdgesChange, onConnect} = nodeController(useShallow(selector));
+  const { nodes, edges, setNodes, onNodesChange, onEdgesChange, onConnect} = nodeController(useShallow(selector));
   const {get_network_heads, get_dep_map, get_dependencies, get_children} = dependencyController()
   const { updateNodeData } = useReactFlow()
   const {turnHelpMenuOff} = helpMenuController()
@@ -80,19 +79,19 @@ const Canvas = (props : any) => {
     return to_ret
   }
   const handleConnect = (new_connection : Connection) => {
-    const connection_source = new_connection?.sourceHandle.split("|")[0]
-    const target_source = new_connection?.targetHandle.split("|")[0]
-    const connection_net = findNetwork(connection_source)
-    const target_net = findNetwork(target_source)
+    const connection_source = new_connection?.sourceHandle?.split("|")[0]
+    const target_source = new_connection?.targetHandle?.split("|")[0]
+    const connection_net = findNetwork(connection_source!)
+    const target_net = findNetwork(target_source!)
     if(connection_source === 'in' && target_source === 'out'){
         alert("You can't directly connect the input layer to the output layer! Try putting a layer in between")
         return
     }
 
     
-    if(connection_source.includes('in') || connection_source.includes('rec_hidden')){
+    if(connection_source!.includes('in') || connection_source!.includes('rec_hidden')){
       if(target_net === connection_source || target_net === 'hanging'){
-        if(target_source.includes('rec_external_') && connection_source != 'in'){
+        if(target_source!.includes('rec_external_') && connection_source != 'in'){
           alert("Because of the complex network gradients and building process involved with nested custom RNNs, while we can still compile a model, we HIGHLY recommend you switch to something else.")
         }
         onConnect(new_connection)
@@ -101,13 +100,13 @@ const Canvas = (props : any) => {
         alert("This connection is illegal(network difference)")
       }
     }
-    else if(target_source.includes('rec_hidden')){
+    else if(target_source!.includes('rec_hidden')){
       if(connection_net === target_source){
         onConnect(new_connection)
       }
       else if(connection_net === 'hanging'){
-        const external_equivalent = target_source.replace('rec_hidden', 'rec_external')
-        if(has_dependency(connection_source, external_equivalent)){
+        const external_equivalent = target_source!.replace('rec_hidden', 'rec_external')
+        if(has_dependency(connection_source!, external_equivalent)){
           alert("This connection cannot be made due to external dependencies")
         }
         else{
@@ -119,12 +118,12 @@ const Canvas = (props : any) => {
       }
     }
     else{
-      if(target_source.includes('rec_external') && connection_net.includes('rec_hidden_')){
+      if(target_source!.includes('rec_external') && connection_net.includes('rec_hidden_')){
         alert("Because of the complex network gradients and building process involved with nested custom RNNs, while we can still compile a model, we HIGHLY recommend you switch to something else.")
       }
       
       if(target_net === 'hanging' && connection_net === 'hanging'){
-        if(has_dependency(connection_source, target_source)){
+        if(has_dependency(connection_source!, target_source!)){
           alert("This connection is illegal(illegal looping)")
         }
         else{
@@ -138,7 +137,7 @@ const Canvas = (props : any) => {
         alert("This connection is illegal(network difference)")
       }
       else{
-        if(has_dependency(connection_source, target_source)){
+        if(has_dependency(connection_source!, target_source!)){
           alert("This connection is illegal(illegal looping)")
         }
         else{

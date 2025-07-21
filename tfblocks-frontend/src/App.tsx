@@ -1,6 +1,6 @@
 import { type Graph } from './controllers/nodeController'
 import { useShallow } from 'zustand/shallow'
-import { useState, useEffect, type MouseEvent} from 'react'
+import { useState, type MouseEvent} from 'react'
 import { ReactFlowProvider, useReactFlow} from '@xyflow/react'
 import { DndContext, type DragEndEvent, type DragStartEvent } from '@dnd-kit/core'
 import {restrictToWindowEdges} from '@dnd-kit/modifiers'
@@ -24,7 +24,7 @@ function PreApp() {
   const [dragging, setDragging] = useState<boolean>(false);
   const {screenToFlowPosition} = useReactFlow();
   const [activeID, setActiveID] = useState<string | null>(null);
-  const {isHelpMenuOn, setHelpMenu} = helpMenuController()
+  const {isHelpMenuOn} = helpMenuController()
   const [showTutorial, setShowTutorial] = useState(true)
 
 
@@ -46,9 +46,9 @@ function PreApp() {
   }
 
   //ONLY FOR DEVELOPMENT
-  useEffect(() => {
-    setHelpMenu('pool')
-  }, [])
+  // useEffect(() => {
+  //   setHelpMenu('pooling')
+  // }, [])
   return (
     <div onMouseMove = {handleMouseMove} className = "w-full h-full font-[DynaPuff] font-weight-[400] relative">
         <DndContext onDragEnd = {handleDragEnd} onDragStart = {handleDragStart} modifiers = {[restrictToWindowEdges]}>

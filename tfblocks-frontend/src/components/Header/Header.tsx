@@ -8,7 +8,7 @@ import FileController from '../../controllers/fileManager'
 import { useEffect, useState } from 'react'
 import CompilationMenu from './CompilationMenu'
 
-const Header = (props: any) => {
+const Header = () => {
     const {nodes} = nodeController()
     const {get_file} = FileController()
     const {get_map, get_properties} = propertyController()

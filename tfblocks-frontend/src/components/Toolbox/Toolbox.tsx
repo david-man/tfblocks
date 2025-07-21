@@ -1,5 +1,5 @@
 import '../../App.css'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Blocks from './Blocks'
 
 

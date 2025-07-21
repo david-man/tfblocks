@@ -37,7 +37,7 @@ const RNNMenu = () => {
             </li>
             <hr className = 'w-4/5 rounded-2xl border-black border-1 m-5' />
             <li>It should be noted that, due to their simplicity, simple RNN's are notorious for instability and an inability to retain information for long.</li>
-            <li>If you're worried about those things, try using GRU's, LSTM's, or even try designing your own Recurrent Layer!</li>
+            <li>If you're worried about those things, try using GRU's, LSTM's, or, if you're on desktop, try designing your own Recurrent Layer!</li>
         </ul>
         
         

@@ -1,6 +1,6 @@
 import { useDraggable } from '@dnd-kit/core';
 import { useState } from 'react';
-export const DragElement = (props) => {
+export const DragElement = (props : any) => {
     const color = props.color ? props.color : 'bg-gray-500'
     const [hovering, set_hovering] = useState(false)
     const {attributes, listeners, setNodeRef, transform} = useDraggable({id: props.id});
@@ -29,7 +29,7 @@ export const DragElement = (props) => {
 
 }
 
-export const DragShadow = (props) => {
+export const DragShadow = (props : any) => {
     const color = props.color ? props.color : 'bg-gray-500'
     const {attributes, listeners, setNodeRef, transform} = useDraggable({id: props.id});
     const style = transform ? {
