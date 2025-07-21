@@ -5,7 +5,7 @@ const TrainingElement = (props : any) => {
     const [lastState, setLastState] = useState(null)
     const fetchProgress = async () => {
         try{
-            const resp = await axios.get('http://localhost:8000/api/progressStatus/')
+            const resp = await axios.get(`${import.meta.env.API_ROUTE}//api/progressStatus/`)
             if(resp.data['progress']){
                 setLastState(resp.data['progress'])
                 if(resp.data['progress'] >= 10){

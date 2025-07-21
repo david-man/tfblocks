@@ -48,7 +48,7 @@ const Header = () => {
     const upload = async () => {
         const filtered_network_heads = get_network_heads().filter((id : string) => (id != 'out'))
         try{
-            const resp = await axios.post('http://localhost:8000/api/sendModel/', {
+            const resp = await axios.post(`${import.meta.env.API_ROUTE}/api/sendModel/`, {
                 active_nodes : [...nodes.map((node : Node) => {
                     return {id: node.id, type: node.type}
                 }).filter((node) => findNetwork(node.id) != 'hanging')],//active nodes defined as nodes that aren't floating around
@@ -77,7 +77,7 @@ const Header = () => {
             alert("There was an error uploading your model! Perhaps the backend server is down :(")
         }
         try{
-            await axios.post('http://localhost:8000/api/release_data/', {'instance_id': instanceID})
+            await axios.post(`${import.meta.env.API_ROUTE}/api/release_data/`, {'instance_id': instanceID})
         }
         catch(err){
             return
@@ -131,7 +131,7 @@ const Header = () => {
                 formData.append('matrix', file)
                 formData.append('save_as', file_ids[i])
                 try{
-                    const resp = await axios.post('http://localhost:8000/api/sendMatrices/', formData)
+                    const resp = await axios.post(`${import.meta.env.API_ROUTE}/api/sendMatrices/`, formData)
                     if(resp.status != 200){
                         alert("Something went wrong when uploading your custom matrices. Aborting compilation.")
                         return

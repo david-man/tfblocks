@@ -5,12 +5,11 @@ from model_runner import build_model
 import io
 import numpy as np
 import os
-import time 
 import shutil
+import sys
 
 app = Flask(__name__)
-cors = CORS(app, origins= "*")  # Enable CORS for all routes
-
+cors = CORS(app, origins= ["http://localhost:5173/", "https://tfblocks.vercel.app/"])  # Enable CORS for selected routes
 def get_folder(instance_id):
     current_directory = os.getcwd()
     folder_path = current_directory + f'/{instance_id}/'
@@ -24,7 +23,7 @@ def erase_folder(instance_id):
         shutil.rmtree(folder_path)
 
 @app.route('/api/sendModel/', methods = ["POST"])
-@cross_origin()
+@cross_origin(origins = ["http://localhost:5173/", "https://tfblocks.vercel.app/"])
 def receive_data():
     data = request.get_json()
     instance_id = data['instance_id']
@@ -39,7 +38,7 @@ def receive_data():
         print(e)
         return jsonify({'message': f"Model compilation failed. Sorry!"}), 400
 @app.route('/api/getMatrixShape/', methods = ['POST'])
-@cross_origin()
+@cross_origin(origins = ["http://localhost:5173/", "https://tfblocks.vercel.app/"])
 def getInputShape():
     data = request.files['input_file']
     try:
@@ -50,7 +49,7 @@ def getInputShape():
         return jsonify({'message': 'input invalid'}), 400
 
 @app.route('/api/sendMatrices/', methods = ["POST"])
-@cross_origin()
+@cross_origin(origins = ["http://localhost:5173/", "https://tfblocks.vercel.app/"])
 def receive_matrices():
     data_id = request.form.get('save_as')
     instance_id = request.form.get('instance_id')
@@ -65,7 +64,7 @@ def receive_matrices():
         return jsonify({'message': 'input invalid'}), 400
 
 @app.route('/api/release_data/', methods = ['POST'])
-@cross_origin()
+@cross_origin(origins = ["http://localhost:5173/", "https://tfblocks.vercel.app/"])
 def release_data():
     try:
         instance_id = request.get_json()['instance_id']
@@ -75,4 +74,6 @@ def release_data():
         return jsonify({}), 400
     
 if __name__ == '__main__':
-    app.run(host='localhost', port=8000, debug = True)
+    if(len(sys.argv) > 1):
+        if(sys.argv[1] == '--dev'):
+            app.run(host='localhost', port=8000, debug = True)

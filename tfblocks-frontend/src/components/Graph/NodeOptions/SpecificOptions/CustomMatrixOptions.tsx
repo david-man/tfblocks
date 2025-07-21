@@ -10,7 +10,7 @@ const CustomMatrixOptions = (props : any) =>
             const formData = new FormData()
             formData.append('input_file', file)
             try{
-                const resp = await axios.post('http://localhost:8000/api/getMatrixShape/', formData)
+                const resp = await axios.post(`${import.meta.env.VITE_API_ROUTE}/api/getMatrixShape/`, formData)
                 if(resp.status == 200){
                     props.setDataShape(resp.data.data_shape)
                     props.setFile(file)
