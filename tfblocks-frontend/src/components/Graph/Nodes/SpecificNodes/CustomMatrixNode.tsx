@@ -33,7 +33,7 @@ const CustomMatrixNode = (props : NodeProps) =>{
     useEffect(() => {
         if(data_shape && file){
             setValid(true)
-            set_properties(id, {"valid": true, "output_handle_id": outgoing_handle_id})
+            set_properties(id, {"valid": true, "output_handle_id": outgoing_handle_id, "file_id": id.toString()})
             add_id(id.toString(), file)
         }
         set_handle_shape(outgoing_handle_id, data_shape)

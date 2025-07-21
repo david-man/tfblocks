@@ -5,31 +5,39 @@ from model_runner import build_model
 import io
 import numpy as np
 import os
+import time 
+import shutil
+
 app = Flask(__name__)
 cors = CORS(app, origins= "*")  # Enable CORS for all routes
-current_progress = 0
+
+def get_folder(instance_id):
+    current_directory = os.getcwd()
+    folder_path = current_directory + f'/{instance_id}/'
+    if(not os.path.exists(folder_path)):
+        os.mkdir(folder_path)
+    return folder_path
+def erase_folder(instance_id):
+    current_directory = os.getcwd()
+    folder_path = current_directory + f'/{instance_id}/'
+    if(os.path.exists(folder_path)):
+        shutil.rmtree(folder_path)
+
 @app.route('/api/sendModel/', methods = ["POST"])
 @cross_origin()
 def receive_data():
     data = request.get_json()
+    instance_id = data['instance_id']
     input_shape, networks, network_compile_order, input_handle_dict, output_handle_dict, type_map, property_map, dependency_map = parse_json(data)
     try:
-        model, model_result = build_model(input_shape, networks, network_compile_order, input_handle_dict, output_handle_dict, type_map, property_map, dependency_map)
-        model.save('newest_model.keras')
-        return jsonify({'message': f"Model compilation succeeded!"}), 200
+        model, model_result = build_model(instance_id, input_shape, networks, network_compile_order, input_handle_dict, output_handle_dict, type_map, property_map, dependency_map)
+        folder_path = get_folder(instance_id)
+        model.save(folder_path + "/newest_model.keras")
+        return send_file(folder_path + "/newest_model.keras", as_attachment=True, download_name='model.keras'), 200
     except Exception as e:
+        erase_folder(instance_id)
         print(e)
         return jsonify({'message': f"Model compilation failed. Sorry!"}), 400
-
-@app.route('/api/getLastModel/', methods = ["GET"])
-@cross_origin()
-def send_model():
-    current_directory = os.getcwd()
-    file_path = os.path.join(current_directory, "newest_model.keras")
-    if(os.path.exists(file_path)):
-        return send_file(file_path, as_attachment=True, download_name='model.keras'), 200
-    else:
-        return {}, 400
 @app.route('/api/getMatrixShape/', methods = ['POST'])
 @cross_origin()
 def getInputShape():
@@ -45,14 +53,26 @@ def getInputShape():
 @cross_origin()
 def receive_matrices():
     data_id = request.form.get('save_as')
+    instance_id = request.form.get('instance_id')
     data = request.files['matrix']
     try:
         data_bytes = io.BytesIO(data.read())
         loaded_array = np.load(data_bytes)
-        np.save(f'{data_id}.npy', loaded_array)
+        folder_path = get_folder(instance_id)
+        np.save(folder_path + f'/{data_id}.npy', loaded_array)
         return jsonify({'message' : 'matrix saved'}), 200
     except:
         return jsonify({'message': 'input invalid'}), 400
 
+@app.route('/api/release_data/', methods = ['POST'])
+@cross_origin()
+def release_data():
+    try:
+        instance_id = request.get_json()['instance_id']
+        erase_folder(instance_id)
+        return jsonify({}), 200
+    except:
+        return jsonify({}), 400
+    
 if __name__ == '__main__':
     app.run(host='localhost', port=8000, debug = True)

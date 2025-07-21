@@ -2,6 +2,7 @@ import keras
 import tensorflow as tf
 import copy as copy
 import numpy as np
+import os
 _debug = False
 def test_model(input_shape, model):
     random_input_shape = (1, ) + tuple(input_shape)
@@ -10,12 +11,11 @@ def test_model(input_shape, model):
         return True
     except Exception:
         return False
-def build_model(input_shape, networks, networks_compile_order, input_handle_dict, output_handle_dict, type_map, properties_map, dependency_map):
+def build_model(instance_id, input_shape, networks, networks_compile_order, input_handle_dict, output_handle_dict, type_map, properties_map, dependency_map):
     RNNs = {}#special dictionary mapping RNN network heads to whole cells
     layers = {}#special dictionary mapping cells to normal layers
     handle_results = {}
     _preloaded = False
-    print(properties_map)
     def preload_layer(node_id):
         if(node_id == 'in'):
             layers[node_id] = keras.Input(shape = input_shape)
@@ -246,9 +246,11 @@ def build_model(input_shape, networks, networks_compile_order, input_handle_dict
                         output_handle = output_handle_dict[node_id][0]
                         handle_results[output_handle] = keras.ops.divide(handle_results[input_handle_1], handle_results[input_handle_2])
                     case 'custom_matrix':
-                        np_array = np.load(f'{node_id}.npy')
+                        file_id = properties_map[node_id]['file_id']
+                        folder_path = os.getcwd() + f'/{instance_id}'
+                        np_array = np.load(folder_path + f'/{file_id}.npy')
                         output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = keras.ops.array(np_array)
+                        handle_results[output_handle] = tf.constant(np_array)
                     case 'scalar_ops':
                         input_handle = input_handle_dict[node_id][0]
                         output_handle = output_handle_dict[node_id][0]

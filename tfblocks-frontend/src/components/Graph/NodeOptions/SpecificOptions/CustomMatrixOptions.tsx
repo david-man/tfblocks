@@ -12,7 +12,6 @@ const CustomMatrixOptions = (props : any) =>
             try{
                 const resp = await axios.post('http://localhost:8000/api/getMatrixShape/', formData)
                 if(resp.status == 200){
-                    console.log(resp.data)
                     props.setDataShape(resp.data.data_shape)
                     props.setFile(file)
                 }

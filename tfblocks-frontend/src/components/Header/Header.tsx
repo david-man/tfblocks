@@ -1,4 +1,3 @@
-import { useShallow } from 'zustand/shallow'
 import '../../App.css'
 import dependencyController from '../../controllers/dependencyController'
 import nodeController from '../../controllers/nodeController'
@@ -6,8 +5,7 @@ import propertyController from '../../controllers/propertyController'
 import axios from 'axios'
 import type { Node } from '@xyflow/react'
 import FileController from '../../controllers/fileManager'
-import helpMenuController, { type Help } from '../../controllers/helpMenuController'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CompilationMenu from './CompilationMenu'
 
 const Header = (props: any) => {
@@ -16,6 +14,7 @@ const Header = (props: any) => {
     const {get_map, get_properties} = propertyController()
     const {get_dep_map, get_child_map, get_network_heads, get_dependencies, get_children} = dependencyController()
     const [userCompile, setUserCompile] = useState(false)
+    const [instanceID, setInstanceID] = useState(-1)
 
     const findNetwork = (id : String) => {
         let to_ret = "hanging"
@@ -56,12 +55,11 @@ const Header = (props: any) => {
                 properties_map: [...get_map()],
                 dependency_map : [...get_dep_map()],
                 child_map : [...get_child_map()],
-                network_heads : filtered_network_heads
-            })
+                network_heads : filtered_network_heads,
+                instance_id : instanceID
+            }, {responseType: 'blob'})
             if(resp.status == 200){
-                const download = await axios.get('http://localhost:8000/api/getLastModel/', {responseType: 'blob'})
-                // Create a URL for the blob and trigger a download
-                const url = window.URL.createObjectURL(new Blob([download.data]));
+                const url = window.URL.createObjectURL(new Blob([resp.data]));
                 const link = document.createElement('a');
                 link.href = url;
                 link.setAttribute('download', 'model.keras'); // Use the desired filename
@@ -73,9 +71,16 @@ const Header = (props: any) => {
             else{
                 alert("There was an error in the backend somewhere! Sorry :(")
             }
+            
         }
         catch (err){
             alert("There was an error uploading your model! Perhaps the backend server is down :(")
+        }
+        try{
+            await axios.post('http://localhost:8000/api/release_data/', {'instance_id': instanceID})
+        }
+        catch(err){
+            return
         }
     }
 
@@ -83,7 +88,6 @@ const Header = (props: any) => {
         let send = true;
         let files : File[] = []
         let file_ids : string[] = []
-        let relevant_nodes : string[] = []
         nodes.map((node : Node) => {
             const id = node.id
             if(node.type == 'recurrent_head'){
@@ -99,51 +103,59 @@ const Header = (props: any) => {
                     send = false;
                 }
                 else{
-                    relevant_nodes = [...relevant_nodes, id]
+                    if(node.type == 'custom_matrix' && findNetwork(id) != 'hanging'){//compile all the files that need to be sent to the main server
+                        if(get_file(id)){
+                            files.push(get_file(id)!)
+                            file_ids.push(id)
+                        }
+                        else{
+                            alert("Something went wrong when retrieving your custom matrices. Aborting compilation.")
+                            return
+                        }
+                    }
                 }
 
-                if(node.type == 'custom_matrix'){
-                    if(get_file(id)){
-                        files.push(get_file(id)!)
-                        file_ids.push(id)
-                    }
-                    else{
-                        alert("Something went wrong when retrieving your custom matrices. Aborting compilation.")
-                        return
-                    }
-                }
+                
             }
         })
-        let i = 0
-        while(i < files.length){
-            const file = files[i]
-            const formData = new FormData()
-            formData.append('matrix', file)
-            formData.append('save_as', file_ids[i])
-            try{
-                const resp = await axios.post('http://localhost:8000/api/sendMatrices/', formData)
-                if(resp.status != 200){
-                    alert("Something went wrong when uploading your custom matrices. Aborting compilation.")
-                    return
-                }
-                i = i+1
-            }
-            catch(err){
-                alert("Something went wrong when uploading your custom matrices. Aborting compilation.")
-                return
-            }
-            
-        }
+        
         if(!send){
             alert("This graph isn't ready to be parsed yet! Make sure you have a valid configuration!")
         }
         else{
+            let i = 0
+            while(i < files.length){
+                const file = files[i]
+                const formData = new FormData()
+                formData.append('instance_id', instanceID.toString())
+                formData.append('matrix', file)
+                formData.append('save_as', file_ids[i])
+                try{
+                    const resp = await axios.post('http://localhost:8000/api/sendMatrices/', formData)
+                    if(resp.status != 200){
+                        alert("Something went wrong when uploading your custom matrices. Aborting compilation.")
+                        return
+                    }
+                    i = i+1
+                }
+                catch(err){
+                    alert("Something went wrong when uploading your custom matrices. Aborting compilation.")
+                    return
+                }
+            }
             setUserCompile(true)
         }
     }
+
+    const turnOff = async () => {
+        setUserCompile(false)
+    }
+    useEffect(() => {
+        setInstanceID(Date.now())
+    }, [])
     return (
         <>
-            {userCompile ? <CompilationMenu turnOff = {() => setUserCompile(false)} upload = {() => upload()}/> : null}
+            {userCompile ? <CompilationMenu turnOff = {turnOff} upload = {upload}/> : null}
             <div className = "border-2 border-gray-500 w-full h-full relative">
                 <div className = 'h-full w-1/12 flex flex-col items-center justify-center absolute left-8'>
                     <img src = {'logo.png'} width = '60px' height = '60px'></img>
