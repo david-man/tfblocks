@@ -78,4 +78,4 @@ if __name__ == '__main__':
         if(sys.argv[1] == '--dev'):
             app.run(host='localhost', port=8000, debug = True)
     else:
-        app.run(host = '0.0.0.0')
+        app.run(host = '0.0.0.0', port=4000)
