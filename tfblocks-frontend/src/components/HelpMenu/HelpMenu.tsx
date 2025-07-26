@@ -15,6 +15,7 @@ import NormalizationMenu from "./Menus/NormalizationMenu"
 import OperationsMenu from "./Menus/OperationsMenu"
 import OutputMenu from "./Menus/OutputMenu"
 import PoolingMenu from "./Menus/PoolingMenu"
+import RecurrentHeadMenu from "./Menus/RecurrentHeadMenu"
 import ReshapeMenu from "./Menus/ReshapeMenu"
 import RNNMenu from "./Menus/RNNMenu"
 import ScaleOpsMenu from "./Menus/ScalarOperationsMenu"
@@ -47,7 +48,8 @@ const HelpMenu = () => {
         'lstm': <LSTMMenu />,
         'gru': <GRUMenu />,
         'input_layer': <InputMenu />,
-        'output_layer': <OutputMenu />
+        'output_layer': <OutputMenu />,
+        'recurrent_head': <RecurrentHeadMenu />
     }
     return (
         <div className = 'w-full h-full bg-gray-100 rounded-2xl border-2 border-gray-500 relative p-[10px]'>

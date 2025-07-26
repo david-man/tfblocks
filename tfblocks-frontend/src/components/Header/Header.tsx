@@ -15,7 +15,7 @@ const Header = () => {
     const {get_dep_map, get_child_map, get_network_heads, get_dependencies, get_children} = dependencyController()
     const [userCompile, setUserCompile] = useState(false)
     const [instanceID, setInstanceID] = useState(-1)
-
+    const [recurrentHeadInNetwork, setRecurrentHeadInNetwork] = useState(false)
     const findNetwork = (id : String) => {
         let to_ret = "hanging"
         get_network_heads().map((network_head : String) => {
@@ -48,7 +48,7 @@ const Header = () => {
     const upload = async () => {
         const filtered_network_heads = get_network_heads().filter((id : string) => (id != 'out'))
         try{
-            const resp = await axios.post(`${import.meta.env.API_ROUTE}/api/sendModel/`, {
+            const resp = await axios.post(`${import.meta.env.VITE_API_ROUTE}/api/sendModel/`, {
                 active_nodes : [...nodes.map((node : Node) => {
                     return {id: node.id, type: node.type}
                 }).filter((node) => findNetwork(node.id) != 'hanging')],//active nodes defined as nodes that aren't floating around
@@ -71,13 +71,12 @@ const Header = () => {
             else{
                 alert("There was an error in the backend somewhere! Sorry :(")
             }
-            
         }
         catch (err){
             alert("There was an error uploading your model! Perhaps the backend server is down :(")
         }
         try{
-            await axios.post(`${import.meta.env.API_ROUTE}/api/release_data/`, {'instance_id': instanceID})
+            await axios.post(`${import.meta.env.VITE_API_ROUTE}/api/release_data/`, {'instance_id': instanceID})
         }
         catch(err){
             return
@@ -88,9 +87,11 @@ const Header = () => {
         let send = true;
         let files : File[] = []
         let file_ids : string[] = []
+        setRecurrentHeadInNetwork(false)
         nodes.map((node : Node) => {
             const id = node.id
             if(node.type == 'recurrent_head'){
+                setRecurrentHeadInNetwork(true)
                 const external_id = 'rec_hidden_' + id.toString()
                 if(!get_properties(id) || !get_properties(id)?.valid){
                     if(findNetwork(external_id) != 'hanging'){
@@ -131,7 +132,7 @@ const Header = () => {
                 formData.append('matrix', file)
                 formData.append('save_as', file_ids[i])
                 try{
-                    const resp = await axios.post(`${import.meta.env.API_ROUTE}/api/sendMatrices/`, formData)
+                    const resp = await axios.post(`${import.meta.env.VITE_API_ROUTE}/api/sendMatrices/`, formData)
                     if(resp.status != 200){
                         alert("Something went wrong when uploading your custom matrices. Aborting compilation.")
                         return
@@ -155,7 +156,7 @@ const Header = () => {
     }, [])
     return (
         <>
-            {userCompile ? <CompilationMenu turnOff = {turnOff} upload = {upload}/> : null}
+            {userCompile ? <CompilationMenu turnOff = {turnOff} upload = {upload} recurrentHeadInNetwork = {recurrentHeadInNetwork}/> : null}
             <div className = "border-2 border-gray-500 w-full h-full relative">
                 <div className = 'h-full w-1/12 flex flex-col items-center justify-center absolute left-8'>
                     <img src = {'logo.png'} width = '60px' height = '60px'></img>

@@ -9,6 +9,7 @@ const CustomMatrixOptions = (props : any) =>
         {
             const formData = new FormData()
             formData.append('input_file', file)
+            props.setDataShape('Loading...')
             try{
                 const resp = await axios.post(`${import.meta.env.VITE_API_ROUTE}/api/getMatrixShape/`, formData)
                 if(resp.status == 200){
@@ -18,6 +19,7 @@ const CustomMatrixOptions = (props : any) =>
             }
             catch{
                 alert("Matrix upload failed!")
+                props.setDataShape(undefined)
             }
         }
     }

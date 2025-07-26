@@ -1,6 +1,6 @@
 import { type Graph } from './controllers/nodeController'
 import { useShallow } from 'zustand/shallow'
-import { useState, type MouseEvent} from 'react'
+import { useEffect, useRef, useState, type MouseEvent} from 'react'
 import { ReactFlowProvider, useReactFlow} from '@xyflow/react'
 import { DndContext, type DragEndEvent, type DragStartEvent } from '@dnd-kit/core'
 import {restrictToWindowEdges} from '@dnd-kit/modifiers'
@@ -14,6 +14,8 @@ import nodeController from "./controllers/nodeController";
 import HelpMenu from './components/HelpMenu/HelpMenu'
 import helpMenuController from './controllers/helpMenuController'
 import TutorialMenu from './components/TutorialScreen/Tutorial'
+import axios from 'axios'
+import Link from './link'
 export type MousePosn = {
   x : number,
   y : number
@@ -61,8 +63,8 @@ function PreApp() {
             <div className = "h-1/10 m-1 bg-white">
               <Header/>
             </div>
-            <div className = "h-9/10 w-full flex mb-2 relative">
-              <div className = "w-23/100 min-w-fit h-full mt-1 ml-1 mb-1 bg-white">
+            <div className = "h-9/10 w-full flex mb-2 relative overflow-x-clip overflow-y-clip">
+              <div className = "w-25/100 h-full mt-1 ml-1 mb-1 bg-white">
                 <Toolbox activeID = {activeID}/>
               </div>
               <div className = "flex-grow h-full mt-1 mr-1 mb-1 bg-white">
@@ -79,8 +81,48 @@ function PreApp() {
   )
 }
 
+function LoadingScreen() {
+  const [refresh, setRefresh] = useState(0)
+  const dots = useRef<string>('...')
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if(dots.current === '...') {
+        dots.current = '.'
+      } else {
+        dots.current += '.'
+      }
+      setRefresh(prev => prev + 1)
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  return (
+    <div className = "bg-white absolute top-0 right-0 z-1000 w-full h-full flex flex-col justify-center items-center">
+      <img src = "loading.gif"></img>
+      <div className = "text-2xl font-bold">Waiting for backend to respond{dots.current}. This could take up to 30 seconds.</div>
+      <div className = "text-[10px] font-bold">Loading screen made by <Link href = "https://dribbble.com/shots/3306683-Tetris-shaped-loader">Vitaly Silkin</Link></div>
+    </div>
+  )
+}
 function App() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const ping = setInterval(async () => {
+      try{
+        const resp = await axios.get(`${import.meta.env.VITE_API_ROUTE}/api/ping/`)
+        if (resp.status === 200) {
+          setReady(true);
+          clearInterval(ping)
+        }
+      }
+      catch (error){
+        setReady(false)
+        console.log("ping failed")
+      }
+    }, 5000)
+    return () => {clearInterval(ping)}
+  }, [])
   return (<ReactFlowProvider>
+    {ready ? null : <LoadingScreen />}
     <PreApp />
   </ReactFlowProvider>)
 }

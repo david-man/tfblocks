@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import Link from "../../../link"
 
 const Slide23 = ({setHole} : any) => {
     useEffect(() => {
@@ -20,7 +21,7 @@ const Slide23 = ({setHole} : any) => {
                 
             </div>
             <div className = 'absolute z-5 h-2/10 w-full flex bottom-0'>
-                <p className = 'text-[25px] text-white text-center p-[12px]'>(Note: Using the Desktop version of the app will turn this button into a 'train' button that you can use to train a model!)</p>
+                <p className = 'text-[25px] text-white text-center p-[12px]'>(Note: Using the <Link href = "https://github.com/david-man/tfblocks-desktop">Desktop</Link> version of tfBlocks will allow you to train on real data after compilation)</p>
             </div>
         </>
     )

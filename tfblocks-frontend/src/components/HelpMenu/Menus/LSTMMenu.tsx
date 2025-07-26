@@ -2,7 +2,7 @@ import helpMenuController from "../../../controllers/helpMenuController"
 import Link from "../../../link"
 const LSTMMenu = () => {
     const {setHelpMenu} = helpMenuController()
-    return <div className = 'w-full h-95/100 flex flex-col items-center overflow-y-scroll rounded-3xl'>
+    return <div className = 'w-full h-95/100 flex flex-col items-center overflow-y-auto rounded-3xl'>
         <p className = "text-3xl text-center p-2 ">LSTM Layers</p>
         <hr className = 'w-5/6 border-black border-1 rounded-2xl'></hr>
         <p className = 'text-2xl text-center p-1 pt-3'>Reference Sheet</p>
