@@ -91,6 +91,7 @@ function LoadingScreen() {
       } else {
         dots.current += '.'
       }
+      console.log(refresh)
       setRefresh(prev => prev + 1)
     }, 1000);
     return () => clearInterval(interval);
