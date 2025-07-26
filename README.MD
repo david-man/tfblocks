@@ -1,6 +1,6 @@
 # tfblocks-main
 
-This is tfblocks's Web repository(the main one)! While tfBlocks's web version is more for experimentation, tfBlocks' Desktop companion is designed for real world machine learning projects. Feel free to follow the instructions below to tinker with the web version.
+This is tfblocks's Web repository(the main one -- tfblocks.vercel.app)! While tfBlocks's web version is more for experimentation, tfBlocks' Desktop companion is designed for real world machine learning projects. Feel free to follow the instructions below to tinker with the web version.
 
 # Core Methodologies
 
