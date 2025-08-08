@@ -30,6 +30,10 @@ def build_model(instance_id, input_shape, networks, networks_compile_order, inpu
                     activation_function = properties_map[node_id]['activation']
                     layers[node_id] = keras.layers.Activation(activation = activation_function)
                     return
+                case 'attention':
+                    heads = properties_map[node_id]['heads']
+                    features = properties_map[node_id]['features']
+                    layers[node_id] = keras.layers.MultiHeadAttention(num_heads = heads, key_dim = features // heads)
                 case 'add':
                     return# dealt with in runtime
                 case 'concatenate':
@@ -245,6 +249,13 @@ def build_model(instance_id, input_shape, networks, networks_compile_order, inpu
                         input_handle_2 = input_handle_dict[node_id][1]
                         output_handle = output_handle_dict[node_id][0]
                         handle_results[output_handle] = keras.ops.divide(handle_results[input_handle_1], handle_results[input_handle_2])
+                    case 'attention':
+                        input_handle_q = input_handle_dict[node_id][0]
+                        input_handle_kv = input_handle_dict[node_id][1]
+                        output_handle = output_handle_dict[node_id][0]
+                        handle_results[output_handle] = layers[node_id](handle_results[input_handle_q], 
+                                                                        handle_results[input_handle_kv], 
+                                                                        handle_results[input_handle_kv])
                     case 'custom_matrix':
                         file_id = properties_map[node_id]['file_id']
                         folder_path = os.getcwd() + f'/{instance_id}'

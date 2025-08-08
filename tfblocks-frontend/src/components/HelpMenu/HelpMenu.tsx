@@ -1,5 +1,6 @@
 import helpMenuController from "../../controllers/helpMenuController"
 import ActivationMenu from "./Menus/ActivationMenu"
+import AttentionMenu from "./Menus/AttentionMenu"
 import ConcatenateMenu from "./Menus/ConcatenateMenu"
 import ConvolutionalMenu from "./Menus/ConvolutionalMenu"
 import CustomMatrixMenu from "./Menus/CustomMatrixMenu"
@@ -49,7 +50,8 @@ const HelpMenu = () => {
         'gru': <GRUMenu />,
         'input_layer': <InputMenu />,
         'output_layer': <OutputMenu />,
-        'recurrent_head': <RecurrentHeadMenu />
+        'recurrent_head': <RecurrentHeadMenu />,
+        'attention': <AttentionMenu />
     }
     return (
         <div className = 'w-full h-full bg-gray-100 rounded-2xl border-2 border-gray-500 relative p-[10px]'>

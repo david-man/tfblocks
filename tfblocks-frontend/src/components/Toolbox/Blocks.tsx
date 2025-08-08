@@ -48,6 +48,7 @@ const Blocks = (props : any) => {
                 <DragElement id = {'lstm'} name = {'LSTM'} activeID = {activeID} color = 'bg-lime-400'></DragElement>
                 <DragElement id = {'gru'} name = {'GRU'} activeID = {activeID} color = 'bg-lime-400'></DragElement>
                 <DragElement id = {'rnn'} name = {'RNN'} activeID = {activeID} color = 'bg-lime-400'></DragElement>
+                <DragElement id = {'attention'} name = {'Attention'} activeID = {activeID} color = 'bg-lime-400'></DragElement>
         </>)],
         ['Custom', (<>
             <DragElement id = {'scalar_ops'} name = {'Scalar Operation Node'} activeID = {activeID} color = 'bg-pink-400'></DragElement>
@@ -94,6 +95,7 @@ const Blocks = (props : any) => {
                 <DragShadow id = {'lstm'} name = {'LSTM'} activeID = {activeID}  color = 'bg-lime-400'></DragShadow>
                 <DragShadow id = {'gru'} name = {'GRU'} activeID = {activeID}  color = 'bg-lime-400'></DragShadow>
                 <DragShadow id = {'rnn'} name = {'RNN'} activeID = {activeID}  color = 'bg-lime-400'></DragShadow>
+                <DragShadow id = {'attention'} name = {'Attention'} activeID = {activeID} color = 'bg-lime-400'></DragShadow>
             </DragOverlay>
         </>
     )
