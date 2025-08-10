@@ -54,6 +54,10 @@ const RecurrentNode = (props : NodeProps) =>{
     useEffect(() => {
         set_dependencies(`rec_external_${id}`, (ExternalParentHandle ? [ExternalParentHandle.split("|")[0]] : []))
     }, [ExternalParentHandle])
+    useEffect(() => {
+        set_dependencies(`rec_hidden_${id}`, [])
+    }, [])
+
 
     //calculate children as if there were 2 different nodes
     useEffect(() => {

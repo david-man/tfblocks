@@ -31,7 +31,7 @@ const CompilationMenu = (props : any) => {
                             if(!uploadClicked)
                             {
                                 if(props.recurrentHeadInNetwork){
-                                    alert("You have a recurrent head in your network! Please refer to the Github before uploading your model!")
+                                    alert("You have a recurrent head in your network! Please refer to the Github before importing your model elsewhere!")
                                 }
                                 setUploadClicked(true)
                                 props.upload();
