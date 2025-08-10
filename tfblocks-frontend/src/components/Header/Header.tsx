@@ -157,12 +157,19 @@ const Header = () => {
     return (
         <>
             {userCompile ? <CompilationMenu turnOff = {turnOff} upload = {upload} recurrentHeadInNetwork = {recurrentHeadInNetwork}/> : null}
-            <div className = "border-2 border-gray-500 w-full h-full relative">
+            <div className = "border-2 border-gray-500 w-full h-full relative flex justify-end items-center">
                 <div className = 'h-full w-1/12 flex flex-col items-center justify-center absolute left-8'>
                     <img src = {'logo.png'} width = '60px' height = '60px'></img>
                 </div>
-                <div className = "absolute top-1/8 right-10 h-3/4 rounded-full border-2 border-gray-500 bg-green-300 flex justify-center items-center aspect-square">
-                    <button onClick = {handleClick} className = 'text-[10px] flex flex-col justify-center items-center cursor-pointer'>
+                <div className = "mr-[30px] h-5/6 min-h-fit rounded-full border-2 border-gray-500 flex justify-center items-center aspect-square">
+                    <button onClick = {() => {
+                        window.open("https://github.com/david-man/tfblocks")
+                    }} className = 'text-[10px] p-[14px] flex flex-col justify-center items-center cursor-pointer'>
+                        <img src = 'github.png' height = {30} width = {30}></img>
+                    </button>
+                </div>
+                <div className = "mr-[30px] h-5/6 min-h-fit rounded-full border-2 border-gray-500 bg-green-300 flex justify-center items-center aspect-square">
+                    <button onClick = {handleClick} className = 'text-[10px] p-[6px] flex flex-col justify-center items-center cursor-pointer'>
                         <img src = 'upload.png' height = {25} width = {25}></img>
                         <p>Compile!</p>
                     </button>

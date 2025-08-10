@@ -5,6 +5,6 @@ Note that if you have a Custom Recurrent head in your network, you will need to 
 
 from CustomRNNCell import CustomRNNCell
 '''
-import keras 
-model = keras.models.load_model("")#put the path of your model in here
+import keras
+model = keras.models.load_model("[].keras")#put the path of your model in here
 model.summary()
