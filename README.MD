@@ -2,7 +2,7 @@
 
 This is tfblocks's Web repository(the main one -- tfblocks.vercel.app)! While tfBlocks's web version is more for experimentation, tfBlocks' Desktop companion is designed for real world machine learning projects. Feel free to follow the instructions below to tinker with the web version.
 
-# Core Methodologies
+## Core Methodologies
 
 tfBlocks's frontend mainly runs on ReactFlow, a library specifically designed for graphs.
 
@@ -11,6 +11,10 @@ Of course, ReactFlow doesn't come with native support for directed acyclic graph
 On the backend, Keras's functional API was used to generate the models. Compilation was done by populating a dictionary of Keras tensor outputs in just the right order such that no layer compiled before a parent or after a dependent. This was particularly difficult to do with the custom RNN heads, which is unfortunate given that they don't transfer well between machines.
 
 If anything, though, this project taught me the most about large project development. I admit that the codebase is extremely messy. I admit that there are unnecessary states that I hold and update. But I hope to improve in the future!
+
+## Examples
+
+For guidance on how to use a compiled .keras file, see the examples folder!
 
 ## Project Setup
 

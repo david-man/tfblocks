@@ -2,3 +2,4 @@
 /tfblocks-frontend/dist
 out/
 .vercel
+.env.*

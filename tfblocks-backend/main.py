@@ -40,7 +40,7 @@ def receive_data():
         return send_file(folder_path + "/newest_model.keras", as_attachment=True, download_name='model.keras'), 200
     except Exception as e:
         erase_folder(instance_id)
-        print(e)
+        print("ERROR:", e)
         return jsonify({'message': f"Model compilation failed. Sorry!"}), 400
 @app.route('/api/getMatrixShape/', methods = ['POST'])
 @cross_origin(origins = ["http://localhost:5173", "https://tfblocks.vercel.app"])

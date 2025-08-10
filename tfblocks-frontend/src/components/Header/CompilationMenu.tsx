@@ -16,6 +16,7 @@ const CompilationMenu = (props : any) => {
                 <p className = 'text-[20px] text-white text-center p-[10px]'>Unfortunately, because of our limited computational resources on the the <i>Web</i> version of tfBlocks, we can't train your model. You'll have to get the <Link href = "https://github.com/david-man/tfblocks-desktop">Desktop</Link> version for that.</p>
                 <p className = 'text-[20px] text-white text-center p-[10px]'>Instead, we will send the compiled model in a .keras file to your computer, where you can train your data on it. You'll have to accept downloads from us for that to happen, of course.</p>
                 <p className = 'text-[20px] text-white text-center p-[10px]'>While this does mean that you'll have to code to use the model, we hope that we've provided a foundation for you to get started!</p>
+                <p className = 'text-[20px] text-white text-center p-[10px]'>If you need help on getting started with that process, refer to our <Link href = 'https://github.com/david-man/tfblocks'>Github</Link></p>
                 <p className = 'text-[20px] text-white text-center p-[75px]'>One final note: We do not keep <i>any</i> of your data. The moment you receive your model, we delete it from our systems. We know you're serious about privacy, so we're serious about keeping it.</p>
                 <div className = 'pt-[40px] w-full h-fit flex justify-around items-center pb-[30px]'>
                      <div className = 'w-1/2 flex justify-around items-center'>
@@ -30,7 +31,7 @@ const CompilationMenu = (props : any) => {
                             if(!uploadClicked)
                             {
                                 if(props.recurrentHeadInNetwork){
-                                    alert("You have a recurrent head in your network! Unfortunately, this means that your model will have limited use")
+                                    alert("You have a recurrent head in your network! Please refer to the Github before uploading your model!")
                                 }
                                 setUploadClicked(true)
                                 props.upload();

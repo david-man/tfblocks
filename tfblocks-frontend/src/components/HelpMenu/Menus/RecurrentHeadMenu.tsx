@@ -1,4 +1,5 @@
 import helpMenuController from "../../../controllers/helpMenuController"
+import Link from "../../../link"
 const RecurrentHeadMenu = () => {
     const {setHelpMenu} = helpMenuController()
     return <div className = 'w-full h-95/100 flex flex-col items-center overflow-y-auto rounded-3xl'>
@@ -17,8 +18,6 @@ const RecurrentHeadMenu = () => {
                 </ul>
             </li>
         </ul>
-        <hr className = 'w-5/6 border-black border-1 rounded-2xl'></hr>
-        <p className = 'text-2xl text-center p-1 pt-3'>NOTE: THIS IS A PURELY EXPERIMENTAL LAYER. ATTEMPTING TO SAVE AND LOAD THIS MODEL WILL NOT WORK DUE TO KERAS DIFFICULTIES :(.</p>
         <hr className = 'w-5/6 border-black border-1 rounded-2xl'></hr>
         <p className = 'text-2xl text-center p-1 pt-3'>If you have not read the Recurrent Layer guide, click&nbsp;
             <span>
@@ -43,6 +42,8 @@ const RecurrentHeadMenu = () => {
                     <li><b>Handle C</b> takes in the <i>new memory state</i>.</li>
                 </ul>
             </li>
+            <hr className = 'w-5/6 border-black border-1 rounded-2xl'></hr>
+            <li>It should be clearly noted by users that, to load this layer in Python, you will need to import the <i>CustomRNNCell.py</i> file located in the examples folder on our <Link href = "https://github.com/david-man/tfblocks">Github</Link></li>
         </ul>
         
         

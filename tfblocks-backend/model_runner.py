@@ -3,6 +3,7 @@ import tensorflow as tf
 import copy as copy
 import numpy as np
 import os
+from CustomRNNCell import CustomRNNCell
 _debug = False
 def test_model(input_shape, model):
     random_input_shape = (1, ) + tuple(input_shape)
@@ -11,6 +12,7 @@ def test_model(input_shape, model):
         return True
     except Exception:
         return False
+
 def build_model(instance_id, input_shape, networks, networks_compile_order, input_handle_dict, output_handle_dict, type_map, properties_map, dependency_map):
     RNNs = {}#special dictionary mapping RNN network heads to whole cells
     layers = {}#special dictionary mapping cells to normal layers
@@ -198,167 +200,126 @@ def build_model(instance_id, input_shape, networks, networks_compile_order, inpu
                     return
                 case _:
                     raise Exception("Layer type not found!")
-    def build_node(node_id):
-        if(node_id not in layers):
-            return
-        else:
-            input_shape = (None, ) + tuple(properties_map[node_id]['input_shape'])
-            layers[node_id].build(input_shape)
-
     def run_node(node_id):
-        if(not _preloaded):
-            raise Exception("run_node ran before layers were properly preloaded. Exiting")
-        else:
-            if(node_id == 'in'):
+        if(node_id == 'in'):
                 output_handle = 'in|output_handle'
                 handle_results[output_handle] = layers[node_id]
-            elif('rec_external_' in node_id):
-                raw_id = node_id.replace("rec_external_", "")
-                network_id = f"rec_hidden_{raw_id}"
-                layer = RNNs[network_id]
-                input_handle = properties_map[raw_id]['external_parent_handle_id']
-                output_handle = properties_map[raw_id]['external_output_handle_id']
-                seq2seq = properties_map[raw_id]['seq2seq']
-                if(seq2seq):
-                    handle_results[output_handle], _ = layer(handle_results[input_handle])
-                else:
-                    handle_results[output_handle] = layer(handle_results[input_handle])
-                return
-            elif(node_id == 'out'):
-                input_handle = input_handle_dict['out'][0]
-                handle_results['final_result'] = handle_results[input_handle]
+        elif('rec_external_' in node_id):
+            raw_id = node_id.replace("rec_external_", "")
+            network_id = f"rec_hidden_{raw_id}"
+            layer = RNNs[network_id]
+            input_handle = properties_map[raw_id]['external_parent_handle_id']
+            output_handle = properties_map[raw_id]['external_output_handle_id']
+            seq2seq = properties_map[raw_id]['seq2seq']
+            if(seq2seq):
+                handle_results[output_handle], _ = layer(handle_results[input_handle])
             else:
-                match type_map[node_id]:
-                    case 'add':
-                        input_handle_1 = input_handle_dict[node_id][0]
-                        input_handle_2 = input_handle_dict[node_id][1]
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = handle_results[input_handle_1] + handle_results[input_handle_2]
-                    case 'subtract':
-                        input_handle_1 = input_handle_dict[node_id][0]
-                        input_handle_2 = input_handle_dict[node_id][1]
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = handle_results[input_handle_1] - handle_results[input_handle_2]
-                    case 'multiply':
-                        input_handle_1 = input_handle_dict[node_id][0]
-                        input_handle_2 = input_handle_dict[node_id][1]
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = keras.ops.multiply(handle_results[input_handle_1], handle_results[input_handle_2])
-                    case 'divide':
-                        input_handle_1 = input_handle_dict[node_id][0]
-                        input_handle_2 = input_handle_dict[node_id][1]
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = keras.ops.divide(handle_results[input_handle_1], handle_results[input_handle_2])
-                    case 'attention':
-                        input_handle_q = input_handle_dict[node_id][0]
-                        input_handle_kv = input_handle_dict[node_id][1]
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = layers[node_id](handle_results[input_handle_q], 
-                                                                        handle_results[input_handle_kv], 
-                                                                        handle_results[input_handle_kv])
-                    case 'custom_matrix':
-                        file_id = properties_map[node_id]['file_id']
-                        folder_path = os.getcwd() + f'/{instance_id}'
-                        np_array = np.load(folder_path + f'/{file_id}.npy')
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = tf.constant(np_array)
-                    case 'scalar_ops':
-                        input_handle = input_handle_dict[node_id][0]
-                        output_handle = output_handle_dict[node_id][0]
-                        scalar = properties_map[node_id]['scalar']
-                        operation = properties_map[node_id]['operation']
-                        match operation:
-                            case 'add':
-                                handle_results[output_handle] = handle_results[input_handle] + scalar
-                            case 'multiply':
-                                handle_results[output_handle] = handle_results[input_handle] * scalar
-                            case 'exponentiate':
-                                handle_results[output_handle] = handle_results[input_handle] ** scalar
-                            case _:
-                                raise Exception("ScalarOps Error!")
-                    case 'concatenate':
-                        axis = properties_map[node_id]['axis']
-                        input_handle_1 = input_handle_dict[node_id][0]
-                        input_handle_2 = input_handle_dict[node_id][1]
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = keras.ops.concatenate(xs = [handle_results[input_handle_1], handle_results[input_handle_2]], axis = axis)
-                    case 'cut':
-                        axis = properties_map[node_id]['axis']
-                        cut_1 = properties_map[node_id]['cut_1']
-                        input_handle = input_handle_dict[node_id][0]
-                        output_handle_1 = output_handle_dict[node_id][0]
-                        output_handle_2 = output_handle_dict[node_id][1]
-                        handle_results[output_handle_1], handle_results[output_handle_2] = keras.ops.split(handle_results[input_handle], [cut_1], axis = axis)
-                    case 'dot_product':
-                        input_handle_1 = input_handle_dict[node_id][0]
-                        input_handle_2 = input_handle_dict[node_id][1]
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = keras.ops.dot(handle_results[input_handle_1], handle_results[input_handle_2])
-                    case 'reshape':
-                        output_shape = properties_map[node_id]['output_shape']
-                        input_handle = input_handle_dict[node_id][0]
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = keras.ops.reshape(handle_results[input_handle], output_shape)
-                    case 'RNN':
-                        input_handle = input_handle_dict[node_id][0]
-                        output_handle = output_handle_dict[node_id][0]
-                        seq2seq = properties_map[node_id]['seq2seq']
-                        if(seq2seq):
-                            handle_results[output_handle], _ = layers[node_id](handle_results[input_handle])
-                        else:
-                            handle_results[output_handle] = layers[node_id](handle_results[input_handle])
-                    case 'LSTM':
-                        input_handle = input_handle_dict[node_id][0]
-                        output_handle = output_handle_dict[node_id][0]
-                        seq2seq = properties_map[node_id]['seq2seq']
-                        if(seq2seq):
-                            handle_results[output_handle], _ = layers[node_id](handle_results[input_handle])
-                        else:
-                            handle_results[output_handle] = layers[node_id](handle_results[input_handle])
-                    case 'GRU':
-                        input_handle = input_handle_dict[node_id][0]
-                        output_handle = output_handle_dict[node_id][0]
-                        seq2seq = properties_map[node_id]['seq2seq']
-                        if(seq2seq):
-                            handle_results[output_handle], _ = layers[node_id](handle_results[input_handle])
-                        else:
-                            handle_results[output_handle] = layers[node_id](handle_results[input_handle])
-                    case _:
-                        input_handle = input_handle_dict[node_id][0]
-                        output_handle = output_handle_dict[node_id][0]
-                        handle_results[output_handle] = layers[node_id](handle_results[input_handle])
-    def assembleRNNs():
-        @keras.saving.register_keras_serializable()
-        class CustomRNNCell(keras.Layer):#REMAKE FOR WEIGHTS
-            def __init__(self, input_shape, state_shape, rec_node_id, run_order):
-                super().__init__()
-                self.input_size = input_shape
-                self.state_size = state_shape
-                self.output_size = state_shape
-                self.run_order = run_order
-                self.rec_node_id = rec_node_id
-                self.raw_id = self.rec_node_id.replace("rec_hidden_", "")
-                self.layers = []
-                for node in self.run_order:
-                    if(node != rec_node_id and node in layers):
-                        self.layers.append(layers[node])#forces Keras to acknowledge the existence of the inner layers
-            def call(self, inputs, states):
-                handle_results[f'{self.rec_node_id}|timestep_handle'] = inputs
-                handle_results[f'{self.rec_node_id}|output_handle'] = states[0]
-                for node in self.run_order:
-                    if(node == self.rec_node_id):
-                        continue
+                handle_results[output_handle] = layer(handle_results[input_handle])
+            return
+        elif(node_id == 'out'):
+            input_handle = input_handle_dict['out'][0]
+            handle_results['final_result'] = handle_results[input_handle]
+        else:
+            match type_map[node_id]:
+                case 'add':
+                    input_handle_1 = input_handle_dict[node_id][0]
+                    input_handle_2 = input_handle_dict[node_id][1]
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = handle_results[input_handle_1] + handle_results[input_handle_2]
+                case 'subtract':
+                    input_handle_1 = input_handle_dict[node_id][0]
+                    input_handle_2 = input_handle_dict[node_id][1]
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = handle_results[input_handle_1] - handle_results[input_handle_2]
+                case 'multiply':
+                    input_handle_1 = input_handle_dict[node_id][0]
+                    input_handle_2 = input_handle_dict[node_id][1]
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = keras.ops.multiply(handle_results[input_handle_1], handle_results[input_handle_2])
+                case 'divide':
+                    input_handle_1 = input_handle_dict[node_id][0]
+                    input_handle_2 = input_handle_dict[node_id][1]
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = keras.ops.divide(handle_results[input_handle_1], handle_results[input_handle_2])
+                case 'attention':
+                    input_handle_q = input_handle_dict[node_id][0]
+                    input_handle_kv = input_handle_dict[node_id][1]
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = layers[node_id](handle_results[input_handle_q], 
+                                                                    handle_results[input_handle_kv], 
+                                                                    handle_results[input_handle_kv])
+                case 'custom_matrix':
+                    file_id = properties_map[node_id]['file_id']
+                    folder_path = os.getcwd() + f'/{instance_id}'
+                    np_array = np.load(folder_path + f'/{file_id}.npy')
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = tf.constant(np_array)
+                case 'scalar_ops':
+                    input_handle = input_handle_dict[node_id][0]
+                    output_handle = output_handle_dict[node_id][0]
+                    scalar = properties_map[node_id]['scalar']
+                    operation = properties_map[node_id]['operation']
+                    match operation:
+                        case 'add':
+                            handle_results[output_handle] = handle_results[input_handle] + scalar
+                        case 'multiply':
+                            handle_results[output_handle] = handle_results[input_handle] * scalar
+                        case 'exponentiate':
+                            handle_results[output_handle] = handle_results[input_handle] ** scalar
+                        case _:
+                            raise Exception("ScalarOps Error!")
+                case 'concatenate':
+                    axis = properties_map[node_id]['axis']
+                    input_handle_1 = input_handle_dict[node_id][0]
+                    input_handle_2 = input_handle_dict[node_id][1]
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = keras.ops.concatenate(xs = [handle_results[input_handle_1], handle_results[input_handle_2]], axis = axis)
+                case 'cut':
+                    axis = properties_map[node_id]['axis']
+                    cut_1 = properties_map[node_id]['cut_1']
+                    input_handle = input_handle_dict[node_id][0]
+                    output_handle_1 = output_handle_dict[node_id][0]
+                    output_handle_2 = output_handle_dict[node_id][1]
+                    handle_results[output_handle_1], handle_results[output_handle_2] = keras.ops.split(handle_results[input_handle], [cut_1], axis = axis)
+                case 'dot_product':
+                    input_handle_1 = input_handle_dict[node_id][0]
+                    input_handle_2 = input_handle_dict[node_id][1]
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = keras.ops.dot(handle_results[input_handle_1], handle_results[input_handle_2])
+                case 'reshape':
+                    output_shape = properties_map[node_id]['output_shape']
+                    input_handle = input_handle_dict[node_id][0]
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = keras.ops.reshape(handle_results[input_handle], output_shape)
+                case 'RNN':
+                    input_handle = input_handle_dict[node_id][0]
+                    output_handle = output_handle_dict[node_id][0]
+                    seq2seq = properties_map[node_id]['seq2seq']
+                    if(seq2seq):
+                        handle_results[output_handle], _ = layers[node_id](handle_results[input_handle])
                     else:
-                        run_node(node)
-                final_handle = properties_map[raw_id]['hidden_parent_handle_id']
-                return handle_results[final_handle], [handle_results[final_handle]]
-            def build(self, input_shape):
-                for node in self.run_order:
-                    if(node in layers and node != self.rec_node_id):
-                        build_node(node)
-                super(CustomRNNCell, self).build(input_shape)
-            
-
+                        handle_results[output_handle] = layers[node_id](handle_results[input_handle])
+                case 'LSTM':
+                    input_handle = input_handle_dict[node_id][0]
+                    output_handle = output_handle_dict[node_id][0]
+                    seq2seq = properties_map[node_id]['seq2seq']
+                    if(seq2seq):
+                        handle_results[output_handle], _ = layers[node_id](handle_results[input_handle])
+                    else:
+                        handle_results[output_handle] = layers[node_id](handle_results[input_handle])
+                case 'GRU':
+                    input_handle = input_handle_dict[node_id][0]
+                    output_handle = output_handle_dict[node_id][0]
+                    seq2seq = properties_map[node_id]['seq2seq']
+                    if(seq2seq):
+                        handle_results[output_handle], _ = layers[node_id](handle_results[input_handle])
+                    else:
+                        handle_results[output_handle] = layers[node_id](handle_results[input_handle])
+                case _:
+                    input_handle = input_handle_dict[node_id][0]
+                    output_handle = output_handle_dict[node_id][0]
+                    handle_results[output_handle] = layers[node_id](handle_results[input_handle])
+    def assembleRNNs():
         for network in networks_compile_order:
             if(not (network == 'in')):
                 raw_id = network.replace("rec_hidden_", "")
@@ -374,14 +335,15 @@ def build_model(instance_id, input_shape, networks, networks_compile_order, inpu
                             break
                 seq2seq = properties_map[raw_id]['seq2seq']
 
-                RNNs[network] = keras.layers.RNN(cell = CustomRNNCell(hidden_input_shape, hidden_state_shape, network, run_order), return_sequences=seq2seq, return_state=seq2seq)
+                RNNs[network] = keras.layers.RNN(cell = CustomRNNCell(instance_id, hidden_input_shape, hidden_state_shape, 
+                                                                      layers, properties_map, network, run_order,
+                                                                      RNNs, type_map, input_handle_dict, output_handle_dict), 
+                                                 return_sequences=seq2seq, return_state=seq2seq)
                 RNNs[network].build(sequences_shape = (None, hidden_input_shape))
     #PRELOADING DATA
     for node_id in type_map.keys():
         preload_layer(node_id)
-    _preloaded = True
     assembleRNNs()
-    
     run_order = ['in']
     nodes_to_add = copy.copy(networks['in'])
     nodes_to_add.remove('in')
@@ -393,6 +355,7 @@ def build_model(instance_id, input_shape, networks, networks_compile_order, inpu
                 break
     for i in run_order:
         run_node(i)
+    
     if(_debug):
         print("RUN ORDER: ", run_order)
         print("INPUT SHAPE: ", input_shape)

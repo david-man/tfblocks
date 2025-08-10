@@ -56,8 +56,8 @@ const AttentionNode = (props : NodeProps) =>{
                             set_data_shape([dim_Q, features])
                             setNeurons(4 * features * (features + 1))
                             set_properties(id, {"valid": true, 
-                                "input_shape_1": IncomingShapeA, 
-                                "input_shape_2": IncomingShapeB,
+                                "input_shape_q": IncomingShapeA, 
+                                "input_shape_kv": IncomingShapeB,
                                 "parent_handle_id_1": ParentAHandle,
                                 "parent_handle_id_2": ParentBHandle,
                                 "features": features,
