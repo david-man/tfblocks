@@ -2,4 +2,6 @@
 /tfblocks-frontend/dist
 out/
 .vercel
-.env.*
+*.env
+*test*
+*.keras

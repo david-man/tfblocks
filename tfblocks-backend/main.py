@@ -7,11 +7,16 @@ import numpy as np
 import os
 import shutil
 import sys
-from transformers import pipeline
-classifier = pipeline('zero-shot-classification', model = 'facebook/bart-large-mnli')
+import os
+import requests
+
+API_URL = "https://router.huggingface.co/hf-inference/models/facebook/bart-large-mnli"
+headers = {
+    "Authorization": f"Bearer {os.environ['HF_TOKEN']}",
+}
+
 app = Flask(__name__)
 cors = CORS(app, origins= ["http://localhost:5173", "https://tfblocks.vercel.app"])  # Enable CORS for selected routes
-
 def get_folder(instance_id):
     current_directory = os.getcwd()
     folder_path = current_directory + f'/{instance_id}/'
@@ -55,10 +60,19 @@ def getHelp():
                                 'outputs': 'output_layer', 
                                 'custom recurrent layers': 'recurrent_head',
                                 'multi-head attention layers': 'attention'}
-    results = classifier(question, list(candidate_keyword_mappings.keys()), hypothesis_template = "this text is asking about {}")
+    
+    def query(payload):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.json()
+
+    output = query({
+        "inputs": question,
+        "parameters": {"candidate_labels": list(candidate_keyword_mappings.keys()),
+                       "hypothesis_template": "this text is related to {}"},
+    })
     best_results = []
-    for i, keyword in enumerate(results['labels']):
-        if(results['scores'][i] > 0.1):
+    for keyword, score in zip(output['labels'], output['scores']):
+        if(score > 0.1):
             best_results.append(candidate_keyword_mappings[keyword])
     return jsonify({'best_results': best_results}), 200
 

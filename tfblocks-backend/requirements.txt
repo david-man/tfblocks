@@ -4,6 +4,3 @@ keras
 numpy
 tensorflow
 gunicorn
-transformers
-tf-keras
-torch

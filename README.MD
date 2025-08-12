@@ -40,3 +40,5 @@ $ cd ./tfblocks-backend
 $ python3 main.py --dev
 ```
 
+Note that, on the backend, you will need a HuggingFace API token with permissions to inference. 
+
