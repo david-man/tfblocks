@@ -7,6 +7,7 @@ import type { Node } from '@xyflow/react'
 import FileController from '../../controllers/fileManager'
 import { useEffect, useState } from 'react'
 import CompilationMenu from './CompilationMenu'
+import HelpMenu from './HelpMenu'
 
 const Header = () => {
     const {nodes} = nodeController()
@@ -14,6 +15,8 @@ const Header = () => {
     const {get_map, get_properties} = propertyController()
     const {get_dep_map, get_child_map, get_network_heads, get_dependencies, get_children} = dependencyController()
     const [userCompile, setUserCompile] = useState(false)
+    const [help, setHelp] = useState(false)
+    const [helpResults, setHelpResults] = useState<Array<string> | undefined>(undefined)
     const [instanceID, setInstanceID] = useState(-1)
     const [recurrentHeadInNetwork, setRecurrentHeadInNetwork] = useState(false)
     const findNetwork = (id : String) => {
@@ -43,6 +46,22 @@ const Header = () => {
             to_ret = 'in'//the network for the output layer should ALWAYS be the same as the network for the input layer.
         }
         return to_ret
+    }
+
+    const askQuestion = async (q : string) => {
+        try{
+            const resp = await axios.post(`${import.meta.env.VITE_API_ROUTE}/api/help/`, {
+                'question': q
+            })
+            if(resp.status == 200){
+                setHelpResults(resp.data.best_results)
+                console.log(resp.data.best_results)
+            }
+        }
+        catch (err){
+            alert("Unfortunately, we couldn't process your question :(")
+            setHelp(false)
+        }
     }
 
     const upload = async () => {
@@ -148,15 +167,22 @@ const Header = () => {
         }
     }
 
-    const turnOff = async () => {
+    const turnOffCompile = () => {
         setUserCompile(false)
     }
+
+    const turnOffHelp = () => {
+        setHelp(false)
+        setHelpResults(undefined)
+    }
+
     useEffect(() => {
         setInstanceID(Date.now())
     }, [])
     return (
         <>
-            {userCompile ? <CompilationMenu turnOff = {turnOff} upload = {upload} recurrentHeadInNetwork = {recurrentHeadInNetwork}/> : null}
+            {userCompile ? <CompilationMenu turnOff = {turnOffCompile} upload = {upload} recurrentHeadInNetwork = {recurrentHeadInNetwork}/> : null}
+            {help ? <HelpMenu askQuestion = {askQuestion} turnOff = {turnOffHelp} helpResults = {helpResults}></HelpMenu> : null}
             <div className = "border-2 border-gray-500 w-full h-full relative flex justify-end items-center">
                 <div className = 'h-full w-1/12 flex flex-col items-center justify-center absolute left-8'>
                     <img src = {'logo.png'} width = '60px' height = '60px'></img>
@@ -168,18 +194,17 @@ const Header = () => {
                         <img src = 'github.png' height = {30} width = {30}></img>
                     </button>
                 </div>
+                <div className = "mr-[30px] h-5/6 min-h-fit rounded-full border-2 border-gray-500 bg-blue-400 flex justify-center items-center aspect-square object-fill">
+                    <button onClick = {() => {setHelp(true)}} className = 'text-[10px] p-[6px] flex flex-col justify-center items-center cursor-pointer'>
+                        <img src = 'help.png' height = {25} width = {25}></img>
+                    </button>
+                </div>
                 <div className = "mr-[30px] h-5/6 min-h-fit rounded-full border-2 border-gray-500 bg-green-300 flex justify-center items-center aspect-square">
                     <button onClick = {handleClick} className = 'text-[10px] p-[6px] flex flex-col justify-center items-center cursor-pointer'>
                         <img src = 'upload.png' height = {25} width = {25}></img>
                         <p>Compile!</p>
                     </button>
                 </div>
-                
-                {/* <div className = 'absolute top-1/8 right-2/5 w-1/5 h-3/4'>
-                    {trainingState ? <TrainingElement setTrainingState = {setTrainingState}/> : <IdleElement setTrainingState = {setTrainingState}/>}
-                </div> 
-                this element will only be included on the desktop version
-                */}
             </div>
         </>
     )

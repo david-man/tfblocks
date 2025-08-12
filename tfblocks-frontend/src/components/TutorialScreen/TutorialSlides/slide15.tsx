@@ -14,7 +14,7 @@ const Slide15 = () => {
                 <div className = 'flex flex-col'>
                     <p className = 'text-[25px] text-white text-center'>All layers, though, have a help button attached.</p>
                     <br/>
-                    <p className = 'text-[25px] text-white text-center'>If you're ever unsure about how a layer functions, click on it!</p>
+                    <p className = 'text-[25px] text-white text-center'>If you're ever unsure about how a layer functions, click on the button or search through the help icon in the header.</p>
                 </div>
             </div>
             {exampleNode}

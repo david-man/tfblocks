@@ -7,9 +7,11 @@ import numpy as np
 import os
 import shutil
 import sys
-
+from transformers import pipeline
+classifier = pipeline('zero-shot-classification', model = 'facebook/bart-large-mnli')
 app = Flask(__name__)
 cors = CORS(app, origins= ["http://localhost:5173", "https://tfblocks.vercel.app"])  # Enable CORS for selected routes
+
 def get_folder(instance_id):
     current_directory = os.getcwd()
     folder_path = current_directory + f'/{instance_id}/'
@@ -21,6 +23,44 @@ def erase_folder(instance_id):
     folder_path = current_directory + f'/{instance_id}/'
     if(os.path.exists(folder_path)):
         shutil.rmtree(folder_path)
+
+@app.route('/api/help/', methods = ['POST'])
+@cross_origin(origins = ["http://localhost:5173", "https://tfblocks.vercel.app"])
+def getHelp():
+    data = request.get_json()
+    question = data['question']
+    candidate_keyword_mappings = {'dense layer': 'dense', 
+                                'convolutional layer': 'conv', 
+                                'activation function' : 'activation', 
+                                'pooling layer': 'pooling',
+                                'normalization layer': 'norm', 
+                                'dropout layer' : 'dropout', 
+                                'element-wise addition' : 'add', 
+                                'element-wise subtraction' : 'subtract',
+                                'dot product operation' : 'dot_product', 
+                                'element-wise multiplication' : 'multiply', 
+                                'element-wise division' : 'divide', 
+                                'matrix slice operation' : 'cut',
+                                'concatenate operation': 'concatenate', 
+                                'upscale layer' : 'upscale', 
+                                'flatten layer': 'flatten', 
+                                'reshape layer': 'reshape', 
+                                'scalar operations': 'scalar_ops', 
+                                'custom matrix': 'custom_matrix',
+                                'recurrence': 'recurrent-general', 
+                                'simple RNN layer': 'rnn', 
+                                'LSTM layer': 'lstm', 
+                                'GRU layer': 'gru', 
+                                'inputs': 'input_layer', 
+                                'outputs': 'output_layer', 
+                                'custom RNN': 'recurrent_head',
+                                'multi-head attention layer': 'attention'}
+    results = classifier(question, list(candidate_keyword_mappings.keys()))
+    best_results = []
+    for i, keyword in enumerate(results['labels']):
+        if(results['scores'][i] > 0.225):
+            best_results.append(candidate_keyword_mappings[keyword])
+    return jsonify({'best_results': best_results}), 200
 
 @app.route('/api/ping/', methods = ["GET"])
 @cross_origin(origins = ["http://localhost:5173", "https://tfblocks.vercel.app"])
