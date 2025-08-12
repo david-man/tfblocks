@@ -29,36 +29,36 @@ def erase_folder(instance_id):
 def getHelp():
     data = request.get_json()
     question = data['question']
-    candidate_keyword_mappings = {'dense layer': 'dense', 
-                                'convolutional layer': 'conv', 
-                                'activation function' : 'activation', 
-                                'pooling layer': 'pooling',
-                                'normalization layer': 'norm', 
-                                'dropout layer' : 'dropout', 
+    candidate_keyword_mappings = {'dense layers': 'dense', 
+                                'convolutional layers': 'conv', 
+                                'activation functions' : 'activation', 
+                                'pooling layers': 'pooling',
+                                'normalization layers': 'norm', 
+                                'dropout layers' : 'dropout', 
                                 'element-wise addition' : 'add', 
                                 'element-wise subtraction' : 'subtract',
                                 'dot product operation' : 'dot_product', 
                                 'element-wise multiplication' : 'multiply', 
                                 'element-wise division' : 'divide', 
-                                'matrix slice operation' : 'cut',
-                                'concatenate operation': 'concatenate', 
-                                'upscale layer' : 'upscale', 
-                                'flatten layer': 'flatten', 
-                                'reshape layer': 'reshape', 
+                                'matrix slice operations' : 'cut',
+                                'concatenate operations': 'concatenate', 
+                                'upscale layers' : 'upscale', 
+                                'flatten layers': 'flatten', 
+                                'reshape layers': 'reshape', 
                                 'scalar operations': 'scalar_ops', 
-                                'custom matrix': 'custom_matrix',
+                                'custom matrices': 'custom_matrix',
                                 'recurrence': 'recurrent-general', 
-                                'simple RNN layer': 'rnn', 
-                                'LSTM layer': 'lstm', 
-                                'GRU layer': 'gru', 
+                                'simple RNN layers': 'rnn', 
+                                'LSTM layers': 'lstm', 
+                                'GRU layers': 'gru', 
                                 'inputs': 'input_layer', 
                                 'outputs': 'output_layer', 
-                                'custom RNN': 'recurrent_head',
-                                'multi-head attention layer': 'attention'}
-    results = classifier(question, list(candidate_keyword_mappings.keys()))
+                                'custom recurrent layers': 'recurrent_head',
+                                'multi-head attention layers': 'attention'}
+    results = classifier(question, list(candidate_keyword_mappings.keys()), hypothesis_template = "this text is asking about {}")
     best_results = []
     for i, keyword in enumerate(results['labels']):
-        if(results['scores'][i] > 0.225):
+        if(results['scores'][i] > 0.1):
             best_results.append(candidate_keyword_mappings[keyword])
     return jsonify({'best_results': best_results}), 200
 
@@ -122,5 +122,7 @@ if __name__ == '__main__':
     if(len(sys.argv) > 1):
         if(sys.argv[1] == '--dev'):
             app.run(host='localhost', port=8000, debug = False)
+        else:
+            app.run(host = '0.0.0.0', port=os.getenv('PORT', 4000))
     else:
         app.run(host = '0.0.0.0', port=os.getenv('PORT', 4000))
