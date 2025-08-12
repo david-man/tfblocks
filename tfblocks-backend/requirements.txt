@@ -6,3 +6,4 @@ tensorflow
 gunicorn
 transformers
 tf-keras
+torch
