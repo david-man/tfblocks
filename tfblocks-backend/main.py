@@ -119,10 +119,11 @@ def release_data():
         return jsonify({}), 400
     
 if __name__ == '__main__':
+    port = int(os.getenv('PORT', 4000))
     if(len(sys.argv) > 1):
         if(sys.argv[1] == '--dev'):
-            app.run(host='localhost', port=8000, debug = False)
+            app.run(host='localhost', port=8000, debug=False)
         else:
-            app.run(host = '0.0.0.0', port=os.getenv('PORT', 4000))
+            app.run(host='0.0.0.0', port=port, debug=False)
     else:
-        app.run(host = '0.0.0.0', port=os.getenv('PORT', 4000))
+        app.run(host='0.0.0.0', port=port, debug=False)
